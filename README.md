@@ -16,11 +16,13 @@ This repository is the Foundry **game system package** (JavaScript, sheets, data
 
 ### Manifest URL (players / GMs)
 
-Use this manifest when installing the system in Foundry (**Install System** → **Manifest URL**):
+Use this manifest when installing the system in Foundry (**Install System** → **Manifest URL**) or when publishing to the Forge Bazaar:
 
 ```
-https://raw.githubusercontent.com/EmberWolf-Games/ash-and-anvil/main/system.json
+https://github.com/EmberWolf-Games/ash-and-anvil/releases/latest/download/system.json
 ```
+
+That URL always points at the newest release. The manifest’s `download` field references the matching `ash-and-anvil.zip` on the same release.
 
 ### Development (clone + junction)
 
@@ -70,6 +72,37 @@ Under **Configure Settings → Ash & Anvil**:
 | Version | Notes |
 |--------|--------|
 | **0.1.0** | Scaffold: data models, Application V2 sheets, DM settings registry. Core D20 mechanics and automation are planned. |
+
+## Releasing
+
+Releases are built by GitHub Actions (`.github/workflows/release.yml`).
+
+1. Bump `"version"` in `system.json` on `main` (keep in sync with the tag you are about to create).
+2. Commit and push to `main`.
+3. Create and push a version tag (semver, with a leading `v`):
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+The workflow uploads three assets to the GitHub Release:
+
+| Asset | Purpose |
+|-------|---------|
+| `system.json` | Foundry / Forge manifest (`releases/latest/download/system.json`) |
+| `ash-and-anvil.zip` | Installable system package |
+| `ash-and-anvil-<version>-source.tar.gz` | Full source snapshot |
+
+You can also run the workflow manually from the **Actions** tab (**Release** → **Run workflow**) and enter a version (e.g. `0.1.0`).
+
+To build artifacts locally:
+
+```bash
+node utils/release/build-release.mjs 0.1.0
+```
+
+Output is written to `dist/release/`.
 
 ## Contributing
 

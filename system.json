@@ -50,6 +50,6 @@
   "initiative": "1d20 + @attributes.initiative.mod",
   "socket": false,
   "url": "https://github.com/EmberWolf-Games/ash-and-anvil",
-  "manifest": "https://raw.githubusercontent.com/EmberWolf-Games/ash-and-anvil/main/system.json",
-  "download": "https://github.com/EmberWolf-Games/ash-and-anvil/archive/refs/heads/main.zip"
+  "manifest": "https://github.com/EmberWolf-Games/ash-and-anvil/releases/latest/download/system.json",
+  "download": "https://github.com/EmberWolf-Games/ash-and-anvil/releases/latest/download/ash-and-anvil.zip"
 }
