@@ -72,9 +72,9 @@ Under **Configure Settings → Ash & Anvil**:
 
 | Version | Notes |
 |--------|--------|
-| **0.1.2** | Current dev build. Patch version increments on each commit/push to `main`. |
+| **0.1.3** | Current dev build on `main`. Patch version increments on each commit/push. |
 
-Previous: **0.1.0** scaffold; **0.1.1** branding and console diagnostics. Core D20 mechanics and automation are planned. |
+**0.1.2** (released): branding assets, pause overlay, verbose console logging, startup banner. **0.1.0** scaffold. Core D20 mechanics and automation are planned. |
 
 ## Releasing
 
