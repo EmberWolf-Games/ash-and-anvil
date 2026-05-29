@@ -1,0 +1,43 @@
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+ehthumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs and env
+*.log
+npm-debug.log*
+.env
+.env.*
+
+# Node / tooling (future TypeScript or lint setup)
+node_modules/
+package-lock.json
+dist/
+.cache/
+coverage/
+.eslintcache
+
+# Foundry
+*.lnk
+**/fvtt-upload-*/
+.worlds/
+
+# Compiled compendium databases (source JSON/LDB workflow TBD)
+packs/**/*.db
+packs/**/*.ldb
+
+# Release artifacts (if you zip builds locally)
+*.zip
+release/
+
+# Secrets
+.env.local
+credentials.json

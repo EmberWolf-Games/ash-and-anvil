@@ -1,0 +1,50 @@
+/**
+ * Ash & Anvil — system styles (ember / forge palette placeholders)
+ */
+
+.ash-and-anvil.sheet {
+  --aa-accent: #e85d04;
+  --aa-accent-dim: #9d3f0a;
+  --aa-surface: #1a1a1a;
+  --aa-surface-raised: #2a2a2a;
+  --aa-border: #3d3d3d;
+  --aa-text: #f0ebe3;
+}
+
+.ash-and-anvil.sheet .window-content {
+  background: var(--aa-surface);
+  color: var(--aa-text);
+}
+
+.ash-and-anvil.sheet .sheet-header {
+  border-bottom: 2px solid var(--aa-accent-dim);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+}
+
+.ash-and-anvil.sheet .profile-img {
+  flex: 0 0 64px;
+  height: 64px;
+  margin-right: 8px;
+  object-fit: cover;
+  border: 1px solid var(--aa-accent);
+}
+
+.ash-and-anvil.sheet .abilities .ability {
+  align-items: center;
+  border: 1px solid var(--aa-border);
+  border-radius: 4px;
+  padding: 0.35rem;
+  text-align: center;
+}
+
+.ash-and-anvil.sheet .ability-mod {
+  color: var(--aa-accent);
+  font-weight: bold;
+}
+
+.ash-and-anvil.sheet input,
+.ash-and-anvil.sheet select {
+  background: var(--aa-surface-raised);
+  color: var(--aa-text);
+}

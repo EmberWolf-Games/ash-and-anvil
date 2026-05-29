@@ -1,0 +1,26 @@
+<section class="sheet-body">
+  <div class="abilities grid grid-3col">
+    {{#each abilityRows as |row|}}
+    <div class="ability flexcol" data-ability="{{row.key}}">
+      <label class="ability-label">{{row.label}}</label>
+      <input type="number" name="system.abilities.{{row.key}}.value" value="{{row.ability.value}}" />
+      <span class="ability-mod">{{numberFormat row.ability.mod sign=true}}</span>
+    </div>
+    {{/each}}
+  </div>
+
+  <div class="details">
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.Ancestry"}}</label>
+      <input type="text" name="system.details.ancestry" value="{{system.details.ancestry}}" />
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.Class"}}</label>
+      <input type="text" name="system.details.class" value="{{system.details.class}}" />
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.Biography"}}</label>
+      {{editor system.details.biography target="system.details.biography" button=true editable=editable engine="prosemirror"}}
+    </div>
+  </div>
+</section>
