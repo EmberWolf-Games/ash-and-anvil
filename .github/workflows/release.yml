@@ -2,14 +2,18 @@ name: Release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       version:
-        description: "Semantic version (e.g. 0.1.0 — without leading v)"
-        required: true
+        description: "Optional override version (e.g. 0.1.0). Leave empty to use system.json."
+        required: false
         type: string
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -26,27 +30,38 @@ jobs:
       - name: Resolve version
         id: version
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ -n "${{ inputs.version }}" ]; then
             VERSION="${{ inputs.version }}"
           else
-            VERSION="${GITHUB_REF_NAME#v}"
+            VERSION=$(jq -r .version system.json)
           fi
           if ! echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$'; then
             echo "Invalid semver: $VERSION"
             exit 1
           fi
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          TAG="v${VERSION}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q "${TAG}"; then
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            echo "Tag ${TAG} already exists on origin — skipping release."
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+            echo "Will publish release ${TAG}."
+          fi
 
       - name: Setup Node
+        if: steps.version.outputs.publish == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: "22"
 
       - name: Build Foundry package and manifest
+        if: steps.version.outputs.publish == 'true'
         run: node utils/release/build-release.mjs "${{ steps.version.outputs.version }}"
 
       - name: Create source archive
+        if: steps.version.outputs.publish == 'true'
         run: |
           git archive \
             --format=tar.gz \
@@ -55,6 +70,7 @@ jobs:
             HEAD
 
       - name: Publish GitHub Release
+        if: steps.version.outputs.publish == 'true'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.tag }}

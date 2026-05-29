@@ -78,16 +78,15 @@ Under **Configure Settings → Ash & Anvil**:
 
 ## Releasing
 
-Releases are built by GitHub Actions (`.github/workflows/release.yml`).
+Releases are built automatically by GitHub Actions (`.github/workflows/release.yml`) on every push to `main`.
 
-1. Ensure `"version"` in `system.json` (and `keyVersion` in `ash-and-anvil.mjs`) matches the release you are shipping.
-2. Commit and push to `main` (patch version is bumped automatically during normal development commits).
-3. Create and push a version tag matching that version (semver, with a leading `v`):
+1. Bump `"version"` in `system.json` (and `keyVersion` in `ash-and-anvil.mjs`) before each push.
+2. Commit and push to `main`.
+3. The workflow reads `system.json`, creates `v<version>` if it does not exist yet, and publishes assets.
 
-```bash
-git tag v0.1.0
-git push origin v0.1.0
-```
+If a tag for that version already exists, the workflow skips (no duplicate release).
+
+Manual run: **Actions → Release → Run workflow** (optional version override).
 
 The workflow uploads three assets to the GitHub Release:
 

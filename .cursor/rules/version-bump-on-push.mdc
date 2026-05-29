@@ -11,6 +11,6 @@ Whenever you commit and push changes to this repository:
    - Example: `0.1.1` → `0.1.2`
 2. **Keep in sync** `CONFIG.ASH_ANVIL.keyVersion` in `ash-and-anvil.mjs` (same value as `system.json`).
 3. Include the version bump in the same commit as the functional changes (not a separate orphan bump unless the only change is policy/docs).
-4. **Git tags / GitHub Releases** are separate: only create or move a `v*` tag when the user asks for a release; day-to-day pushes do not require a tag.
+4. **GitHub Releases** run automatically on push to `main` via Actions (reads `system.json` version). Do not create tags manually unless the user asks.
 
 Do not skip the bump because the working tree was "already clean" — if you are about to push new work, the version must reflect it.
