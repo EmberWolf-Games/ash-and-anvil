@@ -1,32 +1,65 @@
 import starter from "../starter/content.mjs";
-import { aaLog, aaVerbose } from "../helpers/logger.mjs";
+import { aaLog, aaVerbose, aaWarn } from "../helpers/logger.mjs";
+
+const ItemDocument = foundry.documents.Item;
 
 /**
- * Seed compendiums from module/starter/content.json when packs are empty.
+ * Seed compendiums from module/starter/content.mjs when packs are empty.
+ */
+/**
+ * @returns {Promise<{ seeded: boolean, packs: string[] }>}
  */
 export async function seedCompendiumsIfNeeded() {
-  if (!game.user.isGM) return;
-  if (!game.settings.get("ash-and-anvil", "automationEnabled")) return;
+  if (!game.user.isGM) return { seeded: false, packs: [] };
+  if (!game.settings.get("ash-and-anvil", "automationEnabled")) return { seeded: false, packs: [] };
 
-  const featureMap = await ensureFeatures();
-  await ensurePack("ancestries", starter.ancestries, (data) => buildAncestry(data, featureMap));
-  await ensurePack("classes", starter.classes, (data) => buildClass(data, featureMap));
-  await ensurePack("backgrounds", starter.backgrounds, (data) => buildBackground(data, featureMap));
+  const seededPacks = [];
+  const featureMap = await ensureFeatures(seededPacks);
+  await ensurePack("ancestries", starter.ancestries, (data) => buildAncestry(data, featureMap), seededPacks);
+  await ensurePack("classes", starter.classes, (data) => buildClass(data, featureMap), seededPacks);
+  await ensurePack("backgrounds", starter.backgrounds, (data) => buildBackground(data, featureMap), seededPacks);
+  return { seeded: seededPacks.length > 0, packs: seededPacks };
+}
+
+/**
+ * @param {CompendiumCollection} pack
+ * @param {() => Promise<void>} operation
+ */
+async function withUnlockedPack(pack, operation) {
+  if (!pack) return;
+  const wasLocked = pack.locked;
+  if (wasLocked) {
+    aaVerbose(`Unlocking compendium for seeding: ${pack.collection}`);
+    await pack.configure({ locked: false });
+  }
+  try {
+    await operation();
+  } finally {
+    if (wasLocked) {
+      aaVerbose(`Re-locking compendium: ${pack.collection}`);
+      await pack.configure({ locked: true });
+    }
+  }
 }
 
 /**
  * @returns {Promise<Map<string, string>>}
  */
-async function ensureFeatures() {
+/**
+ * @param {string[]} seededPacks
+ */
+async function ensureFeatures(seededPacks) {
   const pack = game.packs.get("ash-and-anvil.features");
-  if (!pack) return new Map();
+  if (!pack) {
+    aaWarn("Features compendium pack not found; starter features unavailable.");
+    return new Map();
+  }
   if ((await pack.getIndex()).size > 0) {
     return indexFeatureKeys(pack);
   }
 
-  const docs = [];
-  for (const f of starter.features) {
-    docs.push({
+  await withUnlockedPack(pack, async () => {
+    const docs = starter.features.map((f) => ({
       name: f.name,
       type: "feature",
       system: {
@@ -34,10 +67,12 @@ async function ensureFeatures() {
         key: f.key,
       },
       flags: { "ash-and-anvil": { starterKey: f.key } },
-    });
-  }
-  await Item.createDocuments(docs, { pack: pack.collection });
-  aaLog(`Seeded ${docs.length} features into ${pack.title}.`);
+    }));
+    await ItemDocument.createDocuments(docs, { pack: pack.collection });
+    seededPacks.push(pack.collection);
+    aaLog(`Seeded ${docs.length} features into ${pack.title}.`);
+  });
+
   return indexFeatureKeys(pack);
 }
 
@@ -46,11 +81,11 @@ async function ensureFeatures() {
  * @returns {Promise<Map<string, string>>}
  */
 async function indexFeatureKeys(pack) {
-  const index = await pack.getIndex({ fields: ["flags"] });
   const map = new Map();
-  for (const entry of index) {
-    const key = entry.flags?.["ash-and-anvil"]?.starterKey;
-    if (key) map.set(key, entry.uuid);
+  const documents = await pack.getDocuments();
+  for (const doc of documents) {
+    const key = doc.flags?.["ash-and-anvil"]?.starterKey;
+    if (key) map.set(key, doc.uuid);
   }
   return map;
 }
@@ -60,24 +95,33 @@ async function indexFeatureKeys(pack) {
  * @param {object[]} entries
  * @param {(data: object) => object} builder
  */
-async function ensurePack(name, entries, builder) {
+/**
+ * @param {string[]} seededPacks
+ */
+async function ensurePack(name, entries, builder, seededPacks) {
   const pack = game.packs.get(`ash-and-anvil.${name}`);
-  if (!pack) return;
+  if (!pack) {
+    aaWarn(`Compendium pack ash-and-anvil.${name} not found.`);
+    return;
+  }
   if ((await pack.getIndex()).size > 0) {
     aaVerbose(`Compendium ${name} already populated; skip seed.`);
     return;
   }
 
-  const docs = entries.map((e) => builder(e));
-  await Item.createDocuments(docs, { pack: pack.collection });
-  aaLog(`Seeded ${docs.length} entries into ${pack.title}.`);
+  await withUnlockedPack(pack, async () => {
+    const docs = entries.map((e) => builder(e));
+    await ItemDocument.createDocuments(docs, { pack: pack.collection });
+    seededPacks.push(pack.collection);
+    aaLog(`Seeded ${docs.length} entries into ${pack.title}.`);
+  });
 }
 
 /**
  * @param {object} data
- * @param {Map<string, string>} featureMap
+ * @param {Map<string, string>} _featureMap
  */
-function buildAncestry(data, featureMap) {
+function buildAncestry(data, _featureMap) {
   return {
     name: data.name,
     type: "ancestry",
@@ -92,7 +136,7 @@ function buildAncestry(data, featureMap) {
   };
 }
 
-function buildClass(data, featureMap) {
+function buildClass(data, _featureMap) {
   return {
     name: data.name,
     type: "class",
@@ -107,7 +151,7 @@ function buildClass(data, featureMap) {
   };
 }
 
-function buildBackground(data, featureMap) {
+function buildBackground(data, _featureMap) {
   return {
     name: data.name,
     type: "background",
@@ -123,7 +167,7 @@ function buildBackground(data, featureMap) {
 
 /**
  * Load starter items for chargen when compendiums unavailable.
- * @returns {Promise<{ ancestries: Item[], classes: Item[], backgrounds: Item[] }>}
+ * @returns {Promise<{ ancestries: object[], classes: object[], backgrounds: object[] }>}
  */
 export async function loadStarterCatalog() {
   const ancestries = await loadPackOrFallback("ancestries", starter.ancestries, "ancestry", buildAncestry);
@@ -142,7 +186,13 @@ async function loadPackOrFallback(packName, fallback, type, builder) {
   const pack = game.packs.get(`ash-and-anvil.${packName}`);
   if (pack && (await pack.getIndex()).size > 0) {
     const docs = await pack.getDocuments();
-    return docs.map((d) => ({ id: d.id, uuid: d.uuid, name: d.name, system: d.system.toObject(), type }));
+    return docs.map((d) => ({
+      id: d.id,
+      uuid: d.uuid,
+      name: d.name,
+      system: d.system.toObject(),
+      type: d.type,
+    }));
   }
 
   const featureMap = new Map();

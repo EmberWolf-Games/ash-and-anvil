@@ -83,6 +83,8 @@
     "SettingsStandardArrayHint": "Six comma-separated scores to assign.",
     "SettingsAutoApplyDerivedName": "Auto-apply derived data",
     "SettingsAutoApplyDerivedHint": "Recalculate derived stats when equipment or class data changes.",
+    "SeedCompendiumsDone": "Starter compendiums populated (Ancestries, Classes, Backgrounds, Features).",
+    "SeedCompendiumsFailed": "Could not populate starter compendiums. Check the console (F12) for details.",
     "SheetActorCharacter": "Character Sheet",
     "SheetActorNpc": "NPC Sheet",
     "SheetItem": "Item Sheet",

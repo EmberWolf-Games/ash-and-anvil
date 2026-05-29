@@ -26,32 +26,40 @@ Hooks.once("init", () => {
   printStartupBanner();
   aaLog("Initializing (1st Edition)…");
 
+  const actorDataModels = {
+    character: CharacterData,
+    npc: NpcData,
+  };
+
+  const itemDataModels = {
+    ancestry: AncestryData,
+    class: ClassData,
+    background: BackgroundData,
+    gear: GearData,
+    feature: FeatureData,
+    spell: SpellData,
+  };
+
   CONFIG.ASH_ANVIL = {
-    keyVersion: "0.2.0",
+    keyVersion: "0.2.1",
     rules: RULES,
+    registeredTypes: {
+      actors: Object.keys(actorDataModels),
+      items: Object.keys(itemDataModels),
+    },
   };
 
   aaGroup("Data models", () => {
-    CONFIG.Actor.dataModels = {
-      character: CharacterData,
-      npc: NpcData,
-    };
-
-    CONFIG.Item.dataModels = {
-      ancestry: AncestryData,
-      class: ClassData,
-      background: BackgroundData,
-      gear: GearData,
-      feature: FeatureData,
-      spell: SpellData,
-    };
-
-    aaVerbose("Actor data models", Object.keys(CONFIG.Actor.dataModels));
-    aaVerbose("Item data models", Object.keys(CONFIG.Item.dataModels));
+    CONFIG.Actor.dataModels = actorDataModels;
+    CONFIG.Item.dataModels = itemDataModels;
+    aaVerbose("Actor data models", CONFIG.ASH_ANVIL.registeredTypes.actors);
+    aaVerbose("Item data models", CONFIG.ASH_ANVIL.registeredTypes.items);
   });
 
   CONFIG.Actor.documentClass = AAAActor;
   CONFIG.Item.documentClass = AAAItem;
+
+  const { Actors, Items } = foundry.documents.collections;
 
   registerSettings();
   registerPauseScreen();
@@ -84,8 +92,12 @@ Hooks.once("init", () => {
 Hooks.once("ready", async () => {
   printReadySummary();
   try {
-    await seedCompendiumsIfNeeded();
+    const result = await seedCompendiumsIfNeeded();
+    if (result?.seeded) {
+      ui.notifications?.info(game.i18n.localize("ASHANVIL.SeedCompendiumsDone"), { localize: false });
+    }
   } catch (err) {
     console.error("Ash & Anvil | Compendium seed failed", err);
+    ui.notifications?.error(game.i18n.localize("ASHANVIL.SeedCompendiumsFailed"), { localize: false });
   }
 });

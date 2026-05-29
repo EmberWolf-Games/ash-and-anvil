@@ -18,8 +18,6 @@ const BANNER_ART = [
 
 const BORDER = "============================================================";
 
-const BANNER = [BORDER, BANNER_ART, BORDER].join("\n");
-
 const STYLES = {
   banner: "color: #e85d04; font-weight: bold; font-family: monospace;",
   title: "color: #f0ebe3; font-weight: bold;",
@@ -35,7 +33,11 @@ export function printStartupBanner() {
   const subtitle = `${system.title} | EmberWolf Games`;
   const meta = `ESModule loaded · System v${system.version} · Foundry v${foundryVersion}`;
 
-  console.log(`%c${BANNER}`, STYLES.banner);
+  console.log(`%c${BORDER}`, STYLES.banner);
+  for (const line of BANNER_ART.split("\n")) {
+    console.log(`%c${line}`, STYLES.banner);
+  }
+  console.log(`%c${BORDER}`, STYLES.banner);
   console.log(`%c${subtitle}`, STYLES.title);
   console.log(`%c${meta}`, STYLES.meta);
 
@@ -55,6 +57,7 @@ export function printReadySummary() {
     automationEnabled: game.settings.get("ash-and-anvil", "automationEnabled"),
   });
 
-  aaVerbose("Registered actor types", Object.keys(CONFIG.Actor.dataModels ?? {}));
-  aaVerbose("Registered item types", Object.keys(CONFIG.Item.dataModels ?? {}));
+  const registered = CONFIG.ASH_ANVIL?.registeredTypes ?? {};
+  aaVerbose("Registered actor types", registered.actors ?? []);
+  aaVerbose("Registered item types", registered.items ?? []);
 }
