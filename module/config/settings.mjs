@@ -7,6 +7,11 @@ const SYSTEM_ID = "ash-and-anvil";
  * Expand this registry as mechanics are defined in planning.
  */
 export function registerSettings() {
+  if (!game.settings) {
+    console.error("Ash & Anvil | game.settings unavailable during registerSettings.");
+    return;
+  }
+
   game.settings.register(SYSTEM_ID, "verboseLogging", {
     name: "ASHANVIL.SettingsVerboseLoggingName",
     hint: "ASHANVIL.SettingsVerboseLoggingHint",

@@ -49,7 +49,7 @@
   color: var(--aa-text);
 }
 
-/* Pause overlay (renderGamePause) */
+/* Pause overlay (v13: replaces default clock SVG / FA icon) */
 #pause img.ash-anvil-pause {
   border: none;
   box-shadow: none;
@@ -59,4 +59,14 @@
   max-width: min(42vh, 420px);
   object-fit: contain;
   width: auto;
+}
+
+#pause.paused figure::before,
+#pause.paused .window-content::before {
+  content: none;
+}
+
+#pause.paused figure:has(img.ash-anvil-pause) svg,
+#pause.paused figure:has(img.ash-anvil-pause) i {
+  display: none !important;
 }
