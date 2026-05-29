@@ -50,15 +50,32 @@
 }
 
 /* Pause overlay (v13: replaces default clock SVG / FA icon) */
-#pause img.ash-anvil-pause {
+@keyframes ash-anvil-pause-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Half size vs original (was ~42vh / 420px). Half spin speed (12s vs Foundry ~6s). */
+#pause.paused img.ash-anvil-pause {
+  animation: ash-anvil-pause-spin 12s linear infinite !important;
   border: none;
   box-shadow: none;
-  filter: drop-shadow(0 0 12px rgba(232, 93, 4, 0.45));
+  filter: drop-shadow(0 0 8px rgba(232, 93, 4, 0.45));
   height: auto;
-  max-height: min(42vh, 420px);
-  max-width: min(42vh, 420px);
+  max-height: min(21vh, 210px);
+  max-width: min(21vh, 210px);
   object-fit: contain;
+  transform-origin: center center;
   width: auto;
+}
+
+#pause.paused figure:has(img.ash-anvil-pause) {
+  animation: ash-anvil-pause-spin 12s linear infinite !important;
+  transform-origin: center center;
 }
 
 #pause.paused figure::before,

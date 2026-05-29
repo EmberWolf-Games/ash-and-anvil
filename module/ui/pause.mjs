@@ -48,6 +48,14 @@ function applyPauseImage(root) {
   img.src = src;
   img.alt = alt;
   img.classList.add("ash-anvil-pause");
+  img.style.animation = "ash-anvil-pause-spin 12s linear infinite";
+  img.style.transformOrigin = "center center";
+
+  const figure = root.querySelector("figure");
+  if (figure) {
+    figure.style.animation = "ash-anvil-pause-spin 12s linear infinite";
+    figure.style.transformOrigin = "center center";
+  }
 
   document.documentElement.style.setProperty("--ash-anvil-pause-image", `url("${src}")`);
 

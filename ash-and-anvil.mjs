@@ -18,7 +18,7 @@ Hooks.once("init", () => {
   aaLog("Initializing (1st Edition)…");
 
   CONFIG.ASH_ANVIL = {
-    keyVersion: "0.1.4",
+    keyVersion: "0.1.5",
   };
 
   aaGroup("Data models", () => {
