@@ -2,7 +2,7 @@
   "id": "ash-and-anvil",
   "title": "Ash & Anvil (1st Edition)",
   "description": "An original D20 fantasy roleplaying system for Foundry VTT, developed by EmberWolf Games.",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
@@ -34,20 +34,65 @@
       }
     },
     "Item": {
+      "ancestry": {
+        "htmlFields": ["description"]
+      },
+      "class": {
+        "htmlFields": ["description"]
+      },
+      "background": {
+        "htmlFields": ["description"]
+      },
       "gear": {},
-      "feature": {},
+      "feature": {
+        "htmlFields": ["description"]
+      },
       "spell": {
         "htmlFields": ["description"]
       }
     }
   },
+  "packs": [
+    {
+      "name": "ancestries",
+      "label": "Ancestries",
+      "path": "packs/ancestries",
+      "type": "Item",
+      "system": "ash-and-anvil",
+      "ownership": { "PLAYER": "OBSERVER", "ASSISTANT": "OWNER" }
+    },
+    {
+      "name": "classes",
+      "label": "Classes",
+      "path": "packs/classes",
+      "type": "Item",
+      "system": "ash-and-anvil",
+      "ownership": { "PLAYER": "OBSERVER", "ASSISTANT": "OWNER" }
+    },
+    {
+      "name": "backgrounds",
+      "label": "Backgrounds",
+      "path": "packs/backgrounds",
+      "type": "Item",
+      "system": "ash-and-anvil",
+      "ownership": { "PLAYER": "OBSERVER", "ASSISTANT": "OWNER" }
+    },
+    {
+      "name": "features",
+      "label": "Features",
+      "path": "packs/features",
+      "type": "Item",
+      "system": "ash-and-anvil",
+      "ownership": { "PLAYER": "OBSERVER", "ASSISTANT": "OWNER" }
+    }
+  ],
   "grid": {
     "distance": 5,
     "units": "ft"
   },
   "primaryTokenAttribute": "attributes.health",
   "secondaryTokenAttribute": null,
-  "initiative": "1d20 + @attributes.initiative.mod",
+  "initiative": "1d20 + @abilities.fin.mod",
   "background": "systems/ash-and-anvil/assets/ui/AshandAnvil_Logo.png",
   "media": [
     {

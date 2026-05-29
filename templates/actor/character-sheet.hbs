@@ -1,4 +1,27 @@
 <section class="sheet-body">
+  {{#unless buildComplete}}
+  <div class="chargen-banner flexrow">
+    <p>{{localize "ASHANVIL.ChargenIncompleteBanner"}}</p>
+    <button type="button" data-action="openChargen">{{localize "ASHANVIL.ChargenOpen"}}</button>
+  </div>
+  {{/unless}}
+
+  <div class="identity flexrow">
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.Ancestry"}}</label>
+      <span>{{ancestryName}}</span>
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.Class"}}</label>
+      <span>{{className}}</span>
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.Background"}}</label>
+      <span>{{backgroundName}}</span>
+    </div>
+    <button type="button" data-action="openChargen">{{localize "ASHANVIL.ChargenOpen"}}</button>
+  </div>
+
   <div class="abilities grid grid-3col">
     {{#each abilityRows as |row|}}
     <div class="ability flexcol" data-ability="{{row.key}}">
@@ -9,15 +32,34 @@
     {{/each}}
   </div>
 
+  <div class="edge">
+    <label>{{localize "ASHANVIL.Edge"}}</label>
+    <span class="edge-value">+{{edge}}</span>
+  </div>
+
+  <div class="skills">
+    <h3>{{localize "ASHANVIL.Skills"}}</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>{{localize "ASHANVIL.Skill"}}</th>
+          <th>{{localize "ASHANVIL.Trained"}}</th>
+          <th>{{localize "ASHANVIL.Bonus"}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each skillRows as |row|}}
+        <tr>
+          <td>{{row.label}}</td>
+          <td>{{#if row.skill.trained}}<i class="fa-solid fa-check"></i>{{else}}—{{/if}}</td>
+          <td>{{numberFormat row.skill.bonus sign=true}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
   <div class="details">
-    <div class="form-group">
-      <label>{{localize "ASHANVIL.Ancestry"}}</label>
-      <input type="text" name="system.details.ancestry" value="{{system.details.ancestry}}" />
-    </div>
-    <div class="form-group">
-      <label>{{localize "ASHANVIL.Class"}}</label>
-      <input type="text" name="system.details.class" value="{{system.details.class}}" />
-    </div>
     <div class="form-group">
       <label>{{localize "ASHANVIL.Biography"}}</label>
       {{editor system.details.biography target="system.details.biography" button=true editable=editable engine="prosemirror"}}

@@ -49,6 +49,59 @@
   color: var(--aa-text);
 }
 
+.ash-and-anvil.sheet .chargen-banner,
+.ash-and-anvil.sheet .chargen-warning {
+  background: var(--aa-accent-dim);
+  border: 1px solid var(--aa-accent);
+  border-radius: 4px;
+  color: var(--aa-text);
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+}
+
+.ash-and-anvil.sheet .skills table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.ash-and-anvil.sheet .skills th,
+.ash-and-anvil.sheet .skills td {
+  border-bottom: 1px solid var(--aa-border);
+  padding: 0.25rem 0.5rem;
+}
+
+.ash-and-anvil.chargen-wizard .chargen-steps {
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.ash-and-anvil.chargen-wizard .chargen-steps .step {
+  border: 1px solid var(--aa-border);
+  border-radius: 3px;
+  font-size: var(--font-size-12);
+  padding: 0.2rem 0.4rem;
+}
+
+.ash-and-anvil.chargen-wizard .chargen-steps .step.active {
+  border-color: var(--aa-accent);
+  color: var(--aa-accent);
+}
+
+.ash-and-anvil.chargen-wizard .item-choice {
+  border: 1px solid var(--aa-border);
+  border-radius: 4px;
+  display: block;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+}
+
+.ash-and-anvil.chargen-wizard .chargen-footer {
+  border-top: 1px solid var(--aa-border);
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+}
+
 /* Pause overlay (v13: replaces default clock SVG / FA icon) */
 @keyframes ash-anvil-pause-spin {
   from {

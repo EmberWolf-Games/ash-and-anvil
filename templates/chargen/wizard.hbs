@@ -1,0 +1,103 @@
+<form class="chargen-wizard flexcol">
+  <nav class="chargen-steps flexrow">
+    {{#each steps as |label index|}}
+    <span class="step {{#if (eq ../step index)}}active{{/if}}">{{label}}</span>
+    {{/each}}
+  </nav>
+
+  <section class="chargen-body">
+    {{#if (eq step 0)}}
+    <h3>{{localize "ASHANVIL.ChargenStepAncestry"}}</h3>
+    <div class="item-list">
+      {{#each catalog.ancestries as |entry|}}
+      <label class="item-choice">
+        <input type="radio" name="ancestryId" value="{{entry.id}}" {{checked (eq ../state.ancestryId entry.id)}} />
+        <strong>{{entry.name}}</strong>
+        <p>{{{entry.system.description}}}</p>
+      </label>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if (eq step 1)}}
+    <h3>{{localize "ASHANVIL.ChargenStepClass"}}</h3>
+    <div class="item-list">
+      {{#each catalog.classes as |entry|}}
+      <label class="item-choice">
+        <input type="radio" name="classId" value="{{entry.id}}" {{checked (eq ../state.classId entry.id)}} />
+        <strong>{{entry.name}}</strong>
+        <p>Hit die: d{{entry.system.hitDie}}</p>
+        <p>{{{entry.system.description}}}</p>
+      </label>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if (eq step 2)}}
+    <h3>{{localize "ASHANVIL.ChargenStepBackground"}}</h3>
+    <div class="item-list">
+      {{#each catalog.backgrounds as |entry|}}
+      <label class="item-choice">
+        <input type="radio" name="backgroundId" value="{{entry.id}}" {{checked (eq ../state.backgroundId entry.id)}} />
+        <strong>{{entry.name}}</strong>
+        <p>{{{entry.system.description}}}</p>
+      </label>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if (eq step 3)}}
+    <h3>{{localize "ASHANVIL.ChargenStepAbilities"}}</h3>
+    <p class="hint">{{localize "ASHANVIL.ChargenAbilityHint"}} — {{rules.statMethod}}</p>
+    <div class="abilities-grid grid grid-3col">
+      {{#each abilityKeys as |key|}}
+      <div class="form-group">
+        <label>{{lookup ../abilityLabels key}}</label>
+        <input type="number" name="abilities.{{key}}" value="{{lookup ../state.abilities key}}" min="3" max="18" />
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if (eq step 4)}}
+    <h3>{{localize "ASHANVIL.ChargenStepSkills"}}</h3>
+    {{#if selectedClass}}
+    <p>{{localize "ASHANVIL.ChargenClassSkillHint"}} {{selectedClass.system.skillChoices}}</p>
+    {{/if}}
+    <ul class="skill-list">
+      {{#each skillRows as |row|}}
+      <li>
+        <label>
+          <input type="checkbox" name="classSkills.{{row.key}}" value="1" {{checked row.trained}} {{#if row.locked}}disabled{{/if}} />
+          {{row.label}}{{#if row.locked}} ({{localize "ASHANVIL.BackgroundSkill"}}){{/if}}
+        </label>
+      </li>
+      {{/each}}
+    </ul>
+    {{/if}}
+
+    {{#if (eq step 5)}}
+    <h3>{{localize "ASHANVIL.ChargenStepReview"}}</h3>
+    <ul class="review-list">
+      <li><strong>{{localize "ASHANVIL.Ancestry"}}:</strong> {{selectedAncestry.name}}</li>
+      <li><strong>{{localize "ASHANVIL.Class"}}:</strong> {{selectedClass.name}}</li>
+      <li><strong>{{localize "ASHANVIL.Background"}}:</strong> {{selectedBackground.name}}</li>
+    </ul>
+    <div class="abilities-review grid grid-3col">
+      {{#each abilityKeys as |key|}}
+      <div>{{lookup ../abilityLabels key}}: {{lookup ../state.abilities key}}</div>
+      {{/each}}
+    </div>
+    {{/if}}
+  </section>
+
+  <footer class="chargen-footer flexrow">
+    {{#if step}}<button type="button" data-action="back">{{localize "ASHANVIL.Back"}}</button>{{/if}}
+    <span class="flex1"></span>
+    {{#unless isLast}}
+    <button type="button" data-action="next" {{#unless canNext}}disabled{{/unless}}>{{localize "ASHANVIL.Next"}}</button>
+    {{else}}
+    <button type="button" data-action="finish" {{#unless canFinish}}disabled{{/unless}}>{{localize "ASHANVIL.Finish"}}</button>
+    {{/unless}}
+  </footer>
+</form>
