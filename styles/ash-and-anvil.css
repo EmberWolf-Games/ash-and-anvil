@@ -76,10 +76,18 @@
 }
 
 .ash-and-anvil.chargen-wizard .chargen-steps .step {
+  background: transparent;
   border: 1px solid var(--aa-border);
   border-radius: 3px;
+  color: inherit;
+  cursor: pointer;
   font-size: var(--font-size-12);
   padding: 0.2rem 0.4rem;
+}
+
+.ash-and-anvil.chargen-wizard .chargen-steps .step:disabled {
+  cursor: default;
+  opacity: 0.55;
 }
 
 .ash-and-anvil.chargen-wizard .chargen-steps .step.active {
@@ -96,10 +104,17 @@
 }
 
 .ash-and-anvil.chargen-wizard .chargen-footer {
+  align-items: center;
   border-top: 1px solid var(--aa-border);
   gap: 0.5rem;
   margin-top: 0.75rem;
   padding-top: 0.5rem;
+}
+
+.ash-and-anvil.chargen-wizard .chargen-footer .chargen-hint {
+  color: var(--color-text-light-6);
+  font-size: var(--font-size-12);
+  font-style: italic;
 }
 
 /* Pause overlay (v13: replaces default clock SVG / FA icon) */

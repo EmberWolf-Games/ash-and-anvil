@@ -36,6 +36,7 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
       next: ChargenWizard.#onNext,
       back: ChargenWizard.#onBack,
       finish: ChargenWizard.#onFinish,
+      gotoStep: ChargenWizard.#onGotoStep,
     },
   };
 
@@ -106,9 +107,32 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
       locked: selectedBackground?.system?.trainedSkills?.includes(key) ?? false,
     }));
     context.canNext = this.#canAdvance();
-    context.canFinish = this.step === 5 && this.#canAdvance();
     context.isLast = this.step >= 5;
     return context;
+  }
+
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+    this.#bindFormListeners();
+  }
+
+  #bindFormListeners() {
+    const form = this.#getForm();
+    if (!form || form.dataset.aaChargenBound) return;
+    form.dataset.aaChargenBound = "1";
+    form.addEventListener("change", () => {
+      this.#readForm(form);
+      this.render({ force: true });
+    });
+  }
+
+  /**
+   * @returns {HTMLFormElement|null}
+   */
+  #getForm() {
+    if (this.element instanceof HTMLFormElement) return this.element;
+    return this.element?.querySelector("form") ?? null;
   }
 
   /**
@@ -155,7 +179,7 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async #onNext(_event, target) {
     const app = /** @type {ChargenWizard} */ (this);
-    const form = app.element?.querySelector("form") ?? target.closest("form");
+    const form = app.#getForm() ?? target.closest("form");
     if (form) app.#readForm(form);
     if (!app.#canAdvance()) {
       ui.notifications.warn(game.i18n.localize("ASHANVIL.ChargenIncomplete"));
@@ -169,7 +193,7 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async #onBack(_event, target) {
     const app = /** @type {ChargenWizard} */ (this);
-    const form = app.element?.querySelector("form") ?? target.closest("form");
+    const form = app.#getForm() ?? target.closest("form");
     if (form) app.#readForm(form);
     if (app.step > 0) {
       app.step -= 1;
@@ -179,7 +203,7 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async #onFinish(_event, target) {
     const app = /** @type {ChargenWizard} */ (this);
-    const form = app.element?.querySelector("form") ?? target.closest("form");
+    const form = app.#getForm() ?? target.closest("form");
     if (form) app.#readForm(form);
     if (!app.#canAdvance()) {
       ui.notifications.warn(game.i18n.localize("ASHANVIL.ChargenIncomplete"));
@@ -189,15 +213,38 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
     app.close();
   }
 
+  static async #onGotoStep(_event, target) {
+    const app = /** @type {ChargenWizard} */ (this);
+    const form = app.#getForm();
+    if (form) app.#readForm(form);
+    const step = Number(target.dataset.step);
+    if (!Number.isInteger(step) || step < 0 || step > 5) return;
+
+    if (step <= app.step) {
+      app.step = step;
+      app.render({ force: true });
+      return;
+    }
+
+    while (app.step < step) {
+      if (!app.#canAdvance()) {
+        ui.notifications.warn(game.i18n.localize("ASHANVIL.ChargenIncomplete"));
+        return;
+      }
+      app.step += 1;
+    }
+    app.render({ force: true });
+  }
+
   /**
    * @param {HTMLFormElement} form
    */
   #readForm(form) {
     const fd = new FormDataExtended(form);
     const data = fd.object;
-    if (data.ancestryId) this.state.ancestryId = data.ancestryId;
-    if (data.classId) this.state.classId = data.classId;
-    if (data.backgroundId) this.state.backgroundId = data.backgroundId;
+    if (data.ancestryId !== undefined) this.state.ancestryId = data.ancestryId || null;
+    if (data.classId !== undefined) this.state.classId = data.classId || null;
+    if (data.backgroundId !== undefined) this.state.backgroundId = data.backgroundId || null;
     for (const key of ABILITY_KEYS) {
       const val = data.abilities?.[key];
       if (val !== undefined && val !== null && val !== "") this.state.abilities[key] = Number(val);

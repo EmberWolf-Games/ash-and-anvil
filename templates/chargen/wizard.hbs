@@ -1,7 +1,13 @@
-<form class="chargen-wizard flexcol">
+<div class="chargen-wizard flexcol">
   <nav class="chargen-steps flexrow">
     {{#each steps as |label index|}}
-    <span class="step {{#if (eq ../step index)}}active{{/if}}">{{label}}</span>
+    <button
+      type="button"
+      class="step {{#if (eq ../step index)}}active{{/if}}"
+      data-action="gotoStep"
+      data-step="{{index}}"
+      {{#if (gt index ../step)}}disabled{{/if}}
+    >{{label}}</button>
     {{/each}}
   </nav>
 
@@ -94,10 +100,11 @@
   <footer class="chargen-footer flexrow">
     {{#if step}}<button type="button" data-action="back">{{localize "ASHANVIL.Back"}}</button>{{/if}}
     <span class="flex1"></span>
+    {{#unless canNext}}<span class="chargen-hint">{{localize "ASHANVIL.ChargenIncomplete"}}</span>{{/unless}}
     {{#unless isLast}}
-    <button type="button" data-action="next" {{#unless canNext}}disabled{{/unless}}>{{localize "ASHANVIL.Next"}}</button>
+    <button type="button" data-action="next">{{localize "ASHANVIL.Next"}}</button>
     {{else}}
-    <button type="button" data-action="finish" {{#unless canFinish}}disabled{{/unless}}>{{localize "ASHANVIL.Finish"}}</button>
+    <button type="button" data-action="finish">{{localize "ASHANVIL.Finish"}}</button>
     {{/unless}}
   </footer>
-</form>
+</div>
