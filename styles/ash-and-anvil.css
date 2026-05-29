@@ -102,6 +102,49 @@
   opacity: 0.9;
 }
 
+.ash-and-anvil.sheet .sheet-subtabs {
+  border-bottom: 1px solid var(--aa-border);
+  gap: 0.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.ash-and-anvil.sheet .sheet-subtab {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: var(--aa-text);
+  cursor: pointer;
+  font-size: var(--font-size-12);
+  opacity: 0.75;
+  padding: 0.25rem 0.5rem;
+}
+
+.ash-and-anvil.sheet .sheet-subtab.active {
+  border-color: var(--aa-accent-dim);
+  color: var(--aa-accent);
+  opacity: 1;
+}
+
+.ash-and-anvil.sheet .layout-pending-note {
+  color: var(--aa-accent);
+  font-style: italic;
+  margin: 0.5rem 0;
+}
+
+.ash-and-anvil.sheet .biography-tab .bio-section {
+  margin-bottom: 1rem;
+}
+
+.ash-and-anvil.sheet .biography-tab .bio-stack .form-group {
+  margin-bottom: 0.75rem;
+}
+
+.ash-and-anvil.sheet .biography-tab .bio-grid .form-group label {
+  display: block;
+  font-size: var(--font-size-12);
+  margin-bottom: 0.15rem;
+}
+
 .ash-and-anvil.sheet .profile-img {
   flex: 0 0 64px;
   height: 64px;

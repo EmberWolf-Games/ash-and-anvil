@@ -11,11 +11,20 @@
   </nav>
 
   <div class="sheet-tab-content" data-tab-panel="{{activeTab}}">
-    {{#if (eq activeTab "main")}}
-    {{> "systems/ash-and-anvil/templates/actor/tabs/main.hbs"}}
+    {{#if (eq activeTab "details")}}
+    {{> "systems/ash-and-anvil/templates/actor/tabs/details.hbs"}}
+    {{/if}}
+    {{#if (eq activeTab "inventory")}}
+    {{> "systems/ash-and-anvil/templates/actor/tabs/inventory.hbs"}}
     {{/if}}
     {{#if (eq activeTab "features")}}
     {{> "systems/ash-and-anvil/templates/actor/tabs/features.hbs"}}
+    {{/if}}
+    {{#if (eq activeTab "powers")}}
+    {{> "systems/ash-and-anvil/templates/actor/tabs/powers.hbs"}}
+    {{/if}}
+    {{#if (eq activeTab "effects")}}
+    {{> "systems/ash-and-anvil/templates/actor/tabs/effects.hbs"}}
     {{/if}}
     {{#if (eq activeTab "biography")}}
     {{> "systems/ash-and-anvil/templates/actor/tabs/biography.hbs"}}

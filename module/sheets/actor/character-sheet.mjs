@@ -1,5 +1,9 @@
 import { ChargenWizard } from "../../applications/chargen-wizard.mjs";
-import { CHARACTER_SHEET_PARAMS } from "../../config/sheet-params.mjs";
+import {
+  CHARACTER_SHEET_PARAMS,
+  defaultSubTabId,
+  getSubTabs,
+} from "../../config/sheet-params.mjs";
 import { prepareCharacterSheetContext } from "./prepare-character-context.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -7,7 +11,13 @@ const { ActorSheetV2 } = foundry.applications.sheets;
 
 export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   /** @type {string} */
-  #activeTab = CHARACTER_SHEET_PARAMS.tabs.find((t) => t.default)?.id ?? "main";
+  #activeTab = CHARACTER_SHEET_PARAMS.tabs.find((t) => t.default)?.id ?? "details";
+
+  /** @type {Record<string, string>} */
+  #activeSubTabs = {
+    powers: defaultSubTabId("powers"),
+    effects: defaultSubTabId("effects"),
+  };
 
   static DEFAULT_OPTIONS = {
     classes: ["ash-and-anvil", "sheet", "actor", "character"],
@@ -20,6 +30,7 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     actions: {
       openChargen: CharacterActorSheet.#onOpenChargen,
       changeTab: CharacterActorSheet.#onChangeTab,
+      changeSubTab: CharacterActorSheet.#onChangeSubTab,
     },
   };
 
@@ -52,7 +63,11 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     }
 
     if (partId === "body") {
-      Object.assign(context, sheetContext, { activeTab: this.#activeTab });
+      Object.assign(context, sheetContext, {
+        activeTab: this.#activeTab,
+        activeSubTabs: { ...this.#activeSubTabs },
+        subTabs: CHARACTER_SHEET_PARAMS.subTabs,
+      });
     }
 
     return context;
@@ -70,6 +85,17 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const valid = CHARACTER_SHEET_PARAMS.tabs.some((t) => t.id === tab);
     if (!valid) return;
     app.#activeTab = tab;
+    app.render(false);
+  }
+
+  static #onChangeSubTab(_event, target) {
+    const app = /** @type {CharacterActorSheet} */ (this);
+    const group = target.dataset.group;
+    const tab = target.dataset.tab;
+    if (!group || !tab) return;
+    const valid = getSubTabs(group).some((t) => t.id === tab);
+    if (!valid) return;
+    app.#activeSubTabs[group] = tab;
     app.render(false);
   }
 }

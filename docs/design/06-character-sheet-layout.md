@@ -24,11 +24,14 @@ Use this document when you lay out the full character sheet design. Params and t
 
 ### Tabs (`CHARACTER_SHEET_TABS`)
 
-| Tab id | Label | Template |
-|--------|-------|----------|
-| `main` | Main | `templates/actor/tabs/main.hbs` |
-| `features` | Features | `templates/actor/tabs/features.hbs` |
-| `biography` | Biography | `templates/actor/tabs/biography.hbs` |
+| Tab id | Label | Sub-tabs | Status |
+|--------|-------|----------|--------|
+| `details` | Details | — | **Layout pending** (start here) |
+| `inventory` | Inventory | — | Layout pending |
+| `features` | Features | — | Layout pending |
+| `powers` | Powers | Spellcasting, Psionics, Divine Gifts | Sub-tabs wired; layout pending |
+| `effects` | Effects | Active, Passive | Sub-tabs wired; layout pending |
+| `biography` | Biography | — | **Implemented** (see `parts/biography.hbs`) |
 
 Add/rename/reorder tabs in `sheet-params.mjs`; wire matching partial in `character-sheet.hbs`.
 

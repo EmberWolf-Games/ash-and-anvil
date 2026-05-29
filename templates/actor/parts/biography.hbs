@@ -1,4 +1,91 @@
-<h3 class="zone-title">{{localize "ASHANVIL.Biography"}}</h3>
-<div class="form-group">
-  {{editor system.details.biography target="system.details.biography" button=true editable=editable engine="prosemirror"}}
-</div>
+<section class="bio-section bio-section--identity">
+  <h3 class="zone-title">{{localize "ASHANVIL.BioSectionIdentity"}}</h3>
+  <div class="bio-grid grid grid-3col">
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioAlignment"}}</label>
+      <input type="text" name="system.details.alignment" value="{{bio.alignment}}" />
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioFaith"}}</label>
+      <input type="text" name="system.details.faith" value="{{bio.faith}}" />
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioGender"}}</label>
+      <input type="text" name="system.details.gender" value="{{bio.gender}}" />
+    </div>
+  </div>
+</section>
+
+<section class="bio-section bio-section--physical">
+  <h3 class="zone-title">{{localize "ASHANVIL.BioSectionPhysical"}}</h3>
+  <div class="bio-grid grid grid-3col">
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioEyeColor"}}</label>
+      <input type="text" name="system.details.eyeColor" value="{{bio.eyeColor}}" />
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioHairColor"}}</label>
+      <input type="text" name="system.details.hairColor" value="{{bio.hairColor}}" />
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioSkinColor"}}</label>
+      <input type="text" name="system.details.skinColor" value="{{bio.skinColor}}" />
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioHeight"}}</label>
+      <input type="text" name="system.details.height" value="{{bio.height}}" />
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioWeight"}}</label>
+      <input type="text" name="system.details.weight" value="{{bio.weight}}" />
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioAge"}}</label>
+      <input type="text" name="system.details.age" value="{{bio.age}}" />
+    </div>
+  </div>
+</section>
+
+<section class="bio-section bio-section--personality">
+  <h3 class="zone-title">{{localize "ASHANVIL.BioSectionPersonality"}}</h3>
+  <div class="bio-stack">
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioPersonalityTraits"}}</label>
+      {{editor bio.personalityTraits target="system.details.personalityTraits" button=true editable=editable engine="prosemirror"}}
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioIdeals"}}</label>
+      {{editor bio.ideals target="system.details.ideals" button=true editable=editable engine="prosemirror"}}
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioBonds"}}</label>
+      {{editor bio.bonds target="system.details.bonds" button=true editable=editable engine="prosemirror"}}
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioFlaws"}}</label>
+      {{editor bio.flaws target="system.details.flaws" button=true editable=editable engine="prosemirror"}}
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioFears"}}</label>
+      {{editor bio.fears target="system.details.fears" button=true editable=editable engine="prosemirror"}}
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioQuirks"}}</label>
+      {{editor bio.quirks target="system.details.quirks" button=true editable=editable engine="prosemirror"}}
+    </div>
+  </div>
+</section>
+
+<section class="bio-section bio-section--appearance">
+  <h3 class="zone-title">{{localize "ASHANVIL.BioAppearance"}}</h3>
+  <div class="form-group">
+    {{editor bio.appearance target="system.details.appearance" button=true editable=editable engine="prosemirror"}}
+  </div>
+</section>
+
+<section class="bio-section bio-section--backstory">
+  <h3 class="zone-title">{{localize "ASHANVIL.BioBackstory"}}</h3>
+  <div class="form-group">
+    {{editor bio.backstory target="system.details.backstory" button=true editable=editable engine="prosemirror"}}
+  </div>
+</section>

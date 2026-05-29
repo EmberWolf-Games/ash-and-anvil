@@ -8,26 +8,45 @@
  * @property {string} labelKey i18n key
  * @property {string} template Handlebars template path
  * @property {boolean} [default] first tab shown when sheet opens
+ * @property {boolean} [nested] tab contains sub-tabs (see subTabs map)
  */
 
-/** @typedef {object} SheetZoneParam
- * @property {string} id stable zone id for CSS / layout grid
- * @property {string} labelKey optional i18n label
- * @property {string[]} fields data keys available in this zone (see docs/design/06-character-sheet-layout.md)
+/** @typedef {object} SheetSubTabParam
+ * @property {string} id
+ * @property {string} labelKey
+ * @property {string} [template] optional override; defaults to tabs/{parent}-{id}.hbs
+ * @property {boolean} [default]
  */
 
 /** @type {Readonly<SheetTabParam[]>} */
 export const CHARACTER_SHEET_TABS = [
   {
-    id: "main",
-    labelKey: "ASHANVIL.SheetTabMain",
-    template: "systems/ash-and-anvil/templates/actor/tabs/main.hbs",
+    id: "details",
+    labelKey: "ASHANVIL.SheetTabDetails",
+    template: "systems/ash-and-anvil/templates/actor/tabs/details.hbs",
     default: true,
+  },
+  {
+    id: "inventory",
+    labelKey: "ASHANVIL.SheetTabInventory",
+    template: "systems/ash-and-anvil/templates/actor/tabs/inventory.hbs",
   },
   {
     id: "features",
     labelKey: "ASHANVIL.SheetTabFeatures",
     template: "systems/ash-and-anvil/templates/actor/tabs/features.hbs",
+  },
+  {
+    id: "powers",
+    labelKey: "ASHANVIL.SheetTabPowers",
+    template: "systems/ash-and-anvil/templates/actor/tabs/powers.hbs",
+    nested: true,
+  },
+  {
+    id: "effects",
+    labelKey: "ASHANVIL.SheetTabEffects",
+    template: "systems/ash-and-anvil/templates/actor/tabs/effects.hbs",
+    nested: true,
   },
   {
     id: "biography",
@@ -36,70 +55,62 @@ export const CHARACTER_SHEET_TABS = [
   },
 ];
 
-/** Layout grid tokens (CSS hooks in styles/ash-and-anvil.css). */
-export const CHARACTER_SHEET_LAYOUT = {
-  /** Total columns for CSS grid zones */
-  columns: 12,
-  /** Default gap between zones (rem) */
-  gap: "0.75rem",
-  /** Profile portrait size in header (px) */
-  portraitSize: 96,
-  /** Ability block display: "grid" | "row" | "compact" — templates/CSS branch on this */
-  abilityDisplay: "grid",
-  /** Skills display: "table" | "grouped" | "compact" */
-  skillDisplay: "grouped",
-  /** Show chargen banner when build incomplete */
-  showChargenBanner: true,
+/** @type {Readonly<Record<string, SheetSubTabParam[]>>} */
+export const CHARACTER_SHEET_SUB_TABS = {
+  powers: [
+    {
+      id: "spellcasting",
+      labelKey: "ASHANVIL.SheetSubTabSpellcasting",
+      template: "systems/ash-and-anvil/templates/actor/tabs/powers-spellcasting.hbs",
+      default: true,
+    },
+    {
+      id: "psionics",
+      labelKey: "ASHANVIL.SheetSubTabPsionics",
+      template: "systems/ash-and-anvil/templates/actor/tabs/powers-psionics.hbs",
+    },
+    {
+      id: "divineGifts",
+      labelKey: "ASHANVIL.SheetSubTabDivineGifts",
+      template: "systems/ash-and-anvil/templates/actor/tabs/powers-divine-gifts.hbs",
+    },
+  ],
+  effects: [
+    {
+      id: "active",
+      labelKey: "ASHANVIL.SheetSubTabActiveEffects",
+      template: "systems/ash-and-anvil/templates/actor/tabs/effects-active.hbs",
+      default: true,
+    },
+    {
+      id: "passive",
+      labelKey: "ASHANVIL.SheetSubTabPassiveEffects",
+      template: "systems/ash-and-anvil/templates/actor/tabs/effects-passive.hbs",
+    },
+  ],
 };
 
-/**
- * Semantic zones — map your wireframe regions to these ids when you lay out the sheet.
- * @type {Readonly<Record<string, SheetZoneParam>>}
- */
-export const CHARACTER_SHEET_ZONES = {
-  header: {
-    id: "header",
-    labelKey: "ASHANVIL.SheetZoneHeader",
-    fields: ["name", "img", "level", "health", "initiative", "edge"],
-  },
-  identity: {
-    id: "identity",
-    labelKey: "ASHANVIL.SheetZoneIdentity",
-    fields: ["ancestry", "class", "background", "buildComplete"],
-  },
-  abilities: {
-    id: "abilities",
-    labelKey: "ASHANVIL.SheetZoneAbilities",
-    fields: ["abilities.*.value", "abilities.*.mod"],
-  },
-  skills: {
-    id: "skills",
-    labelKey: "ASHANVIL.SheetZoneSkills",
-    fields: ["skills.*.trained", "skills.*.bonus"],
-  },
-  features: {
-    id: "features",
-    labelKey: "ASHANVIL.SheetZoneFeatures",
-    fields: ["items.feature", "build.ancestry", "build.class", "build.background"],
-  },
-  biography: {
-    id: "biography",
-    labelKey: "ASHANVIL.SheetZoneBiography",
-    fields: ["details.biography"],
-  },
+/** Layout grid tokens (CSS hooks in styles/ash-and-anvil.css). */
+export const CHARACTER_SHEET_LAYOUT = {
+  columns: 12,
+  gap: "0.75rem",
+  portraitSize: 96,
+  abilityDisplay: "grid",
+  skillDisplay: "grouped",
+  showChargenBanner: true,
 };
 
 /** @type {Readonly<object>} */
 export const CHARACTER_SHEET_PARAMS = {
   id: "character",
   window: {
-    width: 820,
-    height: 900,
+    width: 860,
+    height: 920,
     resizable: true,
   },
   tabs: CHARACTER_SHEET_TABS,
+  subTabs: CHARACTER_SHEET_SUB_TABS,
   layout: CHARACTER_SHEET_LAYOUT,
-  zones: CHARACTER_SHEET_ZONES,
 };
 
 /** NPC sheet params (placeholder for later full design). */
@@ -109,9 +120,27 @@ export const NPC_SHEET_PARAMS = {
 };
 
 /**
- * @param {foundry.abstract.Document} actor
+ * @param {foundry.abstract.Document} _actor
  * @returns {typeof CHARACTER_SHEET_PARAMS}
  */
 export function getCharacterSheetParams(_actor) {
   return CONFIG.ASH_ANVIL?.sheets?.character ?? CHARACTER_SHEET_PARAMS;
+}
+
+/**
+ * @param {string} parentTabId
+ * @returns {SheetSubTabParam[]}
+ */
+export function getSubTabs(parentTabId) {
+  const params = getCharacterSheetParams();
+  return params.subTabs?.[parentTabId] ?? [];
+}
+
+/**
+ * @param {string} parentTabId
+ * @returns {string}
+ */
+export function defaultSubTabId(parentTabId) {
+  const tabs = getSubTabs(parentTabId);
+  return tabs.find((t) => t.default)?.id ?? tabs[0]?.id ?? "";
 }

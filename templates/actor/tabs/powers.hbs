@@ -1,0 +1,25 @@
+<div class="sheet-zone sheet-zone--powers" data-zone="powers">
+  <nav class="sheet-subtabs flexrow" data-group="powers">
+    {{#each subTabs.powers as |tab|}}
+    <button
+      type="button"
+      class="sheet-subtab {{#if (eq ../activeSubTabs.powers tab.id)}}active{{/if}}"
+      data-action="changeSubTab"
+      data-group="powers"
+      data-tab="{{tab.id}}"
+    >{{localize tab.labelKey}}</button>
+    {{/each}}
+  </nav>
+
+  <div class="sheet-subtab-content" data-subtab-panel="powers-{{activeSubTabs.powers}}">
+    {{#if (eq activeSubTabs.powers "spellcasting")}}
+    {{> "systems/ash-and-anvil/templates/actor/tabs/powers-spellcasting.hbs"}}
+    {{/if}}
+    {{#if (eq activeSubTabs.powers "psionics")}}
+    {{> "systems/ash-and-anvil/templates/actor/tabs/powers-psionics.hbs"}}
+    {{/if}}
+    {{#if (eq activeSubTabs.powers "divineGifts")}}
+    {{> "systems/ash-and-anvil/templates/actor/tabs/powers-divine-gifts.hbs"}}
+    {{/if}}
+  </div>
+</div>

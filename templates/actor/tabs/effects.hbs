@@ -1,0 +1,22 @@
+<div class="sheet-zone sheet-zone--effects" data-zone="effects">
+  <nav class="sheet-subtabs flexrow" data-group="effects">
+    {{#each subTabs.effects as |tab|}}
+    <button
+      type="button"
+      class="sheet-subtab {{#if (eq ../activeSubTabs.effects tab.id)}}active{{/if}}"
+      data-action="changeSubTab"
+      data-group="effects"
+      data-tab="{{tab.id}}"
+    >{{localize tab.labelKey}}</button>
+    {{/each}}
+  </nav>
+
+  <div class="sheet-subtab-content" data-subtab-panel="effects-{{activeSubTabs.effects}}">
+    {{#if (eq activeSubTabs.effects "active")}}
+    {{> "systems/ash-and-anvil/templates/actor/tabs/effects-active.hbs"}}
+    {{/if}}
+    {{#if (eq activeSubTabs.effects "passive")}}
+    {{> "systems/ash-and-anvil/templates/actor/tabs/effects-passive.hbs"}}
+    {{/if}}
+  </div>
+</div>
