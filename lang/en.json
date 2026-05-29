@@ -17,7 +17,9 @@
     "Class": "Class",
     "Description": "Description",
     "Edge": "Edge",
-    "FeatureKey": "Feature key",
+    "Features": "Features",
+    "NoFeatures": "No features yet — complete character build or add items.",
+    "ChargenBuildBlocks": "Build choices",
     "Health": "Health",
     "HealthMax": "Health Max",
     "HealthTemp": "Temp HP",
@@ -88,6 +90,15 @@
     "SheetActorCharacter": "Character Sheet",
     "SheetActorNpc": "NPC Sheet",
     "SheetItem": "Item Sheet",
+    "SheetTabMain": "Main",
+    "SheetTabFeatures": "Features",
+    "SheetTabBiography": "Biography",
+    "SheetZoneHeader": "Header",
+    "SheetZoneIdentity": "Identity",
+    "SheetZoneAbilities": "Abilities",
+    "SheetZoneSkills": "Skills",
+    "SheetZoneFeatures": "Features & build",
+    "SheetZoneBiography": "Biography",
     "SpellSchool": "School"
   }
 }

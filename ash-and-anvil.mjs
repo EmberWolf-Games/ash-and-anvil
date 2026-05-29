@@ -14,6 +14,7 @@ import {
   SpellData,
 } from "./module/data/item/_module.mjs";
 import { registerSettings } from "./module/config/settings.mjs";
+import { CHARACTER_SHEET_PARAMS, NPC_SHEET_PARAMS } from "./module/config/sheet-params.mjs";
 import { printReadySummary, printStartupBanner } from "./module/helpers/banner.mjs";
 import { aaGroup, aaLog, aaVerbose } from "./module/helpers/logger.mjs";
 import { CharacterActorSheet, NpcActorSheet } from "./module/sheets/actor/_module.mjs";
@@ -41,11 +42,15 @@ Hooks.once("init", () => {
   };
 
   CONFIG.ASH_ANVIL = {
-    keyVersion: "0.2.6",
+    keyVersion: "0.2.7",
     rules: RULES,
     registeredTypes: {
       actors: Object.keys(actorDataModels),
       items: Object.keys(itemDataModels),
+    },
+    sheets: {
+      character: CHARACTER_SHEET_PARAMS,
+      npc: NPC_SHEET_PARAMS,
     },
   };
 

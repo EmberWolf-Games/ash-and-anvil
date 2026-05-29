@@ -22,6 +22,86 @@
   padding-bottom: 0.5rem;
 }
 
+.ash-and-anvil.sheet .sheet-tabs {
+  border-bottom: 1px solid var(--aa-border);
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.ash-and-anvil.sheet .sheet-tab {
+  background: var(--aa-surface-raised);
+  border: 1px solid var(--aa-border);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  color: var(--aa-text);
+  cursor: pointer;
+  font-size: var(--font-size-13);
+  padding: 0.35rem 0.75rem;
+}
+
+.ash-and-anvil.sheet .sheet-tab.active {
+  background: var(--aa-surface);
+  border-color: var(--aa-accent);
+  color: var(--aa-accent);
+}
+
+.ash-and-anvil.sheet .sheet-zone {
+  margin-bottom: var(--aa-sheet-gap, 0.75rem);
+}
+
+.ash-and-anvil.sheet .sheet-zone .zone-title {
+  border-bottom: 1px solid var(--aa-border);
+  color: var(--aa-accent);
+  font-size: var(--font-size-14);
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.25rem;
+}
+
+.ash-and-anvil.sheet .character-sheet-body {
+  --aa-sheet-gap: 0.75rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.ash-and-anvil.sheet .identity .identity-value {
+  font-weight: bold;
+}
+
+.ash-and-anvil.sheet .combat .resource {
+  align-items: center;
+  gap: 0.35rem;
+  margin-right: 1rem;
+}
+
+.ash-and-anvil.sheet .skill-group {
+  margin-bottom: 0.75rem;
+}
+
+.ash-and-anvil.sheet .skill-group-title {
+  font-size: var(--font-size-12);
+  margin: 0 0 0.25rem;
+  opacity: 0.85;
+}
+
+.ash-and-anvil.sheet .item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ash-and-anvil.sheet .item-list li {
+  border: 1px solid var(--aa-border);
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+}
+
+.ash-and-anvil.sheet .item-list .description {
+  font-size: var(--font-size-12);
+  margin-top: 0.25rem;
+  opacity: 0.9;
+}
+
 .ash-and-anvil.sheet .profile-img {
   flex: 0 0 64px;
   height: 64px;

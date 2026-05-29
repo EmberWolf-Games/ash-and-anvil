@@ -1,0 +1,47 @@
+<h3 class="zone-title">{{localize "ASHANVIL.Skills"}}</h3>
+{{#if (eq layout.skillDisplay "grouped")}}
+<div class="skills-grouped">
+  {{#each skillGroups as |group|}}
+  <section class="skill-group" data-ability="{{group.abilityKey}}">
+    <h4 class="skill-group-title">{{group.abilityLabel}}</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>{{localize "ASHANVIL.Skill"}}</th>
+          <th>{{localize "ASHANVIL.Trained"}}</th>
+          <th>{{localize "ASHANVIL.Bonus"}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each group.skills as |row|}}
+        <tr data-skill="{{row.key}}">
+          <td>{{row.label}}</td>
+          <td>{{#if row.skill.trained}}<i class="fa-solid fa-check"></i>{{else}}—{{/if}}</td>
+          <td>{{numberFormat row.skill.bonus sign=true}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </section>
+  {{/each}}
+</div>
+{{else}}
+<table class="skills-table">
+  <thead>
+    <tr>
+      <th>{{localize "ASHANVIL.Skill"}}</th>
+      <th>{{localize "ASHANVIL.Trained"}}</th>
+      <th>{{localize "ASHANVIL.Bonus"}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each skillRows as |row|}}
+    <tr data-skill="{{row.key}}">
+      <td>{{row.label}}</td>
+      <td>{{#if row.skill.trained}}<i class="fa-solid fa-check"></i>{{else}}—{{/if}}</td>
+      <td>{{numberFormat row.skill.bonus sign=true}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+{{/if}}

@@ -1,0 +1,41 @@
+<h3 class="zone-title">{{localize "ASHANVIL.SheetZoneFeatures"}}</h3>
+
+<section class="build-blocks">
+  <h4>{{localize "ASHANVIL.ChargenBuildBlocks"}}</h4>
+  <ul class="item-list">
+    {{#if items.build.ancestry.id}}
+    <li class="build-block" data-type="ancestry">
+      <strong>{{items.build.ancestry.name}}</strong>
+      {{#if items.build.ancestry.description}}<div class="description">{{{items.build.ancestry.description}}}</div>{{/if}}
+    </li>
+    {{/if}}
+    {{#if items.build.class.id}}
+    <li class="build-block" data-type="class">
+      <strong>{{items.build.class.name}}</strong>
+      {{#if items.build.class.description}}<div class="description">{{{items.build.class.description}}}</div>{{/if}}
+    </li>
+    {{/if}}
+    {{#if items.build.background.id}}
+    <li class="build-block" data-type="background">
+      <strong>{{items.build.background.name}}</strong>
+      {{#if items.build.background.description}}<div class="description">{{{items.build.background.description}}}</div>{{/if}}
+    </li>
+    {{/if}}
+  </ul>
+</section>
+
+<section class="feature-list">
+  <h4>{{localize "ASHANVIL.Features"}}</h4>
+  {{#if items.features.length}}
+  <ul class="item-list">
+    {{#each items.features as |feature|}}
+    <li class="feature" data-item-id="{{feature.id}}">
+      <strong>{{feature.name}}</strong>
+      {{#if feature.description}}<div class="description">{{{feature.description}}}</div>{{/if}}
+    </li>
+    {{/each}}
+  </ul>
+  {{else}}
+  <p class="hint">{{localize "ASHANVIL.NoFeatures"}}</p>
+  {{/if}}
+</section>

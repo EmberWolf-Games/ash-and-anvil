@@ -1,0 +1,37 @@
+{{#if layout.showChargenBanner}}
+{{#unless buildComplete}}
+<div class="sheet-zone sheet-zone--chargen chargen-banner flexrow" data-zone="chargen">
+  <p>{{localize "ASHANVIL.ChargenIncompleteBanner"}}</p>
+  <button type="button" data-action="openChargen">{{localize "ASHANVIL.ChargenOpen"}}</button>
+</div>
+{{/unless}}
+{{/if}}
+
+<div class="sheet-zone sheet-zone--identity identity flexrow" data-zone="identity">
+  {{> "systems/ash-and-anvil/templates/actor/parts/identity.hbs"}}
+</div>
+
+<div class="sheet-zone sheet-zone--abilities abilities" data-zone="abilities" data-display="{{layout.abilityDisplay}}">
+  {{> "systems/ash-and-anvil/templates/actor/parts/abilities.hbs"}}
+</div>
+
+<div class="sheet-zone sheet-zone--combat combat flexrow" data-zone="combat">
+  <div class="resource">
+    <label>{{localize "ASHANVIL.Edge"}}</label>
+    <span class="edge-value">+{{combat.edge}}</span>
+  </div>
+  <div class="resource">
+    <label>{{localize "ASHANVIL.InitiativeMod"}}</label>
+    <span>{{numberFormat combat.initiative sign=true}}</span>
+  </div>
+  {{#if combat.hitDie}}
+  <div class="resource">
+    <label>{{localize "ASHANVIL.HitDie"}}</label>
+    <span>d{{combat.hitDie}}</span>
+  </div>
+  {{/if}}
+</div>
+
+<div class="sheet-zone sheet-zone--skills skills" data-zone="skills" data-display="{{layout.skillDisplay}}">
+  {{> "systems/ash-and-anvil/templates/actor/parts/skills.hbs"}}
+</div>
