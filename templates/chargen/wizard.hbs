@@ -54,7 +54,7 @@
 
     {{#if (eq step 3)}}
     <h3>{{localize "ASHANVIL.ChargenStepAbilities"}}</h3>
-    <p class="hint">{{localize "ASHANVIL.ChargenAbilityHint"}} — {{rules.statMethod}}</p>
+    <p class="hint">{{localize "ASHANVIL.ChargenAbilityHint"}} — {{rules.statMethod}}{{#if standardArrayHint}} ({{standardArrayHint}}){{/if}}</p>
     <div class="abilities-grid grid grid-3col">
       {{#each abilityKeys as |key|}}
       <div class="form-group">
@@ -72,12 +72,14 @@
     {{/if}}
     <ul class="skill-list">
       {{#each skillRows as |row|}}
+      {{#if (or row.inPool row.locked)}}
       <li>
         <label>
           <input type="checkbox" name="classSkills.{{row.key}}" value="1" {{checked row.trained}} {{#if row.locked}}disabled{{/if}} />
           {{row.label}}{{#if row.locked}} ({{localize "ASHANVIL.BackgroundSkill"}}){{/if}}
         </label>
       </li>
+      {{/if}}
       {{/each}}
     </ul>
     {{/if}}

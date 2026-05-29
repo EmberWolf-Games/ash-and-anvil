@@ -8,6 +8,7 @@ import {
   isValidStandardArrayAssignment,
   validatePointBuy,
 } from "./chargen-helpers.mjs";
+import { cloneSystemData, documentToCreateData } from "../helpers/document.mjs";
 
 export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
   /** @type {Actor} */
@@ -108,6 +109,9 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
     }));
     context.canNext = this.#canAdvance();
     context.isLast = this.step >= 5;
+    if (rules.statMethod === "standardArray") {
+      context.standardArrayHint = rules.standardArray.join(", ");
+    }
     return context;
   }
 
@@ -156,9 +160,9 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
       case 4: {
         const cls = this.#findEntry(this.state.catalog.classes, this.state.classId);
         const need = cls?.system?.skillChoices ?? 0;
-        const bg = this.#findEntry(this.state.catalog.backgrounds, this.state.backgroundId);
-        const bgCount = bg?.system?.trainedSkills?.length ?? 0;
-        return this.state.classSkills.length >= need;
+        const pool = cls?.system?.skillPool ?? [];
+        const validPicks = this.state.classSkills.filter((key) => pool.includes(key));
+        return validPicks.length >= need;
       }
       default:
         return true;
@@ -246,12 +250,17 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
     if (data.classId !== undefined) this.state.classId = data.classId || null;
     if (data.backgroundId !== undefined) this.state.backgroundId = data.backgroundId || null;
     for (const key of ABILITY_KEYS) {
+      const input = form.querySelector(`[name="abilities.${key}"]`);
+      if (!input) continue;
       const val = data.abilities?.[key] ?? data[`abilities.${key}`];
       if (val !== undefined && val !== null && val !== "") this.state.abilities[key] = Number(val);
     }
-    this.state.classSkills = [];
-    for (const key of SKILL_KEYS) {
-      if (data.classSkills?.[key] || data[`classSkills.${key}`]) this.state.classSkills.push(key);
+    const hasSkillFields = SKILL_KEYS.some((key) => form.querySelector(`[name="classSkills.${key}"]`));
+    if (hasSkillFields) {
+      this.state.classSkills = [];
+      for (const key of SKILL_KEYS) {
+        if (data.classSkills?.[key] || data[`classSkills.${key}`]) this.state.classSkills.push(key);
+      }
     }
   }
 
@@ -260,7 +269,7 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
     const cls = this.#findEntry(this.state.catalog.classes, this.state.classId);
     const background = this.#findEntry(this.state.catalog.backgrounds, this.state.backgroundId);
 
-    const system = foundry.utils.deepClone(this.actor.system.toObject());
+    const system = cloneSystemData(this.actor.system);
 
     for (const key of ABILITY_KEYS) {
       system.abilities[key].value = this.state.abilities[key];
@@ -277,7 +286,9 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
     for (const key of background?.system?.trainedSkills ?? []) {
       if (system.skills[key]) system.skills[key].trained = true;
     }
+    const classPool = cls?.system?.skillPool ?? [];
     for (const key of this.state.classSkills) {
+      if (!classPool.includes(key)) continue;
       if (system.skills[key]) system.skills[key].trained = true;
     }
 
@@ -290,7 +301,7 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
         if (!entry) continue;
         if (entry.uuid) {
           const doc = await fromUuid(entry.uuid);
-          if (doc) toEmbed.push(doc.toObject());
+          if (doc) toEmbed.push(documentToCreateData(doc));
         } else {
           toEmbed.push({
             name: entry.name,
@@ -306,13 +317,10 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
           ...(cls?.system?.featureKeys ?? []),
           ...(background?.system?.featureKeys ?? []),
         ];
-        const index = await featurePack.getIndex();
+        const featureDocs = await featurePack.getDocuments();
         for (const key of keys) {
-          const match = index.find((i) => i.flags?.["ash-and-anvil"]?.starterKey === key);
-          if (match) {
-            const f = await fromUuid(match.uuid);
-            if (f) toEmbed.push(f.toObject());
-          }
+          const f = featureDocs.find((d) => d.flags?.["ash-and-anvil"]?.starterKey === key);
+          if (f) toEmbed.push(documentToCreateData(f));
         }
       }
     }

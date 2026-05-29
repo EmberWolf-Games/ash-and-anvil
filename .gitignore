@@ -42,3 +42,4 @@ packs/**/*.ldb
 .env.local
 credentials.json
 .cursor/local-foundry-test.json
+.cursor/playtest-screenshots/
