@@ -246,12 +246,12 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
     if (data.classId !== undefined) this.state.classId = data.classId || null;
     if (data.backgroundId !== undefined) this.state.backgroundId = data.backgroundId || null;
     for (const key of ABILITY_KEYS) {
-      const val = data.abilities?.[key];
+      const val = data.abilities?.[key] ?? data[`abilities.${key}`];
       if (val !== undefined && val !== null && val !== "") this.state.abilities[key] = Number(val);
     }
     this.state.classSkills = [];
     for (const key of SKILL_KEYS) {
-      if (data.classSkills?.[key]) this.state.classSkills.push(key);
+      if (data.classSkills?.[key] || data[`classSkills.${key}`]) this.state.classSkills.push(key);
     }
   }
 
