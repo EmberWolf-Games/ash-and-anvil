@@ -11,8 +11,28 @@ import { aaRules } from "../helpers/logger.mjs";
 export function ensureSkillStructure(system) {
   system.skills ??= {};
   for (const key of SKILL_KEYS) {
-    system.skills[key] ??= { trained: false };
+    system.skills[key] ??= { trained: false, bonus: 0 };
   }
+}
+
+/**
+ * Guard early document init when TypeDataModel defaults are not applied yet.
+ * @param {object} system
+ */
+export function ensureCharacterStructure(system) {
+  system.attributes ??= {};
+  system.attributes.level ??= 1;
+  system.attributes.health ??= { value: 10, max: 10, temp: 0 };
+  system.attributes.initiative ??= { mod: 0 };
+  system.proficiency ??= {};
+  system.proficiency.edge ??= 2;
+  system.details ??= {};
+  system.chargen ??= { buildComplete: false, buildVersion: "" };
+  system.abilities ??= {};
+  for (const key of ABILITY_KEYS) {
+    system.abilities[key] ??= { value: 10, mod: 0 };
+  }
+  ensureSkillStructure(system);
 }
 
 /**
@@ -21,7 +41,7 @@ export function ensureSkillStructure(system) {
 export function deriveCharacter(actor) {
   if (actor.type !== "character") return;
   const system = actor.system;
-  ensureSkillStructure(system);
+  ensureCharacterStructure(system);
 
   applyAbilityMods(system.abilities);
 

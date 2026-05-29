@@ -182,17 +182,29 @@ export async function loadStarterCatalog() {
  * @param {string} type
  * @param {Function} builder
  */
+/**
+ * @param {Item} doc
+ */
+function catalogEntryFromDocument(doc) {
+  const system =
+    typeof doc.system?.toObject === "function"
+      ? doc.system.toObject()
+      : foundry.utils.deepClone(doc.system ?? {});
+  return {
+    id: doc.id,
+    uuid: doc.uuid,
+    name: doc.name,
+    system,
+    type: doc.type,
+    starterKey: doc.flags?.["ash-and-anvil"]?.starterKey,
+  };
+}
+
 async function loadPackOrFallback(packName, fallback, type, builder) {
   const pack = game.packs.get(`ash-and-anvil.${packName}`);
   if (pack && (await pack.getIndex()).size > 0) {
     const docs = await pack.getDocuments();
-    return docs.map((d) => ({
-      id: d.id,
-      uuid: d.uuid,
-      name: d.name,
-      system: d.system.toObject(),
-      type: d.type,
-    }));
+    return docs.map(catalogEntryFromDocument);
   }
 
   const featureMap = new Map();
