@@ -37,7 +37,6 @@ packs/**/*.ldb
 
 # Release artifacts (if you zip builds locally)
 *.zip
-release/
 
 # Secrets
 .env.local
