@@ -1,0 +1,10 @@
+{
+  "baseUrl": "http://localhost:30000",
+  "worldId": "test-world",
+  "worldTitle": "Ash and Anvil Test",
+  "username": "cursor-test-gm",
+  "password": "REPLACE_WITH_TEST_PASSWORD",
+  "systemId": "ash-and-anvil",
+  "dataPath": "C:/Users/Drago/AppData/Local/FoundryVTT",
+  "checklist": "docs/playtest-chargen-mvp.md"
+}

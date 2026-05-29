@@ -41,3 +41,4 @@ packs/**/*.ldb
 # Secrets
 .env.local
 credentials.json
+.cursor/local-foundry-test.json
