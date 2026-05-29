@@ -63,9 +63,10 @@ Under **Configure Settings → Ash & Anvil**:
 
 | Setting | Purpose |
 |--------|---------|
+| **Verbose Logging** | Detailed F12 console diagnostics (init, settings, pause overlay, etc.) |
 | **Rules Profile** | Baseline mode: `standard`, `narrative`, or `gritty` (hooks for future mechanics) |
 | **Enable Automation** | Master switch for automated resolution |
-| **Debug Rules Resolution** | Verbose logging while developing rules |
+| **Debug Rules Resolution** | Extra `console.debug` output for rules resolution (also shown when verbose logging is on) |
 
 ## Status
 

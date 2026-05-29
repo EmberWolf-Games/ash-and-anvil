@@ -48,3 +48,15 @@
   background: var(--aa-surface-raised);
   color: var(--aa-text);
 }
+
+/* Pause overlay (renderGamePause) */
+#pause img.ash-anvil-pause {
+  border: none;
+  box-shadow: none;
+  filter: drop-shadow(0 0 12px rgba(232, 93, 4, 0.45));
+  height: auto;
+  max-height: min(42vh, 420px);
+  max-width: min(42vh, 420px);
+  object-fit: contain;
+  width: auto;
+}

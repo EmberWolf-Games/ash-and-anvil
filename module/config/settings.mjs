@@ -1,3 +1,5 @@
+import { aaLog, aaVerbose } from "../helpers/logger.mjs";
+
 const SYSTEM_ID = "ash-and-anvil";
 
 /**
@@ -5,6 +7,19 @@ const SYSTEM_ID = "ash-and-anvil";
  * Expand this registry as mechanics are defined in planning.
  */
 export function registerSettings() {
+  game.settings.register(SYSTEM_ID, "verboseLogging", {
+    name: "ASHANVIL.SettingsVerboseLoggingName",
+    hint: "ASHANVIL.SettingsVerboseLoggingHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false,
+    onChange: (value) => {
+      aaLog(`Verbose logging ${value ? "enabled" : "disabled"}.`);
+      if (value) aaVerbose("Diagnostic logging is now active for this world.");
+    },
+  });
+
   game.settings.register(SYSTEM_ID, "rulesProfile", {
     name: "ASHANVIL.SettingsRulesProfileName",
     hint: "ASHANVIL.SettingsRulesProfileHint",
@@ -37,6 +52,8 @@ export function registerSettings() {
     type: Boolean,
     default: false,
   });
+
+  aaVerbose("World settings registered.");
 }
 
 /**

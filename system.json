@@ -2,7 +2,7 @@
   "id": "ash-and-anvil",
   "title": "Ash & Anvil (1st Edition)",
   "description": "An original D20 fantasy roleplaying system for Foundry VTT, developed by EmberWolf Games.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
@@ -48,6 +48,14 @@
   "primaryTokenAttribute": "attributes.health",
   "secondaryTokenAttribute": null,
   "initiative": "1d20 + @attributes.initiative.mod",
+  "background": "systems/ash-and-anvil/assets/ui/AshandAnvil_Logo.png",
+  "media": [
+    {
+      "type": "setup",
+      "url": "systems/ash-and-anvil/assets/ui/AshandAnvil_Logo.png",
+      "thumbnail": "systems/ash-and-anvil/assets/ui/AshandAnvil_Logo.png"
+    }
+  ],
   "socket": false,
   "url": "https://github.com/EmberWolf-Games/ash-and-anvil",
   "manifest": "https://github.com/EmberWolf-Games/ash-and-anvil/releases/latest/download/system.json",
