@@ -1,0 +1,15 @@
+---
+description: Pre-1.0 testing uses local Foundry in browser only, not Forge
+alwaysApply: true
+---
+
+# Testing: local Foundry only (pre-1.0)
+
+Until **Ash & Anvil 1.0.0**:
+
+- Run all playtests and bug verification on **local Foundry** accessed in the **browser** (`http://localhost:30000`).
+- Use `.cursor/skills/local-foundry-playtest/SKILL.md` and `docs/testing.md`.
+- Sync system to `%LocalAppData%\FoundryVTT\Data\systems\ash-and-anvil\` before testing.
+- **Do not** default to Forge hosting, Forge modules, or Forge-specific workarounds when reproducing bugs.
+
+Forge Bazaar / manifest URLs remain for **distribution**; they are not the active QA environment before 1.0.

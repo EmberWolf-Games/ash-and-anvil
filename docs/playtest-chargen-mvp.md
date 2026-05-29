@@ -1,11 +1,16 @@
-# Playtest Checklist — Character Creation MVP (v0.2.0)
+# Playtest Checklist — Character Creation MVP
+
+**Environment:** Local Foundry in browser only (see [`testing.md`](testing.md)). Pre-1.0 — do not use Forge for this checklist.
 
 ## Setup
 
-1. Install or link system from `main` / latest release **v0.2.0+**.
-2. Create a new world on **Ash & Anvil (1st Edition)** with **automation enabled**.
-3. Log in as **GM** first (seeds compendiums once).
-4. Hard refresh browser (Ctrl+Shift+R).
+1. Link or copy system from repo into `%LocalAppData%\FoundryVTT\Data\systems\ash-and-anvil\` (or install latest release into local Foundry).
+2. Open Foundry in **browser** at `http://localhost:30000`.
+3. Launch test world **Ash and Anvil Test** on **Ash & Anvil (1st Edition)** with **automation enabled**.
+4. Log in as **GM** first (seeds compendiums once).
+5. Hard refresh browser (Ctrl+Shift+R).
+
+Automated smoke (optional): `node .cursor/playtest-chargen.mjs`
 
 ## Compendium seed
 
@@ -36,8 +41,8 @@
 
 - [ ] F12 banner displays **Ash & Anvil** ASCII art (no syntax errors).
 - [ ] Pause overlay uses custom image at half size.
-- [ ] `releases/latest/download/system.json` installs in Foundry.
+- [ ] Release manifest installs into **local** Foundry (`releases/latest/download/system.json`).
 
 ## Notes
 
-Record issues in GitHub with Foundry version, profile, and stat method used.
+Record issues in GitHub with Foundry version, system version, profile, and stat method used.

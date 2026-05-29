@@ -39,6 +39,16 @@ cmd /c mklink /J "%LOCALAPPDATA%\FoundryVTT\Data\systems\ash-and-anvil" "G:\Curs
 
 Replace the path on the right with your local clone directory. Then restart Foundry or refresh **Game Systems**, and create a world using **Ash & Anvil (1st Edition)**.
 
+## Testing (pre-1.0)
+
+Development QA runs on **local Foundry in the browser** only until **1.0.0** — not on Forge. See [`docs/testing.md`](docs/testing.md) and [`docs/playtest-chargen-mvp.md`](docs/playtest-chargen-mvp.md).
+
+Quick smoke (Foundry running locally):
+
+```bash
+node .cursor/playtest-chargen.mjs
+```
+
 ## Project layout
 
 ```

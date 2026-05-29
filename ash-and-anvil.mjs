@@ -41,7 +41,7 @@ Hooks.once("init", () => {
   };
 
   CONFIG.ASH_ANVIL = {
-    keyVersion: "0.2.5",
+    keyVersion: "0.2.6",
     rules: RULES,
     registeredTypes: {
       actors: Object.keys(actorDataModels),
