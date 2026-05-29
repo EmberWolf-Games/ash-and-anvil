@@ -1,0 +1,16 @@
+---
+description: Bump system version on every commit and push to main
+alwaysApply: true
+---
+
+# Version bump on commit and push
+
+Whenever you commit and push changes to this repository:
+
+1. **Increment the patch version by 1** in `system.json` (`"version"`) before committing.
+   - Example: `0.1.1` → `0.1.2`
+2. **Keep in sync** `CONFIG.ASH_ANVIL.keyVersion` in `ash-and-anvil.mjs` (same value as `system.json`).
+3. Include the version bump in the same commit as the functional changes (not a separate orphan bump unless the only change is policy/docs).
+4. **Git tags / GitHub Releases** are separate: only create or move a `v*` tag when the user asks for a release; day-to-day pushes do not require a tag.
+
+Do not skip the bump because the working tree was "already clean" — if you are about to push new work, the version must reflect it.

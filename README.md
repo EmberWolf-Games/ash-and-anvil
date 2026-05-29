@@ -72,15 +72,17 @@ Under **Configure Settings → Ash & Anvil**:
 
 | Version | Notes |
 |--------|--------|
-| **0.1.0** | Scaffold: data models, Application V2 sheets, DM settings registry. Core D20 mechanics and automation are planned. |
+| **0.1.2** | Current dev build. Patch version increments on each commit/push to `main`. |
+
+Previous: **0.1.0** scaffold; **0.1.1** branding and console diagnostics. Core D20 mechanics and automation are planned. |
 
 ## Releasing
 
 Releases are built by GitHub Actions (`.github/workflows/release.yml`).
 
-1. Bump `"version"` in `system.json` on `main` (keep in sync with the tag you are about to create).
-2. Commit and push to `main`.
-3. Create and push a version tag (semver, with a leading `v`):
+1. Ensure `"version"` in `system.json` (and `keyVersion` in `ash-and-anvil.mjs`) matches the release you are shipping.
+2. Commit and push to `main` (patch version is bumped automatically during normal development commits).
+3. Create and push a version tag matching that version (semver, with a leading `v`):
 
 ```bash
 git tag v0.1.0
