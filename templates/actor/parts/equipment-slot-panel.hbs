@@ -1,11 +1,12 @@
 <div
-  class="equipment-slot equipment-slot--panel {{#if slot.occupied}}occupied{{/if}}"
+  class="equipment-slot equipment-slot--panel {{#if slot.occupied}}occupied{{/if}} {{#if slot.ghost}}equipment-slot--ghost{{/if}} {{#if slot.locked}}equipment-slot--locked{{/if}}"
   data-slot="{{slot.id}}"
-  data-drop-zone="equipment"
+  {{#unless slot.locked}}data-drop-zone="equipment"{{/unless}}
+  {{#if slot.locked}}data-locked="true" title="{{localize 'ASHANVIL.HandSlotGhostHint'}}"{{/if}}
 >
   <span class="slot-panel-label">{{#if slot.ringIndex}}{{slot.abbr}}{{else}}{{slot.label}}{{/if}}</span>
   {{#if slot.item}}
-  <button type="button" class="slot-item" data-action="editItem" data-item-id="{{slot.item.id}}">
+  <button type="button" class="slot-item" data-action="editItem" data-item-id="{{slot.item.id}}" {{#if slot.ghost}}disabled tabindex="-1"{{/if}}>
     <img src="{{slot.item.img}}" alt="" />
     <span class="slot-label">{{slot.item.name}}</span>
   </button>

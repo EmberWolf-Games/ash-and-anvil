@@ -19,6 +19,8 @@ export class GearData extends foundry.abstract.TypeDataModel {
       containerId: new StringField({ initial: "", label: "ASHANVIL.ContainerId" }),
       /** Equipment slot id when worn/wielded. */
       equipmentSlot: new StringField({ initial: "", label: "ASHANVIL.EquipmentSlot" }),
+      /** Hand wield category for weapons and shields. */
+      wieldType: new StringField({ initial: "", label: "ASHANVIL.WieldType" }),
     };
   }
 }

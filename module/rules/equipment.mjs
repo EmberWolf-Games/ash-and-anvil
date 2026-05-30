@@ -1,12 +1,24 @@
 import { EQUIPMENT_SLOT_IDS } from "../config/equipment-slots.mjs";
+import {
+  applyHandEquipSideEffects,
+  resolveUnequipSlotId,
+  validateHandEquip,
+} from "./hand-slots.mjs";
 
 /**
  * @param {Actor} actor
  * @param {Item} item
  * @param {string} slotId
+ * @returns {Promise<boolean>}
  */
 export async function equipItemToSlot(actor, item, slotId) {
-  if (item.type !== "gear" || !EQUIPMENT_SLOT_IDS.includes(slotId)) return;
+  if (item.type !== "gear" || !EQUIPMENT_SLOT_IDS.includes(slotId)) return false;
+
+  const validation = validateHandEquip(actor, item, slotId);
+  if (!validation.ok) {
+    ui.notifications.warn(validation.message);
+    return false;
+  }
 
   const equipment = foundry.utils.deepClone(actor.system.equipment ?? {});
   const previousId = equipment[slotId];
@@ -18,6 +30,8 @@ export async function equipItemToSlot(actor, item, slotId) {
   const oldSlot = item.system.equipmentSlot;
   if (oldSlot && oldSlot !== slotId) equipment[oldSlot] = "";
 
+  await applyHandEquipSideEffects(actor, item, slotId, equipment);
+
   equipment[slotId] = item.id;
   const flat = {};
   for (const id of EQUIPMENT_SLOT_IDS) {
@@ -26,6 +40,7 @@ export async function equipItemToSlot(actor, item, slotId) {
 
   await item.update({ "system.equipmentSlot": slotId, "system.containerId": "" });
   await actor.update(flat);
+  return true;
 }
 
 /**
@@ -33,11 +48,12 @@ export async function equipItemToSlot(actor, item, slotId) {
  * @param {string} slotId
  */
 export async function unequipSlot(actor, slotId) {
-  const itemId = actor.system.equipment?.[slotId];
+  const resolved = resolveUnequipSlotId(actor, slotId);
+  const itemId = actor.system.equipment?.[resolved];
   if (!itemId) return;
   const item = actor.items.get(itemId);
   if (item) await item.update({ "system.equipmentSlot": "" });
-  await actor.update({ [`system.equipment.${slotId}`]: "" });
+  await actor.update({ [`system.equipment.${resolved}`]: "" });
 }
 
 /**

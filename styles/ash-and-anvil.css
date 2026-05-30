@@ -770,6 +770,23 @@
   border-style: solid;
 }
 
+.ash-and-anvil.sheet.actor .equipment-slot--panel.equipment-slot--ghost {
+  border-color: rgba(232, 126, 44, 0.45);
+  border-style: dashed;
+  opacity: 0.85;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot--panel.equipment-slot--ghost .slot-item {
+  cursor: default;
+  filter: grayscale(0.35);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot--panel.equipment-slot--locked {
+  cursor: not-allowed;
+}
+
 .ash-and-anvil.sheet.actor .equipment-slot--panel .slot-panel-label {
   color: var(--aa-accent);
   font-size: var(--font-size-11);

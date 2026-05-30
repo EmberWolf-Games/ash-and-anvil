@@ -426,15 +426,25 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
       if (zone === "equipment") {
 
-        const slotId = target.closest("[data-slot]")?.dataset.slot;
+        const slotEl = target.closest("[data-slot]");
+
+        const slotId = slotEl?.dataset.slot;
 
         if (slotId) {
 
-          await equipItemToSlot(this.actor, item, slotId);
+          if (slotEl?.dataset.locked === "true") {
 
-          this.render(false);
+            ui.notifications.warn(game.i18n.localize("ASHANVIL.HandSlotTwoHandedLocked"));
 
-          return true;
+            return true;
+
+          }
+
+          const equipped = await equipItemToSlot(this.actor, item, slotId);
+
+          if (equipped) this.render(false);
+
+          return equipped;
 
         }
 

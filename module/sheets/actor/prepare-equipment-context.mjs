@@ -5,6 +5,7 @@ import {
   PANEL_SLOTS,
   mannequinImageForGender,
 } from "../../config/equipment-slots.mjs";
+import { getRightHandItem, isLeftHandTwoHandedGhost } from "../../rules/hand-slots.mjs";
 import { gearRow } from "./prepare-sheet-items.mjs";
 
 /**
@@ -13,10 +14,20 @@ import { gearRow } from "./prepare-sheet-items.mjs";
  */
 function mapPanelSlot(def, actor) {
   const equipmentData = actor.system.equipment ?? {};
-  const itemId = equipmentData[def.id] ?? "";
-  const item = itemId ? actor.items.get(itemId) : null;
+  let itemId = equipmentData[def.id] ?? "";
+  let item = itemId ? actor.items.get(itemId) : null;
   const ringIndex = def.ringIndex ?? null;
   const meta = EQUIPMENT_SLOT_META[def.id];
+
+  let ghost = false;
+  let locked = false;
+  if (def.id === "leftHand" && isLeftHandTwoHandedGhost(actor)) {
+    const rightItem = getRightHandItem(actor);
+    ghost = true;
+    locked = true;
+    item = rightItem;
+    itemId = equipmentData.rightHand ?? "";
+  }
 
   return {
     id: def.id,
@@ -26,6 +37,8 @@ function mapPanelSlot(def, actor) {
     group: def.group,
     placement: def.placement,
     linked: false,
+    ghost,
+    locked,
     ringIndex,
     itemId,
     item: item ? gearRow(item, actor) : null,
