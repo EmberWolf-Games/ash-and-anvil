@@ -1,8 +1,8 @@
 /**
  * Build Foundry release artifacts: stamped system.json + installable zip.
  *
- * Usage: node utils/release/build-release.mjs <semver>
- * Example: node utils/release/build-release.mjs 0.1.0
+ * Usage: node utils/release/build-release.mjs <version>
+ * Example: node utils/release/build-release.mjs 0.6.001.002
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,18 +15,14 @@ import {
   RELEASE_MANIFEST_URL,
   SYSTEM_ID,
 } from "./constants.mjs";
+import { validateVersionOrThrow } from "./version.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
 const DIST = path.join(ROOT, "dist", "release");
 const STAGE = path.join(DIST, SYSTEM_ID);
 
-const version = process.argv[2]?.replace(/^v/i, "");
-if (!version || !/^\d+\.\d+\.\d+(-[\w.-]+)?(\+[\w.-]+)?$/.test(version)) {
-  console.error("Usage: node utils/release/build-release.mjs <semver>");
-  console.error("Example: node utils/release/build-release.mjs 0.1.0");
-  process.exit(1);
-}
+const version = validateVersionOrThrow(process.argv[2]?.replace(/^v/i, ""));
 
 /** Paths excluded from the Foundry install zip. */
 const EXCLUDE_NAMES = new Set([

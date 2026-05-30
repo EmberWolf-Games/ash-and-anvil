@@ -7,8 +7,9 @@ alwaysApply: true
 
 Whenever you commit and push changes to this repository:
 
-1. **Increment the patch version by 1** in `system.json` (`"version"`) before committing.
-   - Example: `0.1.1` → `0.1.2`
+1. **Increment the hotfix segment** in `system.json` (`"version"`) before committing, using the build scheme `M.m.bbb.hhh` (see `docs/VERSIONING.md`).
+   - Example: `0.6.001.002` → `0.6.001.003`
+   - Letter suffix (e.g. `002a`) is only for same-hotfix micro-patches; otherwise bump the numeric hotfix.
 2. **Keep in sync** `CONFIG.ASH_ANVIL.keyVersion` in `ash-and-anvil.mjs` (same value as `system.json`).
 3. Include the version bump in the same commit as the functional changes (not a separate orphan bump unless the only change is policy/docs).
 4. **GitHub Releases** run automatically on push to `main` via Actions (reads `system.json` version). Do not create tags manually unless the user asks.

@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Optional override version (e.g. 0.1.0). Leave empty to use system.json."
+        description: "Optional override (e.g. 0.6.001.002). Leave empty to use system.json."
         required: false
         type: string
 
@@ -27,6 +27,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
       - name: Resolve version
         id: version
         run: |
@@ -35,10 +40,7 @@ jobs:
           else
             VERSION=$(jq -r .version system.json)
           fi
-          if ! echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$'; then
-            echo "Invalid semver: $VERSION"
-            exit 1
-          fi
+          node utils/release/validate-version.mjs "$VERSION"
           TAG="v${VERSION}"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
@@ -49,12 +51,6 @@ jobs:
             echo "publish=true" >> "$GITHUB_OUTPUT"
             echo "Will publish release ${TAG}."
           fi
-
-      - name: Setup Node
-        if: steps.version.outputs.publish == 'true'
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
 
       - name: Build Foundry package and manifest
         if: steps.version.outputs.publish == 'true'

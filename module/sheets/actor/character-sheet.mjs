@@ -348,7 +348,7 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
         const btn = select.closest(".tag-field")?.querySelector("[data-action=addTag]");
 
-        if (btn) void CharacterActorSheet.#onAddTag(event, btn);
+        if (btn) void this.#performAddTag(event, btn);
 
       });
 
@@ -509,85 +509,57 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
 
   static async #onAddTag(event, target) {
+    return /** @type {CharacterActorSheet} */ (this).#performAddTag(event, target);
+  }
 
+  async #performAddTag(event, target) {
     event.preventDefault?.();
-
     event.stopPropagation?.();
 
-    const app = /** @type {CharacterActorSheet} */ (this);
-
-    if (!app.#canEditSheet()) return;
+    if (!this.#canEditSheet()) return;
 
     const field = target.dataset.field;
-
     if (!field) return;
 
     const select = target.closest(".tag-field")?.querySelector(".tag-add-select");
-
     const value = select?.value ?? "";
-
     if (!value) return;
 
-
-
-    const current = normalizeTagArray(foundry.utils.getProperty(app.actor.system, field));
-
+    const current = normalizeTagArray(foundry.utils.getProperty(this.actor.system, field));
     if (current.includes(value)) return;
-
     current.push(value);
 
-
-
     const update = { system: {} };
-
     foundry.utils.setProperty(update.system, field, current);
-
-    await app.actor.update(update);
-
-    await recordSheetChanges(app.actor, update);
-
+    await this.actor.update(update);
+    await recordSheetChanges(this.actor, update);
     if (select) select.value = "";
-
-    app.render(false);
-
+    this.render(false);
   }
 
-
-
   static async #onRemoveTag(event, target) {
+    return /** @type {CharacterActorSheet} */ (this).#performRemoveTag(event, target);
+  }
 
+  async #performRemoveTag(event, target) {
     event.preventDefault?.();
-
     event.stopPropagation?.();
 
-    const app = /** @type {CharacterActorSheet} */ (this);
-
-    if (!app.#canEditSheet()) return;
+    if (!this.#canEditSheet()) return;
 
     const field = target.dataset.field;
-
     const value = target.dataset.value;
-
     if (!field || !value) return;
 
-
-
-    const current = normalizeTagArray(foundry.utils.getProperty(app.actor.system, field)).filter(
-
+    const current = normalizeTagArray(foundry.utils.getProperty(this.actor.system, field)).filter(
       (v) => v !== value
-
     );
 
     const update = { system: {} };
-
     foundry.utils.setProperty(update.system, field, current);
-
-    await app.actor.update(update);
-
-    await recordSheetChanges(app.actor, update);
-
-    app.render(false);
-
+    await this.actor.update(update);
+    await recordSheetChanges(this.actor, update);
+    this.render(false);
   }
 
 

@@ -80,19 +80,21 @@ Under **Configure Settings → Ash & Anvil**:
 
 ## Status
 
+Pre-1.0 development. Versioning uses the **build scheme** `M.m.bbb.hhh` (see [docs/VERSIONING.md](docs/VERSIONING.md)) so releases do not drift toward semver `1.0.0` before the system is ready.
+
 | Version | Notes |
 |--------|--------|
-| **0.1.3** | Current dev build on `main`. Patch version increments on each commit/push. |
+| **0.6.001.002** | Current dev build on `main`. Hotfix increments on each release. |
 
-**0.1.2** (released): branding assets, pause overlay, verbose console logging, startup banner. **0.1.0** scaffold. Core D20 mechanics and automation are planned. |
+Core D20 mechanics and automation are in active development. |
 
 ## Releasing
 
 Releases are built automatically by GitHub Actions (`.github/workflows/release.yml`) on every push to `main`.
 
-1. Bump `"version"` in `system.json` (and `keyVersion` in `ash-and-anvil.mjs`) before each push.
+1. Bump `"version"` in `system.json` (and `keyVersion` in `ash-and-anvil.mjs`) using `M.m.bbb.hhh` — see [docs/VERSIONING.md](docs/VERSIONING.md).
 2. Commit and push to `main`.
-3. The workflow reads `system.json`, creates `v<version>` if it does not exist yet, and publishes assets.
+3. The workflow validates the version, creates `v<version>` if it does not exist yet, and publishes assets.
 
 If a tag for that version already exists, the workflow skips (no duplicate release).
 
@@ -106,12 +108,16 @@ The workflow uploads three assets to the GitHub Release:
 | `ash-and-anvil.zip` | Installable system package |
 | `ash-and-anvil-<version>-source.tar.gz` | Full source snapshot |
 
-You can also run the workflow manually from the **Actions** tab (**Release** → **Run workflow**) and enter a version (e.g. `0.1.0`).
-
-To build artifacts locally:
+Validate a version locally:
 
 ```bash
-node utils/release/build-release.mjs 0.1.0
+node utils/release/validate-version.mjs 0.6.001.002
+```
+
+Build artifacts locally:
+
+```bash
+node utils/release/build-release.mjs 0.6.001.002
 ```
 
 Output is written to `dist/release/`.

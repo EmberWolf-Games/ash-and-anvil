@@ -1,4 +1,4 @@
-const BASE = "systems/ash-and-anvil/assets/ui";
+const BASE = "/systems/ash-and-anvil/assets/ui";
 const SLOT_SIZE = 11;
 
 /**
