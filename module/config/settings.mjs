@@ -99,6 +99,24 @@ export function registerSettings() {
     default: true,
   });
 
+  game.settings.register(SYSTEM_ID, "currencyLabel", {
+    name: "ASHANVIL.SettingsCurrencyLabelName",
+    hint: "ASHANVIL.SettingsCurrencyLabelHint",
+    scope: "world",
+    config: true,
+    type: String,
+    default: "Shards",
+  });
+
+  game.settings.register(SYSTEM_ID, "currencyDenominations", {
+    name: "ASHANVIL.SettingsCurrencyDenominationsName",
+    hint: "ASHANVIL.SettingsCurrencyDenominationsHint",
+    scope: "world",
+    config: true,
+    type: String,
+    default: JSON.stringify([{ id: "shard", label: "Shard", rate: 1 }], null, 0),
+  });
+
   aaVerbose("World settings registered.");
 }
 

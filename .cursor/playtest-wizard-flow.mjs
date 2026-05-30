@@ -64,7 +64,7 @@ for (const [field, label] of steps) {
   await log(`after next ${label}`);
 }
 
-const keys = ["mgt", "fin", "res", "ins", "foc", "pre"];
+const keys = ["mgt", "agi", "vit", "mnd", "ins", "cha"];
 const scores = [15, 14, 13, 12, 10, 8];
 await page.evaluate(({ keys, scores }) => {
   keys.forEach((k, i) => {

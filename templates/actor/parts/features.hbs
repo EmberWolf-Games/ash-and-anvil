@@ -2,35 +2,79 @@
 
 <section class="build-blocks">
   <h4>{{localize "ASHANVIL.ChargenBuildBlocks"}}</h4>
-  <ul class="item-list">
+  <ul class="item-list build-block-list">
     {{#if items.build.ancestry.id}}
-    <li class="build-block" data-type="ancestry">
-      <strong>{{items.build.ancestry.name}}</strong>
+    <li class="build-block" data-type="ancestry" data-item-id="{{items.build.ancestry.id}}">
+      <div class="build-block-header flexrow">
+        <img class="item-img" src="{{items.build.ancestry.img}}" alt="" width="28" height="28" />
+        <strong class="flex1">{{items.build.ancestry.name}}</strong>
+        <button type="button" class="item-action" data-action="editItem" data-item-id="{{items.build.ancestry.id}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+      </div>
       {{#if items.build.ancestry.description}}<div class="description">{{{items.build.ancestry.description}}}</div>{{/if}}
     </li>
     {{/if}}
     {{#if items.build.class.id}}
-    <li class="build-block" data-type="class">
-      <strong>{{items.build.class.name}}</strong>
+    <li class="build-block" data-type="class" data-item-id="{{items.build.class.id}}">
+      <div class="build-block-header flexrow">
+        <img class="item-img" src="{{items.build.class.img}}" alt="" width="28" height="28" />
+        <strong class="flex1">{{items.build.class.name}}</strong>
+        <button type="button" class="item-action" data-action="editItem" data-item-id="{{items.build.class.id}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+      </div>
+      {{#if items.build.class.system.hitDie}}
+      <p class="build-meta">{{localize "ASHANVIL.HitDie"}}: d{{items.build.class.system.hitDie}}</p>
+      {{/if}}
       {{#if items.build.class.description}}<div class="description">{{{items.build.class.description}}}</div>{{/if}}
     </li>
     {{/if}}
     {{#if items.build.background.id}}
-    <li class="build-block" data-type="background">
-      <strong>{{items.build.background.name}}</strong>
+    <li class="build-block" data-type="background" data-item-id="{{items.build.background.id}}">
+      <div class="build-block-header flexrow">
+        <img class="item-img" src="{{items.build.background.img}}" alt="" width="28" height="28" />
+        <strong class="flex1">{{items.build.background.name}}</strong>
+        <button type="button" class="item-action" data-action="editItem" data-item-id="{{items.build.background.id}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+      </div>
+      {{#if items.build.background.system.starterGear}}
+      <p class="build-meta">{{localize "ASHANVIL.StarterGear"}}: {{items.build.background.system.starterGear}}</p>
+      {{/if}}
       {{#if items.build.background.description}}<div class="description">{{{items.build.background.description}}}</div>{{/if}}
     </li>
     {{/if}}
   </ul>
 </section>
 
+<section class="ancestry-feature-tiers">
+  <h4>{{localize "ASHANVIL.AncestryFeatures"}}</h4>
+  <p class="hint">{{localize "ASHANVIL.AncestryFeatureHint"}}</p>
+  <ul class="tier-list">
+    {{#each details.ancestryFeatureLevels as |lvl|}}
+    <li class="{{#if (gte ../details.totalLevel lvl)}}tier-unlocked{{else}}tier-locked{{/if}}">
+      {{localize "ASHANVIL.Level"}} {{lvl}}
+      {{#if (gte ../details.totalLevel lvl)}}<span class="tier-status">({{localize "ASHANVIL.Unlocked"}})</span>{{else}}<span class="tier-status">({{localize "ASHANVIL.Locked"}})</span>{{/if}}
+    </li>
+    {{/each}}
+  </ul>
+</section>
+
 <section class="feature-list">
-  <h4>{{localize "ASHANVIL.Features"}}</h4>
+  <div class="feature-list-header flexrow">
+    <h4>{{localize "ASHANVIL.Features"}}</h4>
+    <button type="button" data-action="createItem" data-item-type="feature">{{localize "ASHANVIL.AddFeature"}}</button>
+  </div>
   {{#if items.features.length}}
   <ul class="item-list">
     {{#each items.features as |feature|}}
     <li class="feature" data-item-id="{{feature.id}}">
-      <strong>{{feature.name}}</strong>
+      <div class="feature-header flexrow">
+        <img class="item-img" src="{{feature.img}}" alt="" width="28" height="28" />
+        <strong class="flex1">{{feature.name}}</strong>
+        {{> "systems/ash-and-anvil/templates/actor/parts/item-row-actions.hbs" id=feature.id}}
+      </div>
       {{#if feature.description}}<div class="description">{{{feature.description}}}</div>{{/if}}
     </li>
     {{/each}}

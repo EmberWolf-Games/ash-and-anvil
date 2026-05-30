@@ -27,6 +27,11 @@ export const CHARACTER_SHEET_TABS = [
     default: true,
   },
   {
+    id: "equipment",
+    labelKey: "ASHANVIL.SheetTabEquipment",
+    template: "systems/ash-and-anvil/templates/actor/tabs/equipment.hbs",
+  },
+  {
     id: "inventory",
     labelKey: "ASHANVIL.SheetTabInventory",
     template: "systems/ash-and-anvil/templates/actor/tabs/inventory.hbs",

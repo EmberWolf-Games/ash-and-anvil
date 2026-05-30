@@ -1,4 +1,7 @@
-<div class="sheet-zone sheet-layout-pending" data-zone="powers-spellcasting">
-  <p class="layout-pending-note">{{localize "ASHANVIL.SheetLayoutPending"}}</p>
-  <p class="hint">{{localize "ASHANVIL.SheetSubTabSpellcastingHint"}}</p>
+<div class="sheet-zone sheet-zone--powers-spellcasting" data-zone="powers-spellcasting">
+  {{> "systems/ash-and-anvil/templates/actor/parts/spell-list.hbs"
+    spells=powers.spellcasting
+    tradition="arcane"
+    emptyHint=powerHints.spellcasting
+  }}
 </div>

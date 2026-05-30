@@ -278,3 +278,380 @@
 #pause.paused figure:has(img.ash-anvil-pause) i {
   display: none !important;
 }
+
+/* Details tab */
+.ash-and-anvil.sheet.actor .details-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ash-and-anvil.sheet.actor .details-tab .zone-title {
+  border-bottom: 1px solid var(--aa-border);
+  font-size: var(--font-size-14);
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.25rem;
+}
+
+.ash-and-anvil.sheet.actor .details-identity {
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.ash-and-anvil.sheet.actor .details-portrait {
+  flex: 0 0 120px;
+  text-align: center;
+}
+
+.ash-and-anvil.sheet.actor .details-portrait .profile-img {
+  border: 1px solid var(--aa-border);
+  border-radius: 4px;
+  height: 120px;
+  object-fit: cover;
+  width: 120px;
+}
+
+.ash-and-anvil.sheet.actor .details-identity-fields {
+  flex: 1;
+  gap: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .abilities-grid .ability {
+  align-items: center;
+  border: 1px solid var(--aa-border);
+  border-radius: 4px;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.ash-and-anvil.sheet.actor .abilities-grid .ability-mod {
+  font-size: var(--font-size-18);
+  font-weight: bold;
+}
+
+.ash-and-anvil.sheet.actor .details-saves-defense {
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.ash-and-anvil.sheet.actor .details-saves,
+.ash-and-anvil.sheet.actor .details-ac,
+.ash-and-anvil.sheet.actor .details-quickness {
+  flex: 1;
+}
+
+.ash-and-anvil.sheet.actor .details-saves table,
+.ash-and-anvil.sheet.actor .skills-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.ash-and-anvil.sheet.actor .details-saves th,
+.ash-and-anvil.sheet.actor .details-saves td,
+.ash-and-anvil.sheet.actor .skills-table th,
+.ash-and-anvil.sheet.actor .skills-table td {
+  border-bottom: 1px solid var(--aa-border);
+  padding: 0.25rem 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .ac-grid {
+  display: grid;
+  gap: 0.35rem;
+  grid-template-columns: auto 1fr;
+  margin-bottom: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .derived-value {
+  font-size: var(--font-size-20);
+  font-weight: bold;
+  margin: 0;
+}
+
+.ash-and-anvil.sheet.actor .details-tab .hint {
+  color: var(--color-text-light-6);
+  font-size: var(--font-size-12);
+  font-style: italic;
+  margin: 0.25rem 0 0;
+}
+
+.ash-and-anvil.sheet.actor .details-vitals {
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.ash-and-anvil.sheet.actor .speed-grid .form-group {
+  margin: 0;
+}
+
+.ash-and-anvil.sheet.actor .prof-armor {
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .details-defenses textarea {
+  min-height: 2.5rem;
+  resize: vertical;
+  width: 100%;
+}
+
+/* Inventory tab */
+.ash-and-anvil.sheet.actor .inventory-tab .currency-grid {
+  gap: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .inventory-drop {
+  border: 1px dashed var(--aa-border);
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .gear-table,
+.ash-and-anvil.sheet.actor .powers-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.ash-and-anvil.sheet.actor .gear-table th,
+.ash-and-anvil.sheet.actor .gear-table td,
+.ash-and-anvil.sheet.actor .powers-table th,
+.ash-and-anvil.sheet.actor .powers-table td {
+  border-bottom: 1px solid var(--aa-border);
+  padding: 0.35rem;
+  vertical-align: top;
+}
+
+.ash-and-anvil.sheet.actor .item-img {
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.ash-and-anvil.sheet.actor .item-link {
+  color: var(--aa-accent);
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.ash-and-anvil.sheet.actor .item-action {
+  background: transparent;
+  border: 1px solid var(--aa-border);
+  border-radius: 3px;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.15rem 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .tab-footer {
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+/* Features tab */
+.ash-and-anvil.sheet.actor .build-block-header,
+.ash-and-anvil.sheet.actor .feature-header,
+.ash-and-anvil.sheet.actor .effect-header {
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.ash-and-anvil.sheet.actor .build-meta {
+  font-size: var(--font-size-12);
+  margin: 0.25rem 0 0;
+  opacity: 0.85;
+}
+
+.ash-and-anvil.sheet.actor .feature-list-header {
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .feature-list-header h4 {
+  margin: 0;
+}
+
+/* Effects tab */
+.ash-and-anvil.sheet.actor .effect-row.effect-disabled {
+  opacity: 0.55;
+}
+
+.ash-and-anvil.sheet.actor .effect-changes {
+  font-family: var(--font-monospace);
+  font-size: var(--font-size-12);
+  margin: 0.25rem 0;
+}
+
+.ash-and-anvil.sheet.actor .effect-toggle {
+  align-items: center;
+  display: flex;
+  font-size: var(--font-size-12);
+  gap: 0.25rem;
+}
+
+/* Item sheet */
+.ash-and-anvil.sheet.item .item-header {
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.ash-and-anvil.sheet.item .item-header .profile-img {
+  height: 64px;
+  object-fit: cover;
+  width: 64px;
+}
+
+.ash-and-anvil.sheet.item .item-type {
+  font-size: var(--font-size-12);
+  opacity: 0.75;
+  text-transform: capitalize;
+}
+
+/* Equipment tab */
+.ash-and-anvil.sheet.actor .equipment-mannequin-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0 1rem;
+}
+
+.ash-and-anvil.sheet.actor .equipment-mannequin {
+  height: 520px;
+  position: relative;
+  width: 320px;
+}
+
+.ash-and-anvil.sheet.actor .equipment-mannequin .mannequin-bg {
+  height: 100%;
+  left: 50%;
+  opacity: 0.35;
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  width: auto;
+  pointer-events: none;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px dashed var(--aa-border);
+  border-radius: 4px;
+  display: flex;
+  font-size: var(--font-size-10);
+  justify-content: center;
+  overflow: hidden;
+  padding: 0.1rem;
+  position: absolute;
+  text-align: center;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot.occupied {
+  border-color: var(--aa-accent);
+  border-style: solid;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot .slot-item {
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font-size: inherit;
+  gap: 0.1rem;
+  height: 100%;
+  padding: 0;
+  width: 100%;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot .slot-item img {
+  max-height: 60%;
+  max-width: 90%;
+  object-fit: contain;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot .slot-label {
+  line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot .slot-empty {
+  opacity: 0.65;
+  padding: 0.1rem;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot .slot-unequip {
+  background: var(--aa-surface-raised);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: var(--font-size-12);
+  line-height: 1;
+  padding: 0 0.2rem;
+  position: absolute;
+  right: 1px;
+  top: 1px;
+}
+
+/* Inventory containers */
+.ash-and-anvil.sheet.actor .inventory-container-panel {
+  background: var(--aa-surface-raised);
+  border: 1px solid var(--aa-accent-dim);
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .container-buttons {
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .container-btn {
+  align-items: center;
+  background: var(--aa-surface-raised);
+  border: 1px solid var(--aa-border);
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: var(--font-size-12);
+  gap: 0.35rem;
+  padding: 0.35rem 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .container-btn.active {
+  border-color: var(--aa-accent);
+  color: var(--aa-accent);
+}
+
+.ash-and-anvil.sheet.actor .gear-list .gear-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .gear-meta {
+  font-size: var(--font-size-12);
+  opacity: 0.8;
+}
+
+.ash-and-anvil.sheet.actor .tier-unlocked .tier-status {
+  color: var(--aa-accent);
+}
+
+.ash-and-anvil.sheet.actor .tier-locked .tier-status {
+  opacity: 0.55;
+}
+
+.ash-and-anvil.sheet.actor .class-levels .derived-value {
+  font-weight: bold;
+  padding: 0.25rem 0.5rem;
+}

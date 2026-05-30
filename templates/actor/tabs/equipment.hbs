@@ -1,0 +1,27 @@
+<div class="sheet-zone sheet-zone--equipment equipment-tab" data-zone="equipment">
+  <p class="hint">{{localize "ASHANVIL.EquipmentHint"}}</p>
+  <div class="equipment-mannequin-wrap">
+    <div class="equipment-mannequin">
+      <img class="mannequin-bg" src="{{equipment.mannequinPath}}" alt="" />
+      {{#each equipment.slots as |slot|}}
+      <div
+        class="equipment-slot {{#if slot.occupied}}occupied{{/if}} equipment-slot--{{slot.group}}"
+        data-slot="{{slot.id}}"
+        data-drop-zone="equipment"
+        title="{{slot.label}}"
+        style="top: {{slot.top}}%; left: {{slot.left}}%; width: {{slot.w}}%; height: {{slot.h}}%;"
+      >
+        {{#if slot.item}}
+        <button type="button" class="slot-item" data-action="editItem" data-item-id="{{slot.item.id}}">
+          <img src="{{slot.item.img}}" alt="{{slot.item.name}}" />
+          <span class="slot-label">{{slot.item.name}}</span>
+        </button>
+        <button type="button" class="slot-unequip" data-action="unequipSlot" data-slot="{{slot.id}}" title="{{localize 'ASHANVIL.Unequip'}}">×</button>
+        {{else}}
+        <span class="slot-empty">{{slot.label}}</span>
+        {{/if}}
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</div>

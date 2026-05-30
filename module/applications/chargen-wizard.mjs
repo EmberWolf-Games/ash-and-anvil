@@ -1,6 +1,7 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
-import { ABILITY_KEYS, SKILLS, SKILL_KEYS } from "../rules/constants.mjs";
-import { applyAncestryAdjustments } from "../rules/derive-character.mjs";
+import { ABILITY_KEYS, ABILITIES, SKILLS, SKILL_KEYS } from "../rules/constants.mjs";
+import { applyAncestryAdjustments, ensureSkillEntries } from "../rules/derive-character.mjs";
+import { defaultSkillPoints } from "../rules/skills.mjs";
 import { getRulesConfig } from "../rules/config.mjs";
 import { loadStarterCatalog } from "../bootstrap/seed-compendiums.mjs";
 import {
@@ -87,16 +88,8 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
     context.selectedClass = selectedClass;
     context.selectedBackground = selectedBackground;
     context.abilityKeys = ABILITY_KEYS;
-    const abilityLabelKeys = {
-      mgt: "ASHANVIL.AbilityMgt",
-      fin: "ASHANVIL.AbilityFin",
-      res: "ASHANVIL.AbilityRes",
-      ins: "ASHANVIL.AbilityIns",
-      foc: "ASHANVIL.AbilityFoc",
-      pre: "ASHANVIL.AbilityPre",
-    };
     context.abilityLabels = Object.fromEntries(
-      ABILITY_KEYS.map((k) => [k, game.i18n.localize(abilityLabelKeys[k])])
+      ABILITY_KEYS.map((k) => [k, game.i18n.localize(ABILITIES[k].label)])
     );
     context.skillRows = SKILL_KEYS.map((key) => ({
       key,
@@ -275,22 +268,32 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
       system.abilities[key].value = this.state.abilities[key];
     }
     applyAncestryAdjustments(system, ancestry ? { system: ancestry.system } : null);
+    ensureSkillEntries(system);
 
     system.details.ancestryId = ancestry?.uuid ?? ancestry?.id ?? "";
     system.details.classId = cls?.uuid ?? cls?.id ?? "";
     system.details.backgroundId = background?.uuid ?? background?.id ?? "";
 
     for (const key of SKILL_KEYS) {
-      system.skills[key].trained = false;
+      system.skills.entries[key] ??= { ranks: 0, misc: 0, bonus: 0, custom: false };
+      system.skills.entries[key].ranks = 0;
     }
     for (const key of background?.system?.trainedSkills ?? []) {
-      if (system.skills[key]) system.skills[key].trained = true;
+      if (system.skills.entries[key]) system.skills.entries[key].ranks = 1;
     }
     const classPool = cls?.system?.skillPool ?? [];
     for (const key of this.state.classSkills) {
       if (!classPool.includes(key)) continue;
-      if (system.skills[key]) system.skills[key].trained = true;
+      if (system.skills.entries[key]) system.skills.entries[key].ranks = 1;
     }
+
+    system.attributes.primaryClassLevel = 1;
+    system.attributes.secondaryClassLevel = 0;
+    system.attributes.classLevel = 1;
+    system.attributes.totalLevel = 1;
+    system.attributes.level = 1;
+    system.skills.pointsAvailable = defaultSkillPoints(1);
+    if (ancestry?.system?.speed) system.speed.walk = ancestry.system.speed;
 
     system.chargen.buildComplete = true;
     system.chargen.buildVersion = game.system.version;

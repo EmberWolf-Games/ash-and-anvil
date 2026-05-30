@@ -1,0 +1,22 @@
+<section class="effects-list">
+  {{#if effects.length}}
+  <ul class="effect-list item-list">
+    {{#each effects as |effect|}}
+    <li class="effect-row {{#if effect.disabled}}effect-disabled{{/if}}" data-effect-id="{{effect.id}}">
+      <div class="effect-header flexrow">
+        <img class="item-img" src="{{effect.img}}" alt="" width="24" height="24" />
+        <strong class="flex1">{{effect.name}}</strong>
+        <label class="effect-toggle">
+          <input type="checkbox" data-action="toggleEffect" data-effect-id="{{effect.id}}" {{#unless effect.disabled}}checked{{/unless}} />
+          {{localize "ASHANVIL.EffectEnabled"}}
+        </label>
+      </div>
+      {{#if effect.changeSummary}}<p class="effect-changes">{{effect.changeSummary}}</p>{{/if}}
+      {{#if effect.description}}<div class="description">{{{effect.description}}}</div>{{/if}}
+    </li>
+    {{/each}}
+  </ul>
+  {{else}}
+  <p class="hint">{{emptyHint}}</p>
+  {{/if}}
+</section>

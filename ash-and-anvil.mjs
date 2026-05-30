@@ -42,8 +42,14 @@ Hooks.once("init", () => {
   };
 
   CONFIG.ASH_ANVIL = {
-    keyVersion: "0.2.8",
+    keyVersion: "0.4.0",
     rules: RULES,
+    currency: {
+      getConfig: RULES.getCurrencyConfig,
+      format: RULES.formatCurrency,
+      formatShopPrice: RULES.formatShopPrice,
+      breakdown: RULES.breakdownCurrency,
+    },
     registeredTypes: {
       actors: Object.keys(actorDataModels),
       items: Object.keys(itemDataModels),

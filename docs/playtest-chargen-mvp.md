@@ -2,6 +2,8 @@
 
 **Environment:** Local Foundry in browser only (see [`testing.md`](testing.md)). Pre-1.0 — do not use Forge for this checklist.
 
+**System version:** 0.4.0+
+
 ## Setup
 
 1. Link or copy system from repo into `%LocalAppData%\FoundryVTT\Data\systems\ash-and-anvil\` (or install latest release into local Foundry).
@@ -19,7 +21,7 @@ Automated smoke (optional): `node .cursor/playtest-chargen.mjs`
 
 ## World settings
 
-- [ ] Configure Settings → **Ash & Anvil** shows all options (verbose, rules profile, stat method, point buy, standard array, automation).
+- [ ] Configure Settings → **Ash & Anvil** shows all options (verbose, rules profile, stat method, point buy, standard array, automation, **currency name**, **currency denominations JSON**).
 - [ ] Change **stat method** to point buy; note pool in chargen step 4.
 
 ## Character creation wizard
@@ -28,14 +30,24 @@ Automated smoke (optional): `node .cursor/playtest-chargen.mjs`
 - [ ] Open sheet → **Build Character** (banner visible if incomplete).
 - [ ] Step through: Ancestry → Class → Background → Abilities → Skills → Review.
 - [ ] Finish — no console errors.
-- [ ] Sheet shows ancestry/class/background names, abilities, Edge, skill bonuses.
-- [ ] HP max = class hit die + Resilience mod (Standard/Narrative) or die only (Gritty profile).
+- [ ] Sheet **Details** tab: six abilities (MGT/AGI/VIT/MND/INS/CHA), saves, AC, skills with ranks, primary class level 1, total level 1.
+- [ ] HP max = class hit die + Vitality mod at level 1 (Standard/Narrative) or die only (Gritty profile).
 - [ ] Embedded feature items appear on actor when automation on.
+
+## Character sheet tabs (0.4.0)
+
+- [ ] **Details** — identity, abilities, saves, skills, proficiencies, vitals, heritage.
+- [ ] **Equipment** — mannequin slots; drag gear to slot; unequip works.
+- [ ] **Inventory** — Shards currency, worn/carried list, container buttons open nested contents.
+- [ ] **Features** — build blocks + ancestry feature tiers (1/5/10/15).
+- [ ] **Powers** — spellcasting / psionics / divine gifts sub-tabs.
+- [ ] **Effects** — active / passive sub-tabs.
+- [ ] **Biography** — identity and prose fields.
 
 ## Player
 
 - [ ] Player can run wizard on owned actor (if permissions allow).
-- [ ] Sheet reflects trained skills with correct bonuses.
+- [ ] Sheet reflects skill ranks with correct derived bonuses.
 
 ## Regression
 

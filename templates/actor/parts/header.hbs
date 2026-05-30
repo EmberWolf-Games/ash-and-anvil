@@ -1,33 +1,6 @@
-<header class="sheet-header flexrow" data-zone="header">
-  <img
-    class="profile-img"
-    src="{{document.img}}"
-    data-edit="img"
-    title="{{document.name}}"
-    alt="{{document.name}}"
-    style="flex: 0 0 {{layout.portraitSize}}px; height: {{layout.portraitSize}}px;"
-  />
-  <div class="header-fields">
-    <h1 class="charname"><input name="name" type="text" value="{{document.name}}" placeholder="{{localize 'Name'}}" /></h1>
-    <div class="resource flexrow">
-      <label>{{localize "ASHANVIL.Level"}}</label>
-      <input type="number" name="system.attributes.level" value="{{combat.level}}" disabled />
-    </div>
-    <div class="resource flexrow health">
-      <label>{{localize "ASHANVIL.Health"}}</label>
-      <input type="number" name="system.attributes.health.value" value="{{combat.health.value}}" />
-      <span>/</span>
-      <input type="number" name="system.attributes.health.max" value="{{combat.health.max}}" />
-      {{#if combat.health.temp}}
-      <span class="temp-hp">+{{combat.health.temp}}</span>
-      {{/if}}
-    </div>
-    <div class="resource flexrow">
-      <label>{{localize "ASHANVIL.InitiativeMod"}}</label>
-      <input type="number" name="system.attributes.initiative.mod" value="{{combat.initiative}}" disabled />
-    </div>
-    {{#unless buildComplete}}
-    <p class="chargen-warning">{{localize "ASHANVIL.ChargenIncompleteBanner"}}</p>
-    {{/unless}}
-  </div>
+<header class="sheet-header sheet-header--minimal" data-zone="header">
+  <h1 class="charname"><input name="name" type="text" value="{{document.name}}" placeholder="{{localize 'Name'}}" /></h1>
+  {{#unless buildComplete}}
+  <p class="chargen-warning">{{localize "ASHANVIL.ChargenIncompleteBanner"}}</p>
+  {{/unless}}
 </header>

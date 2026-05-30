@@ -1,4 +1,6 @@
-<div class="sheet-zone sheet-layout-pending" data-zone="effects-passive">
-  <p class="layout-pending-note">{{localize "ASHANVIL.SheetLayoutPending"}}</p>
-  <p class="hint">{{localize "ASHANVIL.SheetSubTabPassiveEffectsHint"}}</p>
+<div class="sheet-zone sheet-zone--effects-passive" data-zone="effects-passive">
+  {{> "systems/ash-and-anvil/templates/actor/parts/effect-list.hbs"
+    effects=effects.passive
+    emptyHint=effects.passiveHint
+  }}
 </div>

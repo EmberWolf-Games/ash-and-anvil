@@ -1,4 +1,7 @@
-<div class="sheet-zone sheet-layout-pending" data-zone="powers-divine-gifts">
-  <p class="layout-pending-note">{{localize "ASHANVIL.SheetLayoutPending"}}</p>
-  <p class="hint">{{localize "ASHANVIL.SheetSubTabDivineGiftsHint"}}</p>
+<div class="sheet-zone sheet-zone--powers-divine-gifts" data-zone="powers-divine-gifts">
+  {{> "systems/ash-and-anvil/templates/actor/parts/spell-list.hbs"
+    spells=powers.divineGifts
+    tradition="divine"
+    emptyHint=powerHints.divineGifts
+  }}
 </div>

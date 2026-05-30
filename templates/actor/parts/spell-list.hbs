@@ -1,0 +1,38 @@
+<section class="powers-list" data-tradition="{{tradition}}">
+  {{#if spells.length}}
+  <table class="powers-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>{{localize "Name"}}</th>
+        <th>{{localize "ASHANVIL.SpellLevel"}}</th>
+        <th>{{localize "ASHANVIL.SpellSchool"}}</th>
+        <th>{{localize "ASHANVIL.SpellPrepared"}}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each spells as |spell|}}
+      <tr class="power-row" data-item-id="{{spell.id}}">
+        <td><img class="item-img" src="{{spell.img}}" alt="" width="24" height="24" /></td>
+        <td>
+          <a class="item-link" data-action="editItem" data-item-id="{{spell.id}}">{{spell.name}}</a>
+          {{#if spell.description}}<div class="description">{{{spell.description}}}</div>{{/if}}
+        </td>
+        <td>{{spell.spellLevel}}</td>
+        <td>{{spell.spellSchool}}</td>
+        <td>{{#if spell.prepared}}{{localize "ASHANVIL.Yes"}}{{else}}{{localize "ASHANVIL.No"}}{{/if}}</td>
+        <td>{{> "systems/ash-and-anvil/templates/actor/parts/item-row-actions.hbs" id=spell.id}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{else}}
+  <p class="hint">{{emptyHint}}</p>
+  {{/if}}
+  <footer class="tab-footer flexrow">
+    <button type="button" data-action="createItem" data-item-type="spell" data-tradition="{{tradition}}">
+      {{localize "ASHANVIL.AddSpell"}}
+    </button>
+  </footer>
+</section>

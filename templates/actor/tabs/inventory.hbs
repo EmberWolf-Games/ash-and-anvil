@@ -1,4 +1,91 @@
-<div class="sheet-zone sheet-zone--inventory sheet-layout-pending" data-zone="inventory">
-  <p class="layout-pending-note">{{localize "ASHANVIL.SheetLayoutPending"}}</p>
-  <p class="hint">{{localize "ASHANVIL.SheetTabInventoryHint"}}</p>
+<div class="sheet-zone sheet-zone--inventory inventory-tab" data-zone="inventory">
+  <section class="inventory-currency">
+    <h3 class="zone-title">{{inventory.currencyLabel}}</h3>
+    <div class="currency-shards flexrow">
+      <div class="form-group flex1">
+        <label>{{localize "ASHANVIL.CurrencyTotal"}}</label>
+        <input type="number" name="system.currency.value" value="{{inventory.currencyValue}}" min="0" />
+      </div>
+      <div class="currency-breakdown flexcol">
+        <span class="hint">{{localize "ASHANVIL.CurrencyBreakdown"}}</span>
+        <strong>{{inventory.currencyDisplay}}</strong>
+      </div>
+    </div>
+  </section>
+
+  {{#if inventory.openContainer}}
+  <section class="inventory-container-panel">
+    <header class="flexrow">
+      <h3 class="zone-title flex1">{{inventory.openContainer.name}}</h3>
+      <button type="button" data-action="closeContainer">{{localize "ASHANVIL.CloseContainer"}}</button>
+    </header>
+    <div class="inventory-drop" data-drop-zone="container" data-container-id="{{inventory.openContainerId}}">
+      {{#if inventory.openContainer.contents.length}}
+      <ul class="gear-list item-list">
+        {{#each inventory.openContainer.contents as |item|}}
+        <li class="gear-row" data-item-id="{{item.id}}">
+          <img class="item-img" src="{{item.img}}" alt="" width="24" height="24" />
+          <a class="item-link" data-action="editItem" data-item-id="{{item.id}}">{{item.name}}</a>
+          <span class="gear-meta">×{{item.quantity}} · {{item.weight}} · {{item.priceDisplay}}</span>
+          {{> "systems/ash-and-anvil/templates/actor/parts/item-row-actions.hbs" id=item.id}}
+        </li>
+        {{/each}}
+      </ul>
+      {{else}}
+      <p class="hint">{{localize "ASHANVIL.ContainerEmpty"}}</p>
+      {{/if}}
+    </div>
+  </section>
+  {{/if}}
+
+  <section class="inventory-carried">
+    <h3 class="zone-title">{{localize "ASHANVIL.CarriedGear"}}</h3>
+    <p class="hint">{{localize "ASHANVIL.CarriedGearHint"}}</p>
+    <div class="inventory-drop inventory-drop--root" data-drop-zone="root">
+      {{#if inventory.hasRootGear}}
+      <ul class="gear-list item-list">
+        {{#each inventory.rootGear as |item|}}
+        <li class="gear-row" data-item-id="{{item.id}}">
+          <img class="item-img" src="{{item.img}}" alt="" width="24" height="24" />
+          <a class="item-link" data-action="editItem" data-item-id="{{item.id}}">{{item.name}}</a>
+          <span class="gear-meta">×{{item.quantity}} · {{item.weight}} · {{item.priceDisplay}}</span>
+          {{> "systems/ash-and-anvil/templates/actor/parts/item-row-actions.hbs" id=item.id}}
+        </li>
+        {{/each}}
+      </ul>
+      {{else}}
+      <p class="hint">{{localize "ASHANVIL.NoCarriedGear"}}</p>
+      {{/if}}
+    </div>
+  </section>
+
+  {{#if inventory.hasContainers}}
+  <section class="inventory-containers">
+    <h3 class="zone-title">{{localize "ASHANVIL.Containers"}}</h3>
+    <div class="container-buttons flexrow">
+      {{#each inventory.containers as |container|}}
+      <button
+        type="button"
+        class="container-btn {{#if container.isOpen}}active{{/if}}"
+        data-action="openContainer"
+        data-container-id="{{container.id}}"
+      >
+        <img src="{{container.img}}" alt="" width="20" height="20" />
+        {{container.name}} ({{container.childCount}})
+      </button>
+      {{/each}}
+    </div>
+  </section>
+  {{/if}}
+
+  <footer class="tab-footer flexrow">
+    <span class="flex1">{{localize "ASHANVIL.TotalWeight"}}: {{inventory.totalWeight}}</span>
+    <button type="button" data-action="createItem" data-item-type="gear" data-container="1">{{localize "ASHANVIL.AddContainer"}}</button>
+    <button type="button" data-action="createItem" data-item-type="gear">{{localize "ASHANVIL.AddGear"}}</button>
+  </footer>
+
+  <section class="inventory-notes">
+    <h3 class="zone-title">{{localize "ASHANVIL.InventoryNotes"}}</h3>
+    <textarea name="system.inventory.notes" rows="3">{{inventory.notes}}</textarea>
+  </section>
 </div>

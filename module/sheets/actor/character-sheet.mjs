@@ -4,20 +4,23 @@ import {
   defaultSubTabId,
   getSubTabs,
 } from "../../config/sheet-params.mjs";
+import { equipItemToSlot, moveItemToContainer, unequipSlot } from "../../rules/equipment.mjs";
+import { confirmDeleteItem, getActorEffects } from "./prepare-sheet-items.mjs";
 import { prepareCharacterSheetContext } from "./prepare-character-context.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
-export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
-  /** @type {string} */
-  #activeTab = CHARACTER_SHEET_PARAMS.tabs.find((t) => t.default)?.id ?? "details";
+const INVENTORY_ITEM_TYPES = new Set(["gear", "spell", "feature"]);
 
-  /** @type {Record<string, string>} */
+export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
+  #activeTab = CHARACTER_SHEET_PARAMS.tabs.find((t) => t.default)?.id ?? "details";
   #activeSubTabs = {
     powers: defaultSubTabId("powers"),
     effects: defaultSubTabId("effects"),
   };
+  /** @type {string|null} */
+  #openContainerId = null;
 
   static DEFAULT_OPTIONS = {
     classes: ["ash-and-anvil", "sheet", "actor", "character"],
@@ -31,7 +34,22 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       openChargen: CharacterActorSheet.#onOpenChargen,
       changeTab: CharacterActorSheet.#onChangeTab,
       changeSubTab: CharacterActorSheet.#onChangeSubTab,
+      addCustomSkill: CharacterActorSheet.#onAddCustomSkill,
+      toggleHeritage: CharacterActorSheet.#onToggleHeritage,
+      createItem: CharacterActorSheet.#onCreateItem,
+      editItem: CharacterActorSheet.#onEditItem,
+      deleteItem: CharacterActorSheet.#onDeleteItem,
+      toggleEffect: CharacterActorSheet.#onToggleEffect,
+      openContainer: CharacterActorSheet.#onOpenContainer,
+      closeContainer: CharacterActorSheet.#onCloseContainer,
+      unequipSlot: CharacterActorSheet.#onUnequipSlot,
     },
+    dragDrop: [
+      {
+        dragSelector: "[data-item-id]",
+        dropSelector: ".inventory-drop, .equipment-slot",
+      },
+    ],
   };
 
   static PARTS = {
@@ -44,15 +62,16 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     },
   };
 
-  /** @override */
   get title() {
     return `${this.actor.name} — ${game.i18n.localize("ASHANVIL.SheetActorCharacter")}`;
   }
 
-  /** @override */
   async _preparePartContext(partId, context, options) {
     context = await super._preparePartContext(partId, context, options);
-    const sheetContext = prepareCharacterSheetContext(this.actor, { editable: this.isEditable });
+    const sheetContext = prepareCharacterSheetContext(this.actor, {
+      editable: this.isEditable,
+      openContainerId: this.#openContainerId,
+    });
 
     if (partId === "header") {
       Object.assign(context, {
@@ -73,6 +92,42 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     return context;
   }
 
+  async _onDropItem(event, item) {
+    if (!this.isEditable || !INVENTORY_ITEM_TYPES.has(item.type)) return false;
+
+    const target = event.target.closest("[data-drop-zone]");
+    if (item.type === "gear" && target) {
+      const zone = target.dataset.dropZone;
+      if (zone === "equipment") {
+        const slotId = target.closest("[data-slot]")?.dataset.slot;
+        if (slotId) {
+          await equipItemToSlot(this.actor, item, slotId);
+          this.render(false);
+          return true;
+        }
+      }
+      if (zone === "container") {
+        const containerId = target.dataset.containerId;
+        if (containerId) {
+          await moveItemToContainer(this.actor, item, containerId);
+          this.render(false);
+          return true;
+        }
+      }
+      if (zone === "root") {
+        await moveItemToContainer(this.actor, item, "");
+        this.render(false);
+        return true;
+      }
+    }
+
+    if (item.parent?.id === this.actor.id) return super._onDropItem(event, item);
+    const itemData = item.toObject();
+    delete itemData._id;
+    await Item.createDocuments([itemData], { parent: this.actor });
+    return true;
+  }
+
   static async #onOpenChargen() {
     const app = /** @type {CharacterActorSheet} */ (this);
     await ChargenWizard.show(app.actor);
@@ -82,8 +137,7 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const app = /** @type {CharacterActorSheet} */ (this);
     const tab = target.dataset.tab;
     if (!tab || tab === app.#activeTab) return;
-    const valid = CHARACTER_SHEET_PARAMS.tabs.some((t) => t.id === tab);
-    if (!valid) return;
+    if (!CHARACTER_SHEET_PARAMS.tabs.some((t) => t.id === tab)) return;
     app.#activeTab = tab;
     app.render(false);
   }
@@ -93,9 +147,115 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const group = target.dataset.group;
     const tab = target.dataset.tab;
     if (!group || !tab) return;
-    const valid = getSubTabs(group).some((t) => t.id === tab);
-    if (!valid) return;
+    if (!getSubTabs(group).some((t) => t.id === tab)) return;
     app.#activeSubTabs[group] = tab;
+    app.render(false);
+  }
+
+  static #onOpenContainer(_event, target) {
+    const app = /** @type {CharacterActorSheet} */ (this);
+    app.#openContainerId = target.dataset.containerId ?? null;
+    app.#activeTab = "inventory";
+    app.render(false);
+  }
+
+  static #onCloseContainer() {
+    const app = /** @type {CharacterActorSheet} */ (this);
+    app.#openContainerId = null;
+    app.render(false);
+  }
+
+  static async #onUnequipSlot(_event, target) {
+    const app = /** @type {CharacterActorSheet} */ (this);
+    if (!app.isEditable) return;
+    const slotId = target.dataset.slot;
+    if (!slotId) return;
+    await unequipSlot(app.actor, slotId);
+    app.render(false);
+  }
+
+  static async #onAddCustomSkill() {
+    const app = /** @type {CharacterActorSheet} */ (this);
+    const label = window.prompt(game.i18n.localize("ASHANVIL.SkillName"));
+    if (!label?.trim()) return;
+    const custom = foundry.utils.deepClone(app.actor.system.skills?.custom ?? []);
+    custom.push({
+      id: foundry.utils.randomID(),
+      label: label.trim(),
+      ability: "mnd",
+      ranks: 0,
+      misc: 0,
+      bonus: 0,
+    });
+    await app.actor.update({ "system.skills.custom": custom });
+    app.render(false);
+  }
+
+  static async #onToggleHeritage(event, target) {
+    const app = /** @type {CharacterActorSheet} */ (this);
+    const kind = target.dataset.heritage;
+    const checked = target.checked;
+    const update = {
+      "system.details.isVampire": kind === "vampire" ? checked : false,
+      "system.details.isLycanthrope": kind === "lycanthrope" ? checked : false,
+    };
+    if (checked && kind === "vampire") update["system.details.isLycanthrope"] = false;
+    if (checked && kind === "lycanthrope") update["system.details.isVampire"] = false;
+    await app.actor.update(update);
+    app.render(false);
+  }
+
+  static async #onCreateItem(_event, target) {
+    const app = /** @type {CharacterActorSheet} */ (this);
+    if (!app.isEditable) return;
+    const type = target.dataset.itemType ?? "gear";
+    const tradition = target.dataset.tradition ?? "arcane";
+    const isContainer = target.dataset.container === "1";
+    const labels = {
+      gear: isContainer ? "ASHANVIL.NewContainer" : "ASHANVIL.NewGear",
+      spell: "ASHANVIL.NewSpell",
+      feature: "ASHANVIL.NewFeature",
+    };
+    const data = {
+      name: game.i18n.localize(labels[type] ?? "Name"),
+      type,
+      system: {},
+    };
+    if (type === "spell") data.system = { tradition, level: 0, school: "", prepared: false };
+    if (type === "gear" && isContainer) {
+      data.system = { isContainer: true, containerKind: "backpack", containerCapacity: 20, quantity: 1 };
+    }
+    const created = await Item.createDocuments([data], { parent: app.actor });
+    created[0]?.sheet?.render(true);
+    app.render(false);
+  }
+
+  static #onEditItem(_event, target) {
+    const app = /** @type {CharacterActorSheet} */ (this);
+    const itemId = target.closest("[data-item-id]")?.dataset.itemId ?? target.dataset.itemId;
+    app.actor.items.get(itemId)?.sheet?.render(true);
+  }
+
+  static async #onDeleteItem(_event, target) {
+    const app = /** @type {CharacterActorSheet} */ (this);
+    if (!app.isEditable) return;
+    const itemId = target.closest("[data-item-id]")?.dataset.itemId ?? target.dataset.itemId;
+    const item = app.actor.items.get(itemId);
+    if (!item) return;
+    if (!(await confirmDeleteItem(item.name))) return;
+    await item.delete();
+    app.render(false);
+  }
+
+  static async #onToggleEffect(_event, target) {
+    const app = /** @type {CharacterActorSheet} */ (this);
+    if (!app.isEditable) return;
+    const effectId = target.dataset.effectId;
+    const effect =
+      app.actor.effects.get(effectId) ??
+      getActorEffects(app.actor).find((e) => e.id === effectId);
+    if (!effect) return;
+    await effect.update({ disabled: !target.checked });
     app.render(false);
   }
 }

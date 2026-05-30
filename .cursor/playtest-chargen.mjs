@@ -146,7 +146,7 @@ async function main() {
 
     const wizard = page.locator("#ash-anvil-chargen");
     const wizardSteps = [];
-    const abilityKeys = ["mgt", "fin", "res", "ins", "foc", "pre"];
+    const abilityKeys = ["mgt", "agi", "vit", "mnd", "ins", "cha"];
     const standardArray = [15, 14, 13, 12, 10, 8];
 
     async function pickFirstRadio(name) {
@@ -238,8 +238,8 @@ async function main() {
       const cls = a.items.find((i) => i.type === "class");
       const bg = a.items.find((i) => i.type === "background");
       const features = a.items.filter((i) => i.type === "feature");
-      const trainedSkills = Object.entries(a.system.skills ?? {})
-        .filter(([, s]) => s.trained)
+      const trainedSkills = Object.entries(a.system.skills?.entries ?? {})
+        .filter(([, s]) => (s?.ranks ?? 0) > 0)
         .map(([k]) => k);
       return {
         buildComplete: a.system.chargen?.buildComplete,
@@ -250,28 +250,40 @@ async function main() {
           Object.entries(a.system.abilities ?? {}).map(([k, v]) => [k, v?.value])
         ),
         edge: a.system.proficiency?.edge,
+        quickness: a.system.attributes?.quickness,
         hpMax: a.system.attributes?.health?.max,
+        primaryClassLevel: a.system.attributes?.primaryClassLevel,
+        totalLevel: a.system.attributes?.totalLevel,
         classHitDie: cls?.system?.hitDie,
-        resilienceMod: a.system.abilities?.res?.mod,
+        vitalityMod: a.system.abilities?.vit?.mod,
+        currencyValue: a.system.currency?.value,
         featureCount: features.length,
         trainedSkills,
+        saveTotals: Object.fromEntries(
+          Object.entries(a.system.saves ?? {}).map(([k, v]) => [k, v?.total])
+        ),
       };
     }, actorId);
 
     report.checklist.sheetAfterFinish = sheet;
     const hpExpected =
-      sheet.classHitDie && sheet.resilienceMod != null
-        ? sheet.classHitDie + sheet.resilienceMod
+      sheet.classHitDie != null && sheet.vitalityMod != null
+        ? sheet.classHitDie + sheet.vitalityMod
         : null;
     report.checklist.chargenSmoke = {
       pass:
         !!sheet.buildComplete &&
         !!sheet.ancestryName &&
         !!sheet.className &&
-        !!sheet.backgroundName,
+        !!sheet.backgroundName &&
+        sheet.abilities?.mgt != null &&
+        sheet.abilities?.agi != null,
       hpCheck:
         hpExpected != null && sheet.hpMax != null ? sheet.hpMax === hpExpected : "skipped",
       featuresEmbedded: sheet.featureCount > 0,
+      skillsWithRanks: sheet.trainedSkills?.length > 0,
+      currencyReady: sheet.currencyValue != null,
+      totalLevel: sheet.totalLevel,
     };
 
     report.checklist.regression = {

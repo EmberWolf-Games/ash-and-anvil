@@ -1,4 +1,218 @@
-<div class="sheet-zone sheet-zone--details sheet-layout-pending" data-zone="details">
-  <p class="layout-pending-note">{{localize "ASHANVIL.SheetLayoutPending"}}</p>
-  <p class="hint">{{localize "ASHANVIL.SheetTabDetailsHint"}}</p>
+<div class="sheet-zone sheet-zone--details details-tab" data-zone="details">
+  {{#unless details.buildComplete}}
+  <div class="chargen-banner flexrow">
+    <p>{{localize "ASHANVIL.ChargenIncompleteBanner"}}</p>
+    <button type="button" data-action="openChargen">{{localize "ASHANVIL.ChargenOpen"}}</button>
+  </div>
+  {{/unless}}
+
+  <section class="details-identity flexrow">
+    <div class="details-portrait">
+      <img class="profile-img" src="{{details.portrait}}" data-edit="img" alt="{{details.name}}" />
+      <label>{{localize "ASHANVIL.Portrait"}}</label>
+    </div>
+    <div class="details-identity-fields flexcol">
+      <div class="form-group">
+        <label>{{localize "Name"}}</label>
+        <input type="text" name="name" value="{{details.name}}" />
+      </div>
+      <div class="form-group">
+        <label>{{localize "ASHANVIL.Ancestry"}}</label>
+        <span>{{details.ancestry}}{{#if details.ancestryBlended}} + {{details.secondaryAncestry}}{{/if}}</span>
+        <p class="hint">{{localize "ASHANVIL.AncestryBlendHint"}}</p>
+      </div>
+      <div class="form-group">
+        <label>{{localize "ASHANVIL.Class"}}</label>
+        <span>{{details.className}}{{#if details.multiClass}} / {{details.secondaryClassName}}{{/if}}</span>
+        <p class="hint">{{localize "ASHANVIL.MultiClassHint"}}</p>
+      </div>
+      <div class="form-group">
+        <label>{{localize "ASHANVIL.Lineage"}}</label>
+        <input type="text" name="system.details.lineage" value="{{details.lineage}}" placeholder="{{localize 'ASHANVIL.LineagePlaceholder'}}" />
+        <p class="hint">{{localize "ASHANVIL.LineageHint"}}</p>
+      </div>
+      <div class="form-group flexrow class-levels">
+        <label>{{localize "ASHANVIL.PrimaryClassLevel"}}</label>
+        <input type="number" name="system.attributes.primaryClassLevel" value="{{details.primaryClassLevel}}" min="0" max="{{details.maxTotalLevel}}" />
+        <label>{{localize "ASHANVIL.SecondaryClassLevel"}}</label>
+        <input type="number" name="system.attributes.secondaryClassLevel" value="{{details.secondaryClassLevel}}" min="0" max="{{details.maxTotalLevel}}" />
+        <label>{{localize "ASHANVIL.TotalLevel"}}</label>
+        <span class="derived-value">{{details.totalLevel}} / {{details.maxTotalLevel}}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="details-abilities">
+    <h3 class="zone-title">{{localize "ASHANVIL.Abilities"}}</h3>
+    <div class="abilities-grid grid grid-3col">
+      {{#each abilityRows as |row|}}
+      <div class="ability flexcol" data-ability="{{row.key}}">
+        <label class="ability-label">{{row.abbr}} — {{row.label}}</label>
+        <input type="number" name="system.abilities.{{row.key}}.value" value="{{row.ability.value}}" min="0" max="50" />
+        <span class="ability-mod">{{numberFormat row.ability.mod sign=true}}</span>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+
+  <section class="details-saves-defense flexrow">
+    <div class="details-saves">
+      <h3 class="zone-title">{{localize "ASHANVIL.SavingThrows"}}</h3>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>{{localize "ASHANVIL.Trained"}}</th>
+            <th>{{localize "ASHANVIL.Misc"}}</th>
+            <th>{{localize "ASHANVIL.Total"}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each saveRows as |row|}}
+          <tr>
+            <td>{{row.abbr}} — {{row.label}}</td>
+            <td><input type="checkbox" name="system.saves.{{row.key}}.trained" {{checked row.save.trained}} /></td>
+            <td><input type="number" name="system.saves.{{row.key}}.misc" value="{{row.save.misc}}" /></td>
+            <td>{{numberFormat row.save.total sign=true}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="details-ac">
+      <h3 class="zone-title">{{localize "ASHANVIL.ArmorClass"}}</h3>
+      <div class="form-group">
+        <label>{{localize "ASHANVIL.ArmorCategory"}}</label>
+        <select name="system.defense.armorCategory">
+          {{#each defense.armorCategories as |cat|}}
+          <option value="{{cat}}" {{selected (eq ../defense.armorCategory cat)}}>{{cat}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="ac-grid">
+        <label>{{localize "ASHANVIL.ACBase"}}</label><input type="number" name="system.defense.ac.base" value="{{defense.ac.base}}" />
+        <label>{{localize "ASHANVIL.ACArmor"}}</label><input type="number" name="system.defense.ac.armor" value="{{defense.ac.armor}}" />
+        <label>{{localize "ASHANVIL.ACShield"}}</label><input type="number" name="system.defense.ac.shield" value="{{defense.ac.shield}}" />
+        <label>{{localize "ASHANVIL.Misc"}}</label><input type="number" name="system.defense.ac.misc" value="{{defense.ac.misc}}" />
+      </div>
+      <p><strong>{{localize "ASHANVIL.ArmorClass"}}:</strong> {{defense.ac.total}}</p>
+      <p><strong>{{localize "ASHANVIL.TouchAC"}}:</strong> {{defense.touchAc}}</p>
+      <p class="hint">{{localize "ASHANVIL.TouchACHint"}}</p>
+    </div>
+    <div class="details-quickness">
+      <h3 class="zone-title">{{localize "ASHANVIL.Quickness"}}</h3>
+      <p class="derived-value">{{numberFormat combat.quickness sign=true}}</p>
+      <p class="hint">{{localize "ASHANVIL.QuicknessHint"}}</p>
+      <h3 class="zone-title">{{localize "ASHANVIL.Edge"}}</h3>
+      <p class="derived-value">+{{combat.edge}}</p>
+    </div>
+  </section>
+
+  <section class="details-vitals flexrow">
+    <div class="details-hp">
+      <h3 class="zone-title">{{localize "ASHANVIL.Health"}}</h3>
+      <div class="flexrow">
+        <input type="number" name="system.attributes.health.value" value="{{combat.health.value}}" min="0" />
+        <span>/</span>
+        <input type="number" name="system.attributes.health.max" value="{{combat.health.max}}" min="0" />
+        <label>{{localize "ASHANVIL.HealthTemp"}}</label>
+        <input type="number" name="system.attributes.health.temp" value="{{combat.health.temp}}" min="0" />
+      </div>
+    </div>
+    <div class="details-death-saves">
+      <h3 class="zone-title">{{localize "ASHANVIL.DeathSaves"}}</h3>
+      <div class="flexrow">
+        <label>{{localize "ASHANVIL.Successes"}}</label>
+        <input type="number" name="system.attributes.deathSaves.successes" value="{{combat.deathSaves.successes}}" min="0" max="3" />
+        <label>{{localize "ASHANVIL.Failures"}}</label>
+        <input type="number" name="system.attributes.deathSaves.failures" value="{{combat.deathSaves.failures}}" min="0" max="3" />
+      </div>
+    </div>
+    <div class="details-favor">
+      <h3 class="zone-title">{{localize "ASHANVIL.Favor"}}</h3>
+      <input type="number" name="system.attributes.favor" value="{{combat.favor}}" min="0" />
+      <p class="hint">{{localize "ASHANVIL.FavorHint"}}</p>
+    </div>
+  </section>
+
+  <section class="details-speed">
+    <h3 class="zone-title">{{localize "ASHANVIL.Speed"}}</h3>
+    <div class="speed-grid grid grid-3col">
+      <div class="form-group"><label>{{localize "ASHANVIL.SpeedWalk"}}</label><input type="number" name="system.speed.walk" value="{{speed.walk}}" min="0" /></div>
+      <div class="form-group"><label>{{localize "ASHANVIL.SpeedFly"}}</label><input type="number" name="system.speed.fly" value="{{speed.fly}}" min="0" /></div>
+      <div class="form-group"><label>{{localize "ASHANVIL.SpeedHover"}}</label><input type="number" name="system.speed.hover" value="{{speed.hover}}" min="0" /></div>
+      <div class="form-group"><label>{{localize "ASHANVIL.SpeedSwim"}}</label><input type="number" name="system.speed.swim" value="{{speed.swim}}" min="0" /></div>
+      <div class="form-group"><label>{{localize "ASHANVIL.SpeedClimb"}}</label><input type="number" name="system.speed.climb" value="{{speed.climb}}" min="0" /></div>
+      <div class="form-group"><label>{{localize "ASHANVIL.SpeedBurrow"}}</label><input type="number" name="system.speed.burrow" value="{{speed.burrow}}" min="0" /></div>
+    </div>
+  </section>
+
+  <section class="details-skills">
+    <h3 class="zone-title">{{localize "ASHANVIL.Skills"}}</h3>
+    <p class="hint">{{localize "ASHANVIL.SkillPointsHint"}} {{skillsMeta.pointsSpent}} / {{skillsMeta.pointsAvailable}} · {{localize "ASHANVIL.MaxRanks"}} {{skillsMeta.maxRanks}} · {{localize "ASHANVIL.SkillPointsAuto"}}</p>
+    <input type="number" name="system.skills.pointsAvailable" value="{{skillsMeta.pointsAvailable}}" min="0" class="skill-points-pool" readonly />
+    <table class="skills-table">
+      <thead>
+        <tr>
+          <th>{{localize "ASHANVIL.Skill"}}</th>
+          <th>{{localize "ASHANVIL.Ability"}}</th>
+          <th>{{localize "ASHANVIL.Ranks"}}</th>
+          <th>{{localize "ASHANVIL.Misc"}}</th>
+          <th>{{localize "ASHANVIL.Bonus"}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each skillRows as |row|}}
+        <tr>
+          <td>{{row.label}}</td>
+          <td>{{row.abilityAbbr}}</td>
+          <td><input type="number" name="system.skills.entries.{{row.key}}.ranks" value="{{row.entry.ranks}}" min="0" max="{{../skillsMeta.maxRanks}}" /></td>
+          <td><input type="number" name="system.skills.entries.{{row.key}}.misc" value="{{row.entry.misc}}" /></td>
+          <td>{{numberFormat row.entry.bonus sign=true}}</td>
+        </tr>
+        {{/each}}
+        {{#each customSkillRows as |row|}}
+        <tr class="custom-skill">
+          <td>{{row.label}}</td>
+          <td>{{row.abilityAbbr}}</td>
+          <td><input type="number" name="system.skills.custom.{{row.index}}.ranks" value="{{row.entry.ranks}}" min="0" max="{{../skillsMeta.maxRanks}}" /></td>
+          <td><input type="number" name="system.skills.custom.{{row.index}}.misc" value="{{row.entry.misc}}" /></td>
+          <td>{{numberFormat row.entry.bonus sign=true}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <button type="button" data-action="addCustomSkill">{{localize "ASHANVIL.AddCustomSkill"}}</button>
+  </section>
+
+  <section class="details-proficiencies">
+    <h3 class="zone-title">{{localize "ASHANVIL.Proficiencies"}}</h3>
+    <div class="prof-armor flexrow">
+      <label><input type="checkbox" name="system.proficiencies.armorLight" {{checked proficiencies.armorLight}} /> {{localize "ASHANVIL.ProfArmorLight"}}</label>
+      <label><input type="checkbox" name="system.proficiencies.armorMedium" {{checked proficiencies.armorMedium}} /> {{localize "ASHANVIL.ProfArmorMedium"}}</label>
+      <label><input type="checkbox" name="system.proficiencies.armorHeavy" {{checked proficiencies.armorHeavy}} /> {{localize "ASHANVIL.ProfArmorHeavy"}}</label>
+    </div>
+    <div class="form-group"><label>{{localize "ASHANVIL.ProfWeapons"}}</label><input type="text" name="system.proficiencies.weapons" value="{{proficiencies.weapons}}" /></div>
+    <div class="form-group"><label>{{localize "ASHANVIL.ProfTools"}}</label><input type="text" name="system.proficiencies.tools" value="{{proficiencies.tools}}" /></div>
+    <div class="form-group"><label>{{localize "ASHANVIL.ProfLanguages"}}</label><input type="text" name="system.proficiencies.languages" value="{{proficiencies.languages}}" /></div>
+    <div class="form-group"><label>{{localize "ASHANVIL.ProfGameSets"}}</label><input type="text" name="system.proficiencies.gameSets" value="{{proficiencies.gameSets}}" /></div>
+    <div class="form-group"><label>{{localize "ASHANVIL.ProfNotes"}}</label><input type="text" name="system.proficiencies.notes" value="{{proficiencies.notes}}" /></div>
+  </section>
+
+  <section class="details-defenses">
+    <h3 class="zone-title">{{localize "ASHANVIL.Defenses"}}</h3>
+    <div class="form-group"><label>{{localize "ASHANVIL.DamageResistances"}}</label><textarea name="system.defenses.resistances" rows="2">{{defenses.resistances}}</textarea></div>
+    <div class="form-group"><label>{{localize "ASHANVIL.DamageImmunities"}}</label><textarea name="system.defenses.immunities" rows="2">{{defenses.immunities}}</textarea></div>
+    <div class="form-group"><label>{{localize "ASHANVIL.DamageVulnerabilities"}}</label><textarea name="system.defenses.vulnerabilities" rows="2">{{defenses.vulnerabilities}}</textarea></div>
+    <div class="form-group"><label>{{localize "ASHANVIL.ConditionImmunities"}}</label><textarea name="system.defenses.conditionImmunities" rows="2">{{defenses.conditionImmunities}}</textarea></div>
+  </section>
+
+  <section class="details-heritage">
+    <h3 class="zone-title">{{localize "ASHANVIL.Heritage"}}</h3>
+    <div class="flexrow">
+      <label><input type="checkbox" name="system.details.isVampire" {{checked heritage.isVampire}} data-action="toggleHeritage" data-heritage="vampire" /> {{localize "ASHANVIL.HeritageVampire"}}</label>
+      <label><input type="checkbox" name="system.details.isLycanthrope" {{checked heritage.isLycanthrope}} data-action="toggleHeritage" data-heritage="lycanthrope" /> {{localize "ASHANVIL.HeritageLycanthrope"}}</label>
+    </div>
+    <p class="hint">{{localize "ASHANVIL.HeritageHint"}}</p>
+  </section>
 </div>
