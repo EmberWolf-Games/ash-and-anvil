@@ -361,3 +361,5 @@ export function applyAncestryAdjustments(system, ancestryItem, secondaryAncestry
 
 }
 
+export { ensureSkillEntries } from "./skills.mjs";
+
