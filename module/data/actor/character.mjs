@@ -197,6 +197,23 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
           label: "ASHANVIL.CurrencyValue",
         }),
       }),
+      resources: new SchemaField({
+        mana: new SchemaField({
+          value: new NumberField({ integer: true, initial: 0, min: 0, label: "ASHANVIL.ResourceManaValue" }),
+          max: new NumberField({ integer: true, initial: 0, min: 0, label: "ASHANVIL.ResourceManaMax" }),
+          bonus: new NumberField({ integer: true, initial: 0, label: "ASHANVIL.ResourceBonus" }),
+        }),
+        focus: new SchemaField({
+          value: new NumberField({ integer: true, initial: 0, min: 0, label: "ASHANVIL.ResourceFocusValue" }),
+          max: new NumberField({ integer: true, initial: 0, min: 0, label: "ASHANVIL.ResourceFocusMax" }),
+          bonus: new NumberField({ integer: true, initial: 0, label: "ASHANVIL.ResourceBonus" }),
+        }),
+        favor: new SchemaField({
+          value: new NumberField({ integer: true, initial: 0, min: 0, label: "ASHANVIL.ResourceFavorValue" }),
+          max: new NumberField({ integer: true, initial: 0, min: 0, label: "ASHANVIL.ResourceFavorMax" }),
+          bonus: new NumberField({ integer: true, initial: 0, label: "ASHANVIL.ResourceBonus" }),
+        }),
+      }),
       equipment: new SchemaField(equipmentSlotFields(), { label: "ASHANVIL.Equipment" }),
       inventory: new SchemaField({
         totalWeight: new NumberField({ initial: 0, min: 0, label: "ASHANVIL.TotalWeight" }),

@@ -103,6 +103,9 @@ export default {
       skillChoices: 2,
       skillPool: ["spellcraft", "craft", "search", "perform", "useMagicDevice"],
       featureKeys: ["artificer-tinker"],
+      casterProgression: "half",
+      powerPool: "mana",
+      spellcastingAbility: "mnd",
     },
   ],
   backgrounds: [

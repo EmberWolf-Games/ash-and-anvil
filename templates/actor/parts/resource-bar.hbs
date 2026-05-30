@@ -1,0 +1,20 @@
+<div class="resource-bar resource-bar--{{bar.key}}" data-resource="{{bar.key}}">
+  <div class="resource-bar-header flexrow">
+    <span class="resource-bar-label">{{bar.label}} <span class="resource-bar-abbr">({{bar.abbr}})</span></span>
+    <span class="resource-bar-values">{{bar.display}}</span>
+  </div>
+  <div class="resource-bar-track" title="{{bar.display}}">
+    <div class="resource-bar-fill resource-bar-fill--{{bar.key}}" style="width: {{bar.pct}}%"></div>
+  </div>
+  {{> "systems/ash-and-anvil/templates/actor/parts/resource-adjust.hbs"
+    display=bar.display
+    path=bar.path
+    editable=canAdjustResources
+  }}
+  {{#if sheetEditMode}}
+  <div class="resource-bar-bonus flexrow">
+    <label>{{localize "ASHANVIL.ResourceBonus"}}</label>
+    <input type="number" name="system.{{bar.bonusPath}}" value="{{bar.bonus}}" />
+  </div>
+  {{/if}}
+</div>

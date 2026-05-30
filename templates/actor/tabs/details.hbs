@@ -15,6 +15,7 @@
           <span class="details-meta-item">{{details.ancestry}}{{#if details.ancestryBlended}} · {{details.secondaryAncestry}}{{/if}}</span>
           <span class="details-meta-item">{{details.className}}{{#if details.multiClass}} / {{details.secondaryClassName}}{{/if}}</span>
           <span class="details-meta-item">{{localize "ASHANVIL.TotalLevel"}} {{details.totalLevel}}/{{details.maxTotalLevel}}</span>
+          <span class="details-level-chip" title="{{localize 'ASHANVIL.TotalLevel'}}">Lv {{details.totalLevel}}</span>
         </div>
         <div class="details-levels flexrow">
           <label>{{localize "ASHANVIL.PrimaryClassLevel"}}</label>
@@ -22,9 +23,6 @@
           <label>{{localize "ASHANVIL.SecondaryClassLevel"}}</label>
           <input type="number" name="system.attributes.secondaryClassLevel" value="{{details.secondaryClassLevel}}" min="0" max="{{details.maxTotalLevel}}" />
         </div>
-      </div>
-      <div class="details-level-badge" title="{{localize 'ASHANVIL.TotalLevel'}}">
-        <span class="level-value">{{details.totalLevel}}</span>
       </div>
     </div>
 
@@ -82,31 +80,36 @@
           {{> "systems/ash-and-anvil/templates/actor/parts/resource-adjust.hbs"
             display=combat.hpDisplay
             path="attributes.health.value"
-            editable=sheetEditMode
+            editable=canAdjustResources
           }}
         </div>
         <div class="hp-meta flexrow">
           <label>{{localize "ASHANVIL.HealthMax"}}</label>
           <input type="number" name="system.attributes.health.max" value="{{combat.health.max}}" min="0" {{#unless sheetEditMode}}readonly{{/unless}} />
           <label>{{localize "ASHANVIL.HealthTemp"}}</label>
-          <input type="number" name="system.attributes.health.temp" value="{{combat.health.temp}}" min="0" {{#unless sheetEditMode}}readonly{{/unless}} />
+          <input type="number" class="gameplay-field" name="system.attributes.health.temp" value="{{combat.health.temp}}" min="0" {{#unless canAdjustResources}}readonly{{/unless}} />
         </div>
         <div class="death-favor-grid">
           <div>
             <span class="mini-label">{{localize "ASHANVIL.DeathSaves"}}</span>
             <div class="flexrow">
               <label>{{localize "ASHANVIL.Successes"}}</label>
-              <input type="number" name="system.attributes.deathSaves.successes" value="{{combat.deathSaves.successes}}" min="0" max="3" />
+              <input type="number" class="gameplay-field" name="system.attributes.deathSaves.successes" value="{{combat.deathSaves.successes}}" min="0" max="3" {{#unless canAdjustResources}}readonly{{/unless}} />
               <label>{{localize "ASHANVIL.Failures"}}</label>
-              <input type="number" name="system.attributes.deathSaves.failures" value="{{combat.deathSaves.failures}}" min="0" max="3" />
+              <input type="number" class="gameplay-field" name="system.attributes.deathSaves.failures" value="{{combat.deathSaves.failures}}" min="0" max="3" {{#unless canAdjustResources}}readonly{{/unless}} />
             </div>
-          </div>
-          <div>
-            <span class="mini-label">{{localize "ASHANVIL.Favor"}}</span>
-            <input type="number" name="system.attributes.favor" value="{{combat.favor}}" min="0" />
           </div>
         </div>
       </section>
+
+      {{#if hasResourceBars}}
+      <section class="details-panel details-panel--resources">
+        <h4 class="panel-title">{{localize "ASHANVIL.PowerResources"}}</h4>
+        {{#each resourceBars as |bar|}}
+        {{> "systems/ash-and-anvil/templates/actor/parts/resource-bar.hbs" bar=bar}}
+        {{/each}}
+      </section>
+      {{/if}}
 
       <section class="details-panel details-panel--speed">
         <h4 class="panel-title">{{localize "ASHANVIL.Speed"}}</h4>

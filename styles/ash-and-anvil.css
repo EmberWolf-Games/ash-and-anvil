@@ -108,12 +108,19 @@
   word-break: break-word;
 }
 
-.ash-and-anvil.sheet.sheet-edit-locked .sheet-tab-content input:not([data-action="toggleEditMode"]),
-.ash-and-anvil.sheet.sheet-edit-locked .sheet-tab-content select,
-.ash-and-anvil.sheet.sheet-edit-locked .sheet-tab-content textarea,
+.ash-and-anvil.sheet.sheet-edit-locked .sheet-tab-content input:not([data-action="toggleEditMode"]):not(.gameplay-field):not(.resource-delta-input),
+.ash-and-anvil.sheet.sheet-edit-locked .sheet-tab-content select:not(.gameplay-field),
+.ash-and-anvil.sheet.sheet-edit-locked .sheet-tab-content textarea:not(.gameplay-field),
 .ash-and-anvil.sheet.sheet-edit-locked .sheet-header .charname input {
   opacity: 0.92;
   pointer-events: none;
+}
+
+.ash-and-anvil.sheet.sheet-edit-locked .gameplay-field,
+.ash-and-anvil.sheet.sheet-edit-locked .resource-adjust,
+.ash-and-anvil.sheet.sheet-edit-locked .resource-adjust .resource-apply {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .ash-and-anvil.sheet.sheet-edit-locked .add-skill-btn,
@@ -657,6 +664,63 @@
   margin-bottom: 0.35rem;
 }
 
+.ash-and-anvil.sheet.actor .resource-bar {
+  margin-bottom: 0.65rem;
+}
+
+.ash-and-anvil.sheet.actor .resource-bar-header {
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.2rem;
+}
+
+.ash-and-anvil.sheet.actor .resource-bar-label {
+  color: var(--aa-accent);
+  font-size: var(--font-size-12);
+  font-weight: bold;
+}
+
+.ash-and-anvil.sheet.actor .resource-bar-abbr {
+  font-weight: normal;
+  opacity: 0.75;
+}
+
+.ash-and-anvil.sheet.actor .resource-bar-track {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--aa-border);
+  border-radius: 999px;
+  height: 0.45rem;
+  margin-bottom: 0.35rem;
+  overflow: hidden;
+}
+
+.ash-and-anvil.sheet.actor .resource-bar-fill {
+  background: var(--aa-accent);
+  border-radius: 999px;
+  height: 100%;
+  min-width: 0;
+  transition: width 0.15s ease;
+}
+
+.ash-and-anvil.sheet.actor .resource-bar-fill--focus {
+  background: #6eb5ff;
+}
+
+.ash-and-anvil.sheet.actor .resource-bar-fill--favor {
+  background: #d4b44a;
+}
+
+.ash-and-anvil.sheet.actor .resource-bar-bonus {
+  align-items: center;
+  font-size: var(--font-size-11);
+  gap: 0.35rem;
+  margin-top: 0.15rem;
+}
+
+.ash-and-anvil.sheet.actor .resource-bar-bonus input {
+  max-width: 3.5rem;
+}
+
 .ash-and-anvil.sheet.actor .speed-effective {
   color: var(--aa-accent);
   font-size: var(--font-size-16);
@@ -1184,22 +1248,14 @@
   max-width: 3.5rem;
 }
 
-.ash-and-anvil.sheet.actor .details-level-badge {
-  align-items: center;
-  background: radial-gradient(circle at 30% 30%, #3d3d3d, #1a1a1a);
-  border: 2px solid var(--aa-accent);
-  border-radius: 50%;
-  display: flex;
-  flex-shrink: 0;
-  height: 3.5rem;
-  justify-content: center;
-  width: 3.5rem;
-}
-
-.ash-and-anvil.sheet.actor .details-level-badge .level-value {
+.ash-and-anvil.sheet.actor .details-level-chip {
+  background: rgba(232, 93, 4, 0.15);
+  border: 1px solid var(--aa-accent-dim);
+  border-radius: 999px;
   color: var(--aa-accent);
-  font-size: var(--font-size-18);
+  font-size: var(--font-size-11);
   font-weight: bold;
+  padding: 0.1rem 0.45rem;
 }
 
 .ash-and-anvil.sheet.actor .details-abilities-row {

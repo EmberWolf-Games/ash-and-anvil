@@ -9,6 +9,7 @@ import { migrateLegacyCurrency } from "./currency.mjs";
 import { deriveDefense } from "./defense.mjs";
 
 import { deriveEncumbrance } from "./encumbrance.mjs";
+import { deriveCasterResources } from "./caster-resources.mjs";
 
 import { edgeBonus } from "./proficiency.mjs";
 
@@ -124,6 +125,12 @@ export function ensureCharacterStructure(system) {
 
   system.inventory ??= { totalWeight: 0, notes: "" };
 
+  system.resources ??= {
+    mana: { value: 0, max: 0, bonus: 0 },
+    focus: { value: 0, max: 0, bonus: 0 },
+    favor: { value: 0, max: 0, bonus: 0 },
+  };
+
   system.equipment ??= {};
 
   for (const slotId of EQUIPMENT_SLOT_IDS) {
@@ -192,6 +199,8 @@ function applyHeritageModifiers(system) {
 function deriveInventory(actor, system) {
 
   deriveEncumbrance(actor, system);
+
+  deriveCasterResources(actor, system);
 
 }
 

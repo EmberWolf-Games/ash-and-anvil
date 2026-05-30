@@ -6,7 +6,7 @@
         {{> "systems/ash-and-anvil/templates/actor/parts/resource-adjust.hbs"
           display=inventory.currencyDisplay
           path="currency.value"
-          editable=sheetEditMode
+          editable=canAdjustResources
         }}
         {{#if inventory.currencyBreakdown.length}}
         <ul class="currency-breakdown-chips">

@@ -175,6 +175,16 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
 
 
+  /** Gameplay resource tweaks (HP, currency, pools) without full edit mode. */
+
+  #canAdjustResources() {
+
+    return this.isEditable;
+
+  }
+
+
+
   #syncEditLockClass() {
 
     this.element?.classList.toggle("sheet-edit-locked", this.isEditable && !this.#sheetEditMode);
@@ -300,11 +310,15 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     const sheetEditMode = this.#canEditSheet();
 
+    const canAdjustResources = this.#canAdjustResources();
+
     const sheetContext = prepareCharacterSheetContext(this.actor, {
 
       editable: sheetEditMode,
 
       sheetEditMode,
+
+      canAdjustResources,
 
       changeLog: formatChangeLogForDisplay(this.actor),
 
@@ -652,7 +666,7 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     const app = /** @type {CharacterActorSheet} */ (this);
 
-    if (!app.#canEditSheet()) return;
+    if (!app.#canAdjustResources()) return;
 
     const path = target.dataset.path;
 
@@ -674,7 +688,21 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     }
 
-    await app.actor.update({ [`system.${path}`]: next });
+    if (path.startsWith("resources.") && path.endsWith(".value")) {
+
+      const key = path.split(".")[1];
+
+      const max = app.actor.system.resources?.[key]?.max ?? next;
+
+      next = Math.min(next, max);
+
+    }
+
+    const update = { [`system.${path}`]: next };
+
+    if (path === "resources.favor.value") update["system.attributes.favor"] = next;
+
+    await app.actor.update(update);
 
     input.value = "";
 

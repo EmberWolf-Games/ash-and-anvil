@@ -2,13 +2,13 @@
   <span class="resource-current" title="{{localize 'ASHANVIL.ResourceCurrentHint'}}">{{display}}</span>
   <input
     type="text"
-    class="resource-delta-input"
+    class="resource-delta-input gameplay-field"
     data-resource-input
     placeholder="{{localize 'ASHANVIL.ResourceDeltaPlaceholder'}}"
     {{#unless editable}}readonly disabled{{/unless}}
   />
   {{#if editable}}
-  <button type="button" class="resource-apply" data-action="applyResourceDelta" data-path="{{path}}">
+  <button type="button" class="resource-apply gameplay-field" data-action="applyResourceDelta" data-path="{{path}}">
     {{localize "ASHANVIL.Apply"}}
   </button>
   {{/if}}

@@ -19,6 +19,7 @@ import {
   WEAPON_PROFICIENCIES,
 } from "../../config/traits.mjs";
 import { spentSkillPoints } from "../../rules/skills.mjs";
+import { buildResourceBarContext } from "../../rules/caster-resources.mjs";
 import { availableTagOptions, normalizeTagArray, selectedTags } from "../../helpers/tag-arrays.mjs";
 
 /**
@@ -113,6 +114,8 @@ export function prepareDetailsTabContext(actor, baseContext) {
   const immunityTags = normalizeTagArray(defensesRaw.immunities);
   const vulnerabilityTags = normalizeTagArray(defensesRaw.vulnerabilities);
   const conditionImmunityTags = normalizeTagArray(defensesRaw.conditionImmunities);
+
+  const resourceBars = buildResourceBarContext(actor);
 
   return {
     details: {
@@ -217,5 +220,7 @@ export function prepareDetailsTabContext(actor, baseContext) {
       isVampire: system.details?.isVampire ?? false,
       isLycanthrope: system.details?.isLycanthrope ?? false,
     },
+    resourceBars,
+    hasResourceBars: resourceBars.length > 0,
   };
 }

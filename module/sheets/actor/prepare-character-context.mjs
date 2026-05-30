@@ -186,6 +186,7 @@ export function prepareCharacterSheetContext(actor, options = {}) {
     },
 
     sheetEditMode: options.sheetEditMode ?? false,
+    canAdjustResources: options.canAdjustResources ?? options.editable ?? false,
     isGM: game.user.isGM,
     changeLog: options.changeLog ?? [],
 

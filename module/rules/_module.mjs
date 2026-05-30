@@ -53,3 +53,10 @@ export {
   ensureSkillEntries,
   applyAncestryAdjustments,
 } from "./derive-character.mjs";
+export {
+  buildResourceBarContext,
+  deriveCasterResources,
+  maxSpellLevelForEffectiveLevel,
+  effectiveCasterLevel,
+  divineRank,
+} from "./caster-resources.mjs";

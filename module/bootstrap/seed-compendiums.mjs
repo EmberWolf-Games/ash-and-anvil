@@ -146,6 +146,9 @@ function buildClass(data, _featureMap) {
       skillChoices: data.skillChoices,
       skillPool: data.skillPool,
       featureKeys: data.featureKeys,
+      casterProgression: data.casterProgression ?? "none",
+      powerPool: data.powerPool ?? "none",
+      spellcastingAbility: data.spellcastingAbility ?? "mnd",
     },
     flags: { "ash-and-anvil": { starterKey: data.key } },
   };
