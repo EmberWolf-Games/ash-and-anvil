@@ -76,4 +76,6 @@ export {
   maxSpellLevelForEffectiveLevel,
   effectiveCasterLevel,
   divineRank,
+  spellcastingAbilityMod,
+  powerPoolAbilityMod,
 } from "./caster-resources.mjs";

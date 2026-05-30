@@ -1,4 +1,5 @@
 import { ChargenWizard } from "../../applications/chargen-wizard.mjs";
+import { CustomSkillDialog } from "../../applications/custom-skill-dialog.mjs";
 import { LevelUpWizard } from "../../applications/level-up-wizard.mjs";
 import { runSpellCast, showSpellInfo } from "../../applications/spell-cast-dialog.mjs";
 
@@ -120,6 +121,10 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       removeTag: CharacterActorSheet.#onRemoveTag,
 
       addCustomSkill: CharacterActorSheet.#onAddCustomSkill,
+
+      editCustomSkill: CharacterActorSheet.#onEditCustomSkill,
+
+      deleteCustomSkill: CharacterActorSheet.#onDeleteCustomSkill,
 
       toggleHeritage: CharacterActorSheet.#onToggleHeritage,
 
@@ -959,33 +964,75 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     if (!app.#canEditSheet()) return;
 
-    const label = window.prompt(game.i18n.localize("ASHANVIL.SkillName"));
+    await CustomSkillDialog.prompt(app.actor);
 
-    if (!label?.trim()) return;
+    await recordSheetChanges(app.actor, {
+      system: { skills: { custom: app.actor.system.skills?.custom ?? [] } },
+    });
+
+    app.render(false);
+
+  }
+
+
+
+  static async #onEditCustomSkill(event, target) {
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canEditSheet()) return;
+
+    const index = Number(target.dataset.customIndex);
+
+    if (Number.isNaN(index)) return;
+
+    await CustomSkillDialog.prompt(app.actor, index);
+
+    await recordSheetChanges(app.actor, {
+      system: { skills: { custom: app.actor.system.skills?.custom ?? [] } },
+    });
+
+    app.render(false);
+
+  }
+
+
+
+  static async #onDeleteCustomSkill(event, target) {
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canEditSheet()) return;
+
+    const index = Number(target.dataset.customIndex);
+
+    if (Number.isNaN(index)) return;
 
     const custom = foundry.utils.deepClone(app.actor.system.skills?.custom ?? []);
 
-    custom.push({
+    const entry = custom[index];
 
-      id: foundry.utils.randomID(),
+    if (!entry) return;
 
-      label: label.trim(),
+    const confirmed = await Dialog.confirm({
 
-      ability: "mnd",
+      title: game.i18n.localize("ASHANVIL.DeleteCustomSkill"),
 
-      spRanks: 0,
+      content: `<p>${game.i18n.format("ASHANVIL.DeleteCustomSkillConfirm", { name: entry.label })}</p>`,
 
-      moneyRanks: 0,
+      yes: () => true,
 
-      misc: 0,
+      no: () => false,
 
-      bonus: 0,
+      defaultYes: false,
 
     });
 
-    const update = { "system.skills.custom": custom };
+    if (!confirmed) return;
 
-    await app.actor.update(update);
+    custom.splice(index, 1);
+
+    await app.actor.update({ "system.skills.custom": custom });
 
     await recordSheetChanges(app.actor, { system: { skills: { custom } } });
 

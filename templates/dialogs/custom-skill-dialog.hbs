@@ -1,0 +1,18 @@
+<form class="custom-skill-dialog flexcol">
+  <div class="form-group stacked">
+    <label for="custom-skill-label">{{localize "ASHANVIL.SkillName"}}</label>
+    <input id="custom-skill-label" type="text" name="label" value="{{label}}" placeholder="{{localize 'ASHANVIL.SkillNamePlaceholder'}}" autofocus />
+
+    <label for="custom-skill-ability">{{localize "ASHANVIL.KeyAbility"}}</label>
+    <select id="custom-skill-ability" name="ability">
+      {{#each abilityOptions as |opt|}}
+      <option value="{{opt.key}}" {{#if (eq opt.key ability)}}selected{{/if}}>{{opt.label}} ({{opt.abbr}})</option>
+      {{/each}}
+    </select>
+  </div>
+
+  <footer class="sheet-footer flexrow">
+    <button type="button" data-action="save"><i class="fas fa-check"></i> {{localize "Save"}}</button>
+    <button type="button" data-action="cancel"><i class="fas fa-times"></i> {{localize "Cancel"}}</button>
+  </footer>
+</form>

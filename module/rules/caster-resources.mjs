@@ -57,6 +57,16 @@ export function spellcastingAbilityMod(abilities, abilityKey) {
 }
 
 /**
+ * Ability modifier contribution to power pools (doubled for MP/FP/FV).
+ * @param {object} abilities
+ * @param {string} abilityKey
+ * @returns {number}
+ */
+export function powerPoolAbilityMod(abilities, abilityKey) {
+  return spellcastingAbilityMod(abilities, abilityKey) * 2;
+}
+
+/**
  * @param {Actor} actor
  * @returns {{ item: Item, level: number }[]}
  */
@@ -98,7 +108,7 @@ function poolContribution(allocation, abilities) {
   const abilityKey = sys.spellcastingAbility ?? "mnd";
   const eff = effectiveCasterLevel(allocation.level, progression);
   const maxRank = maxSpellLevelForEffectiveLevel(eff);
-  const mod = spellcastingAbilityMod(abilities, abilityKey);
+  const mod = powerPoolAbilityMod(abilities, abilityKey);
 
   const out = { mana: 0, focus: 0, favor: 0 };
 
@@ -110,7 +120,7 @@ function poolContribution(allocation, abilities) {
     out.focus = eff + maxRank + Math.max(0, mod);
   } else if (pool === "divine") {
     const rank = divineRank(eff);
-    const insightMod = Math.max(0, spellcastingAbilityMod(abilities, "ins"));
+    const insightMod = Math.max(0, powerPoolAbilityMod(abilities, "ins"));
     out.favor = rank + insightMod;
   }
 

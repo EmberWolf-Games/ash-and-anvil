@@ -1809,6 +1809,51 @@
   font-style: italic;
 }
 
+.ash-and-anvil.sheet.actor .skill-class-check-cell {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 1.35rem;
+}
+
+.ash-and-anvil.sheet.actor .skill-custom-actions {
+  display: flex;
+  gap: 0.1rem;
+}
+
+.ash-and-anvil.sheet.actor .skill-custom-action {
+  background: transparent;
+  border: none;
+  color: var(--aa-text-muted, #999);
+  cursor: pointer;
+  font-size: var(--font-size-10);
+  line-height: 1;
+  padding: 0.1rem;
+}
+
+.ash-and-anvil.sheet.actor .skill-custom-action:hover {
+  color: var(--aa-accent);
+}
+
+.ash-and-anvil.sheet.actor .skill-custom-action--delete:hover {
+  color: #c0392b;
+}
+
+.ash-and-anvil.custom-skill-dialog .sheet-footer {
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
+}
+
+.ash-and-anvil.custom-skill-dialog .form-group.stacked label {
+  font-size: var(--font-size-12);
+  margin-top: 0.35rem;
+}
+
+.ash-and-anvil.custom-skill-dialog .form-group.stacked label:first-child {
+  margin-top: 0;
+}
+
 .ash-and-anvil.sheet.actor .skill-class-check {
   margin: 0;
   pointer-events: none;

@@ -40,9 +40,22 @@
   </li>
   {{/each}}
   {{#each customSkillRows as |row|}}
-  <li class="skill-row skill-row--custom">
-    <input class="skill-class-check" type="checkbox" disabled title="{{localize 'ASHANVIL.SkillClassSkillAuto'}}" />
-    <span class="skill-name">{{row.label}}</span>
+  <li class="skill-row skill-row--custom{{#if ../sheetEditMode}} skill-row--custom-editable{{/if}}">
+    <span class="skill-class-check-cell">
+      {{#if ../sheetEditMode}}
+      <span class="skill-custom-actions">
+        <button type="button" class="skill-custom-action" data-action="editCustomSkill" data-custom-index="{{row.index}}" title="{{localize 'ASHANVIL.EditCustomSkill'}}">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button type="button" class="skill-custom-action skill-custom-action--delete" data-action="deleteCustomSkill" data-custom-index="{{row.index}}" title="{{localize 'ASHANVIL.DeleteCustomSkill'}}">
+          <i class="fas fa-trash"></i>
+        </button>
+      </span>
+      {{else}}
+      <input class="skill-class-check" type="checkbox" disabled title="{{localize 'ASHANVIL.SkillClassSkillAuto'}}" />
+      {{/if}}
+    </span>
+    <span class="skill-name" title="{{row.label}}">{{row.label}}</span>
     <span class="skill-key-ability">{{row.abilityAbbr}}</span>
     {{#if ../canAdjustResources}}
     <button type="button" class="skill-modifier skill-modifier--roll" data-action="rollSkill" data-skill="custom" data-custom-index="{{row.index}}" title="{{localize 'ASHANVIL.RollCheckHint'}}">{{numberFormat row.skillModifier sign=true}}</button>
