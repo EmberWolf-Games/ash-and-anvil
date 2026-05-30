@@ -1656,7 +1656,14 @@
 }
 
 .ash-and-anvil.sheet.actor .save-row {
-  grid-template-columns: 1.25rem 2rem 1fr 2.5rem 2.5rem 1.75rem;
+  grid-template-columns: 1.25rem 2rem minmax(0, 1fr) 2.5rem 2.5rem 1.75rem;
+}
+
+.ash-and-anvil.sheet.actor .save-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ash-and-anvil.sheet.actor .save-abbr {

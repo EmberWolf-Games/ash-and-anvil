@@ -39,7 +39,7 @@ export function encumbranceThresholds(mgtScore) {
 
 /**
  * @param {Actor} actor
- * @returns {{ bodyWeight: number, wornWeight: number, carriedWeight: number, currentWeight: number }}
+ * @returns {{ bodyWeight: number, wornWeight: number, carriedWeight: number, loadWeight: number, currentWeight: number }}
  */
 export function computeWeightBreakdown(actor) {
   const equippedIds = getEquippedItemIds(actor.system.equipment ?? {});
@@ -58,6 +58,7 @@ export function computeWeightBreakdown(actor) {
     bodyWeight,
     wornWeight,
     carriedWeight,
+    loadWeight: wornWeight + carriedWeight,
     currentWeight: bodyWeight + wornWeight + carriedWeight,
   };
 }
@@ -111,7 +112,9 @@ export function deriveEncumbrance(actor, system) {
   const mgt = system.abilities?.mgt?.value ?? 10;
   const thresholds = encumbranceThresholds(mgt);
   const breakdown = computeWeightBreakdown(actor);
-  const tier = encumbranceTier(breakdown.currentWeight, thresholds);
+  const loadWeight = breakdown.loadWeight;
+  const tier = encumbranceTier(loadWeight, thresholds);
+  const effectiveMax = thresholds.max + breakdown.bodyWeight;
 
   system.speed ??= {};
   if (!system.speed.baseWalk) {
@@ -128,7 +131,9 @@ export function deriveEncumbrance(actor, system) {
     tier,
     attackBane: attackBaneForTier(tier),
     current: breakdown.currentWeight,
-    max: thresholds.max,
+    load: loadWeight,
+    max: effectiveMax,
+    gearMax: thresholds.max,
     lightThreshold: thresholds.light,
     heavyThreshold: thresholds.heavy,
     bodyWeight: breakdown.bodyWeight,
@@ -149,14 +154,14 @@ export function validateWeightPickup(actor, item, excludeItemId = null) {
   const mgt = actor.system.abilities?.mgt?.value ?? 10;
   const { max } = encumbranceThresholds(mgt);
   const breakdown = computeWeightBreakdown(actor);
-  let current = breakdown.currentWeight;
+  let loadWeight = breakdown.loadWeight;
 
   if (excludeItemId) {
     const existing = actor.items.get(excludeItemId);
-    if (existing?.type === "gear") current -= itemWeight(existing);
+    if (existing?.type === "gear") loadWeight -= itemWeight(existing);
   }
 
-  if (current + itemWeight(item) > max) {
+  if (loadWeight + itemWeight(item) > max) {
     return { ok: false, message: game.i18n.localize("ASHANVIL.EncumbranceOverMax") };
   }
   return { ok: true };

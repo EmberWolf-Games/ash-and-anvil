@@ -64,5 +64,5 @@ export function formatAncestrySummary(actor) {
   if (ancestry) identityParts.push(ancestry);
 
   const identity = identityParts.join(" ") || "—";
-  return `${identity}, ${age}`;
+  return `${identity}, ${age} yrs`;
 }
