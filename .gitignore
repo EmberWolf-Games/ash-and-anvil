@@ -43,3 +43,6 @@ packs/**/*.ldb
 credentials.json
 .cursor/local-foundry-test.json
 .cursor/playtest-screenshots/
+
+# Local design reference (external; symlink/junction at repo root — do not commit)
+AshandAnvil_Docs/

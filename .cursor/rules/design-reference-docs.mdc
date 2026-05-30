@@ -1,0 +1,33 @@
+---
+description: Core Ash & Anvil design reference docs (in-repo + local AshandAnvil_Docs)
+alwaysApply: true
+---
+
+# Design reference documentation
+
+When implementing rules, content, classes, ancestries, subclasses, or chargen features, consult these sources **before inventing mechanics or names**.
+
+## In-repo (versioned)
+
+- `docs/design/` — Foundry implementation briefs (vision, resolution, character model, chargen, automation, sheet layout, inventory).
+- `docs/playtest-chargen-mvp.md` — QA checklist for chargen MVP.
+- `docs/testing.md` — local Foundry playtest setup.
+
+## Local design bible (not in git)
+
+**Path:** `G:/AshandAnvil_Docs/` (also linked at repo root as `AshandAnvil_Docs/` — gitignored).
+
+| Folder / file | Contents |
+|---------------|----------|
+| `Classes/ash_and_anvil_parent_class_design_draft_expanded.md` | Parent class design draft |
+| `Classes/Subclasses/README_class_subclass_index.md` | Index of all subclass docs |
+| `Classes/Subclasses/*_subclasses.md` | Per-class subclass options and progression |
+| `Races/ash_and_anvil_race_design.md` | Ancestry / race design |
+
+The user adds new markdown under `AshandAnvil_Docs/` over time. Prefer the newest doc in the relevant subfolder over stale in-repo stubs when they conflict; flag conflicts explicitly.
+
+## Usage
+
+- Treat `AshandAnvil_Docs` as **canonical IP and mechanics reference** for names, class structure, subclasses, and ancestries.
+- Keep `docs/design/` aligned with what is actually implemented in Foundry; do not copy the full external bible into the repo.
+- Never commit files from `AshandAnvil_Docs/` — the folder is gitignored by design.
