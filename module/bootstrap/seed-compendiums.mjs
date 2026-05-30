@@ -143,6 +143,7 @@ function buildClass(data, _featureMap) {
     system: {
       description: data.description,
       hitDie: data.hitDie,
+      skillPointsPerLevel: data.skillPointsPerLevel ?? 2,
       skillChoices: data.skillChoices,
       skillPool: data.skillPool,
       featureKeys: data.featureKeys,

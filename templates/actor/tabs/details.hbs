@@ -180,53 +180,7 @@
     </aside>
 
     <section class="details-col details-col--skills">
-      <div class="skills-header flexrow">
-        <h4 class="panel-title">{{localize "ASHANVIL.Skills"}}</h4>
-        <span class="skills-meta">{{skillsMeta.pointsSpent}}/{{skillsMeta.pointsAvailable}} · {{localize "ASHANVIL.MaxRanks"}} {{skillsMeta.maxRanks}}</span>
-        <input type="hidden" name="system.skills.pointsAvailable" value="{{skillsMeta.pointsAvailable}}" />
-      </div>
-      <ul class="skill-list-compact">
-        <li class="skill-row skill-row--header">
-          <span class="skill-ability">{{localize "ASHANVIL.Ability"}}</span>
-          <span class="skill-name">{{localize "ASHANVIL.Skill"}}</span>
-          <span class="skill-ranks-h">{{localize "ASHANVIL.Ranks"}}</span>
-          <span class="skill-misc-h">{{localize "ASHANVIL.Misc"}}</span>
-          <span class="skill-bonus-h">{{localize "ASHANVIL.Bonus"}}</span>
-          <span class="skill-passive-h">{{localize "ASHANVIL.Passive"}}</span>
-          <span class="skill-roll-h">{{localize "ASHANVIL.Roll"}}</span>
-        </li>
-        {{#each skillRows as |row|}}
-        <li class="skill-row">
-          <span class="skill-ability">{{row.abilityAbbr}}</span>
-          <span class="skill-name">{{row.label}}</span>
-          <input class="skill-ranks" type="number" name="system.skills.entries.{{row.key}}.ranks" value="{{row.entry.ranks}}" min="0" max="{{../skillsMeta.maxRanks}}" title="{{localize 'ASHANVIL.Ranks'}}" />
-          <input class="skill-misc" type="number" name="system.skills.entries.{{row.key}}.misc" value="{{row.entry.misc}}" title="{{localize 'ASHANVIL.Misc'}}" />
-          <span class="skill-bonus">{{numberFormat row.entry.bonus sign=true}}</span>
-          <span class="skill-passive">{{row.passive}}</span>
-          {{#if ../canAdjustResources}}
-          <button type="button" class="roll-check-btn roll-check-btn--inline" data-action="rollSkill" data-skill="{{row.key}}" title="{{localize 'ASHANVIL.RollCheckHint'}}">
-            <i class="fas fa-dice-d20"></i>
-          </button>
-          {{/if}}
-        </li>
-        {{/each}}
-        {{#each customSkillRows as |row|}}
-        <li class="skill-row skill-row--custom">
-          <span class="skill-ability">{{row.abilityAbbr}}</span>
-          <span class="skill-name">{{row.label}}</span>
-          <input class="skill-ranks" type="number" name="system.skills.custom.{{row.index}}.ranks" value="{{row.entry.ranks}}" min="0" max="{{../skillsMeta.maxRanks}}" />
-          <input class="skill-misc" type="number" name="system.skills.custom.{{row.index}}.misc" value="{{row.entry.misc}}" />
-          <span class="skill-bonus">{{numberFormat row.entry.bonus sign=true}}</span>
-          <span class="skill-passive">{{row.passive}}</span>
-          {{#if ../canAdjustResources}}
-          <button type="button" class="roll-check-btn roll-check-btn--inline" data-action="rollSkill" data-skill="custom" data-custom-index="{{row.index}}" title="{{localize 'ASHANVIL.RollCheckHint'}}">
-            <i class="fas fa-dice-d20"></i>
-          </button>
-          {{/if}}
-        </li>
-        {{/each}}
-      </ul>
-      <button type="button" class="add-skill-btn" data-action="addCustomSkill">{{localize "ASHANVIL.AddCustomSkill"}}</button>
+      {{> "systems/ash-and-anvil/templates/actor/tabs/details-skills-section.hbs"}}
     </section>
 
     <aside class="details-col details-col--extra">

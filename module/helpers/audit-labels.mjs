@@ -60,11 +60,18 @@ export function humanizeAuditPath(path) {
       : path;
   }
 
-  m = path.match(/^system\.skills\.entries\.(\w+)\.(ranks|misc)$/);
+  m = path.match(/^system\.skills\.entries\.(\w+)\.(spRanks|moneyRanks|ranks|misc)$/);
   if (m) {
     const skill = SKILL_DEFINITIONS[m[1]];
-    const field =
-      m[2] === "ranks" ? game.i18n.localize("ASHANVIL.Ranks") : game.i18n.localize("ASHANVIL.Misc");
+    const fieldKey =
+      m[2] === "spRanks"
+        ? "ASHANVIL.SkillSpRanks"
+        : m[2] === "moneyRanks"
+          ? "ASHANVIL.SkillMoneyRanks"
+          : m[2] === "ranks"
+            ? "ASHANVIL.Ranks"
+            : "ASHANVIL.Misc";
+    const field = game.i18n.localize(fieldKey);
     return skill
       ? game.i18n.format("ASHANVIL.AuditSkillField", {
           skill: game.i18n.localize(skill.label),

@@ -2,7 +2,7 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const { FormDataExtended } = foundry.applications.ux;
 import { ABILITY_KEYS, ABILITIES, SKILLS, SKILL_KEYS } from "../rules/constants.mjs";
 import { applyAncestryAdjustments, ensureSkillEntries } from "../rules/derive-character.mjs";
-import { defaultSkillPoints } from "../rules/skills.mjs";
+import { applyDefaultSkillRanks, skillPointsAtFirstLevel } from "../rules/skills.mjs";
 import { getRulesConfig } from "../rules/config.mjs";
 import { loadStarterCatalog } from "../bootstrap/seed-compendiums.mjs";
 import {
@@ -275,25 +275,17 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
     system.details.classId = cls?.uuid ?? cls?.id ?? "";
     system.details.backgroundId = background?.uuid ?? background?.id ?? "";
 
-    for (const key of SKILL_KEYS) {
-      system.skills.entries[key] ??= { ranks: 0, misc: 0, bonus: 0, custom: false };
-      system.skills.entries[key].ranks = 0;
-    }
-    for (const key of background?.system?.trainedSkills ?? []) {
-      if (system.skills.entries[key]) system.skills.entries[key].ranks = 1;
-    }
     const classPool = cls?.system?.skillPool ?? [];
-    for (const key of this.state.classSkills) {
-      if (!classPool.includes(key)) continue;
-      if (system.skills.entries[key]) system.skills.entries[key].ranks = 1;
-    }
+    const classSkillKeys = this.state.classSkills.filter((key) => classPool.includes(key));
+    const edgeSkillKeys = background?.system?.trainedSkills ?? [];
+    applyDefaultSkillRanks(system, classSkillKeys, edgeSkillKeys);
 
     system.attributes.primaryClassLevel = 1;
     system.attributes.secondaryClassLevel = 0;
     system.attributes.classLevel = 1;
     system.attributes.totalLevel = 1;
     system.attributes.level = 1;
-    system.skills.pointsAvailable = defaultSkillPoints(1);
+    system.skills.pointsAvailable = skillPointsAtFirstLevel(cls ? { system: cls.system } : null, system);
     if (ancestry?.system?.speed) {
       system.speed.baseWalk = ancestry.system.speed;
       system.speed.walk = ancestry.system.speed;

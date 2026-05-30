@@ -1,0 +1,63 @@
+{{!-- 3.5e-style skills block (included from details.hbs) --}}
+<div class="skills-header flexrow">
+  <h4 class="panel-title">{{localize "ASHANVIL.Skills"}}</h4>
+  <span class="skills-meta" title="{{localize 'ASHANVIL.SkillPointsHint'}}">{{skillsMeta.pointsSpent}}/{{skillsMeta.pointsAvailable}} SP</span>
+  <span class="skills-max-ranks" title="{{localize 'ASHANVIL.MaxRanksClassCrossHint'}}">{{localize "ASHANVIL.MaxRanksClassCross"}} {{skillsMeta.maxClassRanks}}/{{skillsMeta.maxCrossClassRanks}}</span>
+</div>
+<ul class="skill-list-compact skill-list-compact--35e">
+  <li class="skill-row skill-row--header">
+    <span class="skill-class-h" title="{{localize 'ASHANVIL.SkillClassSkill'}}">✓</span>
+    <span class="skill-name-h">{{localize "ASHANVIL.Skill"}}</span>
+    <span class="skill-key-h">{{localize "ASHANVIL.KeyAbility"}}</span>
+    <span class="skill-mod-h">{{localize "ASHANVIL.SkillModifier"}}</span>
+    <span class="skill-eq-h">=</span>
+    <span class="skill-am-h">{{localize "ASHANVIL.SkillAbilityMod"}}</span>
+    <span class="skill-op-h">+</span>
+    <span class="skill-sp-h">{{localize "ASHANVIL.SkillSpRanks"}}</span>
+    <span class="skill-op-h">+</span>
+    <span class="skill-money-h">{{localize "ASHANVIL.SkillMoneyRanks"}}</span>
+    <span class="skill-op-h">+</span>
+    <span class="skill-misc-h">{{localize "ASHANVIL.SkillMiscMod"}}</span>
+  </li>
+  {{#each skillRows as |row|}}
+  <li class="skill-row{{#if row.classSkill}} skill-row--class-skill{{/if}}{{#if row.edgeSkill}} skill-row--edge-skill{{/if}}">
+    <input class="skill-class-check" type="checkbox" {{#if row.classSkill}}checked{{/if}} disabled title="{{localize 'ASHANVIL.SkillClassSkillAuto'}}" />
+    <span class="skill-name" title="{{#if row.classSkill}}{{localize 'ASHANVIL.ClassSkillHint'}}{{else}}{{#if row.edgeSkill}}{{localize 'ASHANVIL.EdgeSkillHint'}}{{/if}}{{/if}}">{{row.label}}</span>
+    <span class="skill-key-ability">{{row.abilityAbbr}}</span>
+    {{#if ../canAdjustResources}}
+    <button type="button" class="skill-modifier skill-modifier--roll" data-action="rollSkill" data-skill="{{row.key}}" title="{{localize 'ASHANVIL.RollCheckHint'}}">{{numberFormat row.skillModifier sign=true}}</button>
+    {{else}}
+    <span class="skill-modifier">{{numberFormat row.skillModifier sign=true}}</span>
+    {{/if}}
+    <span class="skill-eq" aria-hidden="true">=</span>
+    <span class="skill-ability-mod">{{numberFormat row.abilityMod sign=true}}</span>
+    <span class="skill-op" aria-hidden="true">+</span>
+    <input class="skill-sp-ranks" type="number" name="system.skills.entries.{{row.key}}.spRanks" value="{{row.entry.spRanks}}" min="0" max="{{row.maxSpRanks}}" title="{{localize 'ASHANVIL.SkillSpRanks'}}" />
+    <span class="skill-op" aria-hidden="true">+</span>
+    <input class="skill-money-ranks" type="number" name="system.skills.entries.{{row.key}}.moneyRanks" value="{{row.entry.moneyRanks}}" min="0" max="{{row.maxMoneyRanks}}" title="{{localize 'ASHANVIL.MoneyRankCostHint' cost=row.nextMoneyRankCost}}" />
+    <span class="skill-op" aria-hidden="true">+</span>
+    <input class="skill-misc-mod" type="number" name="system.skills.entries.{{row.key}}.misc" value="{{row.entry.misc}}" title="{{localize 'ASHANVIL.SkillMiscMod'}}" />
+  </li>
+  {{/each}}
+  {{#each customSkillRows as |row|}}
+  <li class="skill-row skill-row--custom">
+    <input class="skill-class-check" type="checkbox" disabled title="{{localize 'ASHANVIL.SkillClassSkillAuto'}}" />
+    <span class="skill-name">{{row.label}}</span>
+    <span class="skill-key-ability">{{row.abilityAbbr}}</span>
+    {{#if ../canAdjustResources}}
+    <button type="button" class="skill-modifier skill-modifier--roll" data-action="rollSkill" data-skill="custom" data-custom-index="{{row.index}}" title="{{localize 'ASHANVIL.RollCheckHint'}}">{{numberFormat row.skillModifier sign=true}}</button>
+    {{else}}
+    <span class="skill-modifier">{{numberFormat row.skillModifier sign=true}}</span>
+    {{/if}}
+    <span class="skill-eq" aria-hidden="true">=</span>
+    <span class="skill-ability-mod">{{numberFormat row.abilityMod sign=true}}</span>
+    <span class="skill-op" aria-hidden="true">+</span>
+    <input class="skill-sp-ranks" type="number" name="system.skills.custom.{{row.index}}.spRanks" value="{{row.entry.spRanks}}" min="0" max="{{row.maxSpRanks}}" />
+    <span class="skill-op" aria-hidden="true">+</span>
+    <input class="skill-money-ranks" type="number" name="system.skills.custom.{{row.index}}.moneyRanks" value="{{row.entry.moneyRanks}}" min="0" max="{{row.maxMoneyRanks}}" title="{{localize 'ASHANVIL.MoneyRankCostHint' cost=row.nextMoneyRankCost}}" />
+    <span class="skill-op" aria-hidden="true">+</span>
+    <input class="skill-misc-mod" type="number" name="system.skills.custom.{{row.index}}.misc" value="{{row.entry.misc}}" />
+  </li>
+  {{/each}}
+</ul>
+<button type="button" class="add-skill-btn" data-action="addCustomSkill">{{localize "ASHANVIL.AddCustomSkill"}}</button>

@@ -18,7 +18,14 @@ import {
   TOOL_PROFICIENCIES,
   WEAPON_PROFICIENCIES,
 } from "../../config/traits.mjs";
-import { spentSkillPoints } from "../../rules/skills.mjs";
+import {
+  moneyRankPurchaseCost,
+  resolveClassSkillKeys,
+  resolveEdgeSkills,
+  skillMaxRanks,
+  spentSkillPoints,
+  skillPointsAvailable,
+} from "../../rules/skills.mjs";
 import { buildResourceBarContext } from "../../rules/caster-resources.mjs";
 import {
   canRollDeathSave,
@@ -87,22 +94,59 @@ export function prepareDetailsTabContext(actor, baseContext) {
     save: system.saves?.[key] ?? { trained: false, misc: 0, total: 0 },
   }));
 
-  const skillRows = SKILL_KEYS.map((key) => ({
-    key,
-    label: game.i18n.localize(SKILL_DEFINITIONS[key].label),
-    abilityAbbr: ABILITIES[SKILL_DEFINITIONS[key].ability]?.abbr ?? "",
-    entry: system.skills?.entries?.[key] ?? { ranks: 0, misc: 0, bonus: 0 },
-    passive: 10 + (system.skills?.entries?.[key]?.bonus ?? 0),
-  }));
+  const totalLevel = system.attributes?.totalLevel ?? 1;
+  const classSkillKeys = resolveClassSkillKeys(actor);
+  const edgeSkillKeys = resolveEdgeSkills(actor);
+  const maxClassRanks = skillMaxRanks(totalLevel, true);
+  const maxCrossClassRanks = skillMaxRanks(totalLevel, false);
 
-  const customSkillRows = (system.skills?.custom ?? []).map((entry, index) => ({
-    index,
-    id: entry.id,
-    label: entry.label,
-    abilityAbbr: ABILITIES[entry.ability]?.abbr ?? entry.ability,
-    entry,
-    passive: 10 + (entry.bonus ?? 0),
-  }));
+  const skillRows = SKILL_KEYS.map((key) => {
+    const def = SKILL_DEFINITIONS[key];
+    const entry = system.skills?.entries?.[key] ?? { spRanks: 0, moneyRanks: 0, misc: 0, bonus: 0 };
+    const classSkill = classSkillKeys.has(key);
+    const edgeSkill = edgeSkillKeys.includes(key) && !classSkill;
+    const maxRanks = skillMaxRanks(totalLevel, classSkill);
+    const abilityMod = system.abilities?.[def.ability]?.mod ?? 0;
+    const spRanks = entry.spRanks ?? 0;
+    const moneyRanks = entry.moneyRanks ?? 0;
+    const nextMoneyRank = moneyRanks + 1;
+    return {
+      key,
+      label: game.i18n.localize(def.label),
+      abilityAbbr: ABILITIES[def.ability]?.abbr ?? "",
+      abilityMod,
+      skillModifier: entry.bonus ?? abilityMod + spRanks + moneyRanks + (entry.misc ?? 0),
+      entry,
+      classSkill,
+      edgeSkill,
+      maxRanks,
+      maxSpRanks: Math.max(0, maxRanks - moneyRanks),
+      maxMoneyRanks: Math.max(0, maxRanks - spRanks),
+      nextMoneyRankCost: moneyRankPurchaseCost(nextMoneyRank),
+    };
+  });
+
+  const customSkillRows = (system.skills?.custom ?? []).map((entry, index) => {
+    const maxRanks = skillMaxRanks(totalLevel, false);
+    const abilityMod = system.abilities?.[entry.ability]?.mod ?? 0;
+    const spRanks = entry.spRanks ?? 0;
+    const moneyRanks = entry.moneyRanks ?? 0;
+    const nextMoneyRank = moneyRanks + 1;
+    return {
+      index,
+      id: entry.id,
+      label: entry.label,
+      abilityAbbr: ABILITIES[entry.ability]?.abbr ?? entry.ability,
+      abilityMod,
+      skillModifier: entry.bonus ?? abilityMod + spRanks + moneyRanks + (entry.misc ?? 0),
+      entry,
+      classSkill: false,
+      maxRanks,
+      maxSpRanks: Math.max(0, maxRanks - moneyRanks),
+      maxMoneyRanks: Math.max(0, maxRanks - spRanks),
+      nextMoneyRankCost: moneyRankPurchaseCost(nextMoneyRank),
+    };
+  });
 
   const prof = system.proficiencies ?? {};
   const speed = {
@@ -111,7 +155,6 @@ export function prepareDetailsTabContext(actor, baseContext) {
   };
   const defense = system.defense ?? {};
   const defensesRaw = system.defenses ?? {};
-  const totalLevel = system.attributes?.totalLevel ?? 1;
 
   const weaponTags = normalizeTagArray(prof.weapons);
   const toolTags = normalizeTagArray(prof.tools);
@@ -161,9 +204,11 @@ export function prepareDetailsTabContext(actor, baseContext) {
     skillRows,
     customSkillRows,
     skillsMeta: {
-      pointsAvailable: system.skills?.pointsAvailable ?? 0,
-      pointsSpent: spentSkillPoints(system),
-      maxRanks: system.skills?.maxRanks ?? 4,
+      pointsAvailable: skillPointsAvailable(actor, system),
+      pointsSpent: spentSkillPoints(system, actor),
+      pointsRemaining: skillPointsAvailable(actor, system) - spentSkillPoints(system, actor),
+      maxClassRanks,
+      maxCrossClassRanks,
     },
     combat: {
       health: system.attributes?.health ?? { value: 0, max: 0, temp: 0 },

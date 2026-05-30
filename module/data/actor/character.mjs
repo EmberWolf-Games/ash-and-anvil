@@ -39,7 +39,8 @@ function skillEntryFields() {
     SKILL_KEYS.map((key) => [
       key,
       new SchemaField({
-        ranks: new NumberField({ integer: true, initial: 0, min: 0 }),
+        spRanks: new NumberField({ integer: true, initial: 0, min: 0, label: "ASHANVIL.SkillSpRanks" }),
+        moneyRanks: new NumberField({ integer: true, initial: 0, min: 0, label: "ASHANVIL.SkillMoneyRanks" }),
         misc: new NumberField({ integer: true, initial: 0 }),
         bonus: new NumberField({ integer: true, initial: 0 }),
         custom: new BooleanField({ initial: false }),
@@ -148,13 +149,15 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       skills: new SchemaField({
         pointsAvailable: new NumberField({ integer: true, initial: 16, min: 0 }),
         maxRanks: new NumberField({ integer: true, initial: 4, min: 0 }),
+        classSkills: new ArrayField(new StringField(), { label: "ASHANVIL.ClassSkills" }),
         entries: new SchemaField(skillEntryFields()),
         custom: new ArrayField(
           new SchemaField({
             id: new StringField({ required: true }),
             label: new StringField({ required: true }),
             ability: new StringField({ initial: "mnd" }),
-            ranks: new NumberField({ integer: true, initial: 0, min: 0 }),
+            spRanks: new NumberField({ integer: true, initial: 0, min: 0 }),
+            moneyRanks: new NumberField({ integer: true, initial: 0, min: 0 }),
             misc: new NumberField({ integer: true, initial: 0 }),
             bonus: new NumberField({ integer: true, initial: 0 }),
           })

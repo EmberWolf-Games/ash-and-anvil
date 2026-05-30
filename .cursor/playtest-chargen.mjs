@@ -239,7 +239,7 @@ async function main() {
       const bg = a.items.find((i) => i.type === "background");
       const features = a.items.filter((i) => i.type === "feature");
       const trainedSkills = Object.entries(a.system.skills?.entries ?? {})
-        .filter(([, s]) => (s?.ranks ?? 0) > 0)
+        .filter(([, s]) => ((s?.spRanks ?? s?.ranks ?? 0) + (s?.moneyRanks ?? 0)) > 0)
         .map(([k]) => k);
       return {
         buildComplete: a.system.chargen?.buildComplete,

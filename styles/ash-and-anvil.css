@@ -1769,7 +1769,8 @@
 
 .ash-and-anvil.sheet.actor .skills-header {
   align-items: baseline;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
   margin-bottom: 0.35rem;
 }
 
@@ -1784,9 +1785,76 @@
   overflow-y: auto;
 }
 
+.ash-and-anvil.sheet.actor .skills-max-ranks {
+  font-size: var(--font-size-10);
+  margin-left: auto;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.ash-and-anvil.sheet.actor .skill-list-compact--35e .skill-row {
+  grid-template-columns:
+    1.25rem minmax(3.5rem, 1fr) 2rem 2.5rem 0.65rem 2rem 0.65rem 2rem 0.65rem 2rem 0.65rem 2rem;
+}
+
 .ash-and-anvil.sheet.actor .skill-row {
   border-bottom: 1px solid rgba(61, 61, 61, 0.6);
-  grid-template-columns: 2rem 1fr 2.25rem 2.25rem 2.25rem 2.25rem 1.75rem;
+}
+
+.ash-and-anvil.sheet.actor .skill-row--class-skill .skill-name {
+  font-weight: bold;
+}
+
+.ash-and-anvil.sheet.actor .skill-row--edge-skill .skill-name {
+  font-style: italic;
+}
+
+.ash-and-anvil.sheet.actor .skill-class-check {
+  margin: 0;
+  pointer-events: none;
+}
+
+.ash-and-anvil.sheet.actor .skill-key-ability,
+.ash-and-anvil.sheet.actor .skill-ability-mod {
+  color: var(--aa-accent);
+  font-weight: bold;
+  text-align: center;
+}
+
+.ash-and-anvil.sheet.actor .skill-modifier {
+  background: var(--aa-surface);
+  border: 1px solid var(--aa-border);
+  border-radius: 3px;
+  font-weight: bold;
+  min-height: 1.35rem;
+  padding: 0.1rem 0.15rem;
+  text-align: center;
+}
+
+.ash-and-anvil.sheet.actor .skill-modifier--roll {
+  color: inherit;
+  cursor: pointer;
+  width: 100%;
+}
+
+.ash-and-anvil.sheet.actor .skill-modifier--roll:hover {
+  border-color: var(--aa-accent);
+  color: var(--aa-accent);
+}
+
+.ash-and-anvil.sheet.actor .skill-eq,
+.ash-and-anvil.sheet.actor .skill-op {
+  opacity: 0.65;
+  text-align: center;
+}
+
+.ash-and-anvil.sheet.actor .skill-sp-ranks,
+.ash-and-anvil.sheet.actor .skill-money-ranks,
+.ash-and-anvil.sheet.actor .skill-misc-mod {
+  max-width: 100%;
+  padding: 0.1rem;
+  text-align: center;
+  width: 100%;
 }
 
 .ash-and-anvil.sheet.actor .skill-row--header {
@@ -1794,6 +1862,7 @@
   color: var(--aa-accent);
   font-size: var(--font-size-10);
   font-weight: bold;
+  line-height: 1.1;
   opacity: 0.9;
   position: sticky;
   top: 0;
@@ -1801,28 +1870,15 @@
   z-index: 1;
 }
 
-.ash-and-anvil.sheet.actor .skill-ability {
-  color: var(--aa-accent);
-  font-weight: bold;
+.ash-and-anvil.sheet.actor .skill-row--header .skill-op-h,
+.ash-and-anvil.sheet.actor .skill-row--header .skill-eq-h {
+  visibility: hidden;
 }
 
 .ash-and-anvil.sheet.actor .skill-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.ash-and-anvil.sheet.actor .skill-ranks,
-.ash-and-anvil.sheet.actor .skill-misc {
-  max-width: 2.25rem;
-  padding: 0.1rem;
-  text-align: center;
-}
-
-.ash-and-anvil.sheet.actor .skill-bonus,
-.ash-and-anvil.sheet.actor .skill-passive {
-  font-weight: bold;
-  text-align: center;
 }
 
 .ash-and-anvil.sheet.actor .add-skill-btn {

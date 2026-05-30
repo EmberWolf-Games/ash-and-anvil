@@ -15,7 +15,7 @@ import { edgeBonus } from "./proficiency.mjs";
 
 import { deriveSaves } from "./saves.mjs";
 
-import { defaultSkillPoints, deriveSkills, ensureSkillEntries } from "./skills.mjs";
+import { defaultSkillPoints, deriveSkills, ensureSkillEntries, skillPointsAvailable } from "./skills.mjs";
 
 import { aaRules } from "../helpers/logger.mjs";
 
@@ -254,7 +254,7 @@ export function deriveCharacter(actor) {
 
   deriveDefense(system);
 
-  deriveSkills(system);
+  deriveSkills(system, actor);
 
   applyHeritageModifiers(system);
 
@@ -266,7 +266,7 @@ export function deriveCharacter(actor) {
 
   if (autoDerived) {
 
-    system.skills.pointsAvailable = defaultSkillPoints(totalLevel);
+    system.skills.pointsAvailable = skillPointsAvailable(actor, system);
 
     system.skills.maxRanks = Math.max(1, totalLevel + 3);
 

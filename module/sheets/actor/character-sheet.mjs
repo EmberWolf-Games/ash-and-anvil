@@ -19,6 +19,11 @@ import { validateWeightPickup } from "../../rules/encumbrance.mjs";
 import { parseDeltaInput } from "../../rules/resource-adjust.mjs";
 
 import {
+  applySkillMoneyRankSubmit,
+  validateSkillPointSubmit,
+} from "../../rules/skills.mjs";
+
+import {
   rollAbilityCheck,
   rollDeathSave,
   rollSavingThrow,
@@ -457,6 +462,18 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
   async _processSubmitData(event, form, submitData, options) {
 
     this.#sanitizeSubmitName(submitData);
+
+    const moneyResult = applySkillMoneyRankSubmit(this.actor, submitData);
+    if (moneyResult.blocked) {
+      this.render(false);
+      return;
+    }
+
+    const pointResult = validateSkillPointSubmit(this.actor, submitData);
+    if (pointResult.blocked) {
+      this.render(false);
+      return;
+    }
 
     if (this.#canEditSheet()) await recordSheetChanges(this.actor, submitData);
 
@@ -956,7 +973,9 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
       ability: "mnd",
 
-      ranks: 0,
+      spRanks: 0,
+
+      moneyRanks: 0,
 
       misc: 0,
 

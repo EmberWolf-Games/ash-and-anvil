@@ -34,9 +34,27 @@ export { rollD20Check, buildCheckPreview, resolveBoonBane, boonDiceCount } from 
 export { deriveSaves } from "./saves.mjs";
 export { deriveDefense } from "./defense.mjs";
 export {
+  applyDefaultSkillRanks,
+  applySkillMoneyRankSubmit,
+  CLASS_SKILL_DEFAULT_RANKS,
+  cumulativeMoneyRankCost,
   deriveSkills,
   defaultSkillPoints,
+  EDGE_SKILL_DEFAULT_RANKS,
+  ensureSkillEntries,
+  isClassSkill,
+  isClassSkillForActor,
+  resolveClassSkillKeys,
+  moneyRankCostDelta,
+  moneyRankPurchaseCost,
+  MONEY_RANK_COST_BASE,
+  resolveEdgeSkills,
+  skillMaxRanks,
+  skillPointsAtFirstLevel,
+  skillPointsAvailable,
   spentSkillPoints,
+  totalSkillRanks,
+  validateSkillPointSubmit,
 } from "./skills.mjs";
 export {
   getRootCarriedGear,
