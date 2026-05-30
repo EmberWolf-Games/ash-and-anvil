@@ -14,12 +14,113 @@
 .ash-and-anvil.sheet .window-content {
   background: var(--aa-surface);
   color: var(--aa-text);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ash-and-anvil.sheet.application form {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ash-and-anvil.sheet.actor.character .character-sheet-body {
+  --aa-sheet-gap: 0.75rem;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ash-and-anvil.sheet .sheet-tabs,
+.ash-and-anvil.sheet .sheet-subtabs {
+  flex: 0 0 auto;
+}
+
+.ash-and-anvil.sheet .sheet-tab-content,
+.ash-and-anvil.sheet .sheet-subtab-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .ash-and-anvil.sheet .sheet-header {
   border-bottom: 2px solid var(--aa-accent-dim);
   margin-bottom: 0.75rem;
   padding-bottom: 0.5rem;
+}
+
+.ash-and-anvil.sheet .sheet-header-row {
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ash-and-anvil.sheet .sheet-edit-toggle {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.35rem;
+  user-select: none;
+}
+
+.ash-and-anvil.sheet .sheet-edit-toggle .toggle-label {
+  color: var(--aa-accent);
+  font-size: var(--font-size-12);
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.ash-and-anvil.sheet .sheet-audit-log {
+  font-size: var(--font-size-11);
+  margin-top: 0.35rem;
+}
+
+.ash-and-anvil.sheet .sheet-audit-log summary {
+  color: rgba(240, 235, 227, 0.75);
+  cursor: pointer;
+}
+
+.ash-and-anvil.sheet .audit-entries {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  max-height: 8rem;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.ash-and-anvil.sheet .audit-entries li {
+  border-top: 1px solid var(--aa-border);
+  padding: 0.25rem 0;
+}
+
+.ash-and-anvil.sheet .audit-meta {
+  color: var(--aa-accent);
+  display: block;
+  font-size: var(--font-size-10);
+}
+
+.ash-and-anvil.sheet .audit-diff {
+  color: rgba(240, 235, 227, 0.85);
+  word-break: break-word;
+}
+
+.ash-and-anvil.sheet.sheet-edit-locked .sheet-tab-content input:not([data-action="toggleEditMode"]),
+.ash-and-anvil.sheet.sheet-edit-locked .sheet-tab-content select,
+.ash-and-anvil.sheet.sheet-edit-locked .sheet-tab-content textarea,
+.ash-and-anvil.sheet.sheet-edit-locked .sheet-header .charname input {
+  opacity: 0.92;
+  pointer-events: none;
+}
+
+.ash-and-anvil.sheet.sheet-edit-locked .add-skill-btn,
+.ash-and-anvil.sheet.sheet-edit-locked .tag-add-row,
+.ash-and-anvil.sheet.sheet-edit-locked .tag-remove,
+.ash-and-anvil.sheet.sheet-edit-locked .slot-unequip {
+  display: none;
 }
 
 .ash-and-anvil.sheet .sheet-tabs {
@@ -55,12 +156,6 @@
   font-size: var(--font-size-14);
   margin: 0 0 0.5rem;
   padding-bottom: 0.25rem;
-}
-
-.ash-and-anvil.sheet .character-sheet-body {
-  --aa-sheet-gap: 0.75rem;
-  display: flex;
-  flex-direction: column;
 }
 
 .ash-and-anvil.sheet .identity .identity-value {
@@ -510,46 +605,165 @@
 }
 
 /* Equipment tab */
+.ash-and-anvil.sheet.actor .equipment-hint {
+  margin: 0 0 0.5rem;
+  opacity: 0.85;
+}
+
+.ash-and-anvil.sheet.actor .equipment-layout {
+  align-items: flex-start;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: minmax(140px, 1fr) minmax(220px, 280px) minmax(120px, 1fr);
+  justify-content: center;
+}
+
+.ash-and-anvil.sheet.actor .equipment-panel {
+  background: var(--aa-surface-raised);
+  border: 1px solid var(--aa-border);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 640px;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .equipment-panel .panel-title {
+  border-bottom: 1px solid var(--aa-border);
+  color: var(--aa-accent);
+  font-size: var(--font-size-12);
+  font-weight: bold;
+  margin: 0 0 0.35rem;
+  padding-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
 .ash-and-anvil.sheet.actor .equipment-mannequin-wrap {
   display: flex;
   justify-content: center;
-  margin: 0.5rem 0 1rem;
 }
 
 .ash-and-anvil.sheet.actor .equipment-mannequin {
-  height: 520px;
+  --mannequin-inset-x: 14%;
+  --mannequin-inset-y: 4%;
+  aspect-ratio: 9 / 16;
+  height: 640px;
+  max-width: 100%;
   position: relative;
-  width: 320px;
+  width: 360px;
+}
+
+.ash-and-anvil.sheet.actor .equipment-mannequin.mannequin--female {
+  --mannequin-inset-x: 12%;
+  --mannequin-inset-y: 3%;
+}
+
+.ash-and-anvil.sheet.actor .equipment-mannequin .mannequin-art {
+  background-image: var(--mannequin-url);
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: contain;
+  bottom: 2%;
+  left: var(--mannequin-inset-x);
+  pointer-events: none;
+  position: absolute;
+  right: var(--mannequin-inset-x);
+  top: var(--mannequin-inset-y);
+}
+
+.ash-and-anvil.sheet.actor .equipment-mannequin .mannequin-slots {
+  bottom: 2%;
+  left: var(--mannequin-inset-x);
+  position: absolute;
+  right: var(--mannequin-inset-x);
+  top: var(--mannequin-inset-y);
 }
 
 .ash-and-anvil.sheet.actor .equipment-mannequin .mannequin-bg {
-  height: 100%;
-  left: 50%;
-  opacity: 0.35;
-  position: absolute;
-  top: 0;
-  transform: translateX(-50%);
-  width: auto;
-  pointer-events: none;
+  display: none;
 }
 
-.ash-and-anvil.sheet.actor .equipment-slot {
+.ash-and-anvil.sheet.actor .equipment-slot--mannequin {
   align-items: center;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px dashed var(--aa-border);
+  aspect-ratio: 1;
+  background: rgba(10, 10, 10, 0.45);
+  border: 1px dashed rgba(232, 93, 4, 0.45);
   border-radius: 4px;
   display: flex;
-  font-size: var(--font-size-10);
+  height: auto;
   justify-content: center;
+  min-height: 2.5rem;
+  min-width: 2.5rem;
   overflow: hidden;
-  padding: 0.1rem;
+  padding: 0;
   position: absolute;
-  text-align: center;
+  transform: translate(-50%, -50%);
+  transition: border-color 0.15s, background 0.15s;
 }
 
-.ash-and-anvil.sheet.actor .equipment-slot.occupied {
+.ash-and-anvil.sheet.actor .equipment-slot--mannequin:hover {
+  background: rgba(232, 93, 4, 0.12);
+  border-color: var(--aa-accent);
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot--mannequin.occupied {
+  background: rgba(0, 0, 0, 0.55);
   border-color: var(--aa-accent);
   border-style: solid;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot--mannequin .slot-abbr {
+  color: rgba(240, 235, 227, 0.85);
+  font-size: var(--font-size-11);
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  pointer-events: none;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot--panel {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px dashed var(--aa-border);
+  border-radius: 4px;
+  display: grid;
+  gap: 0.25rem;
+  grid-template-columns: auto 1fr auto;
+  min-height: 2.25rem;
+  padding: 0.25rem 0.35rem;
+  position: relative;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot--panel.occupied {
+  border-color: var(--aa-accent);
+  border-style: solid;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot--panel .slot-panel-label {
+  color: var(--aa-accent);
+  font-size: var(--font-size-11);
+  font-weight: bold;
+  min-width: 3.5rem;
+}
+
+.ash-and-anvil.sheet.actor .equipment-rings-grid {
+  display: grid;
+  gap: 0.35rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+.ash-and-anvil.sheet.actor .equipment-panel--rings .equipment-slot--panel {
+  grid-template-columns: 1.75rem 1fr auto;
+  min-height: 2rem;
+}
+
+.ash-and-anvil.sheet.actor .equipment-panel--rings .slot-panel-label {
+  min-width: 1.75rem;
+  text-align: center;
 }
 
 .ash-and-anvil.sheet.actor .equipment-slot .slot-item {
@@ -559,44 +773,513 @@
   color: inherit;
   cursor: pointer;
   display: flex;
-  flex-direction: column;
-  font-size: inherit;
-  gap: 0.1rem;
-  height: 100%;
+  font-size: var(--font-size-11);
+  gap: 0.25rem;
+  min-width: 0;
+  overflow: hidden;
   padding: 0;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot--mannequin .slot-item {
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
   width: 100%;
 }
 
 .ash-and-anvil.sheet.actor .equipment-slot .slot-item img {
-  max-height: 60%;
-  max-width: 90%;
+  flex-shrink: 0;
+  height: 1.75rem;
   object-fit: contain;
+  width: 1.75rem;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot--mannequin .slot-item img {
+  height: 70%;
+  max-height: 2.5rem;
+  max-width: 90%;
+  width: auto;
 }
 
 .ash-and-anvil.sheet.actor .equipment-slot .slot-label {
-  line-height: 1.1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 100%;
 }
 
 .ash-and-anvil.sheet.actor .equipment-slot .slot-empty {
-  opacity: 0.65;
-  padding: 0.1rem;
+  color: rgba(240, 235, 227, 0.45);
+  font-size: var(--font-size-10);
+  font-style: italic;
 }
 
 .ash-and-anvil.sheet.actor .equipment-slot .slot-unequip {
   background: var(--aa-surface-raised);
   border: none;
   border-radius: 2px;
+  color: var(--aa-accent);
   cursor: pointer;
   font-size: var(--font-size-12);
   line-height: 1;
-  padding: 0 0.2rem;
+  padding: 0 0.25rem;
+}
+
+.ash-and-anvil.sheet.actor .equipment-slot--mannequin .slot-unequip {
   position: absolute;
   right: 1px;
   top: 1px;
+}
+
+/* Tag chips (proficiencies, defenses) */
+.ash-and-anvil.sheet .tag-field {
+  margin-bottom: 0.65rem;
+}
+
+.ash-and-anvil.sheet .tag-field-header {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.ash-and-anvil.sheet .tag-field-label {
+  color: rgba(240, 235, 227, 0.85);
+  font-size: var(--font-size-11);
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.ash-and-anvil.sheet .tag-add-row {
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.ash-and-anvil.sheet .tag-add-select {
+  font-size: var(--font-size-11);
+  max-width: 10rem;
+}
+
+.ash-and-anvil.sheet .tag-add-btn {
+  background: var(--aa-surface-raised);
+  border: 1px solid var(--aa-border);
+  border-radius: 3px;
+  color: var(--aa-accent);
+  cursor: pointer;
+  font-size: var(--font-size-11);
+  padding: 0.15rem 0.45rem;
+}
+
+.ash-and-anvil.sheet .tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.ash-and-anvil.sheet .tag-chip {
+  align-items: center;
+  background: #1f4d2e;
+  border: 1px solid #2d6a3e;
+  border-radius: 3px;
+  color: #fff;
+  display: inline-flex;
+  font-size: var(--font-size-10);
+  font-weight: bold;
+  gap: 0.2rem;
+  letter-spacing: 0.03em;
+  padding: 0.15rem 0.4rem;
+  text-transform: uppercase;
+}
+
+.ash-and-anvil.sheet .tag-chip .tag-remove {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  font-size: var(--font-size-12);
+  line-height: 1;
+  padding: 0;
+}
+
+.ash-and-anvil.sheet .tag-empty {
+  color: rgba(240, 235, 227, 0.45);
+  font-size: var(--font-size-11);
+  font-style: italic;
+}
+
+/* Details dashboard */
+.ash-and-anvil.sheet.actor .details-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.ash-and-anvil.sheet.actor .details-top {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .details-identity-compact {
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ash-and-anvil.sheet.actor .profile-img--compact {
+  border: 2px solid var(--aa-border);
+  border-radius: 4px;
+  flex-shrink: 0;
+  height: 72px;
+  object-fit: cover;
+  width: 72px;
+}
+
+.ash-and-anvil.sheet.actor .details-name {
+  border-bottom: 1px solid var(--aa-border);
+  color: var(--aa-text);
+  display: block;
+  font-size: var(--font-size-20);
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+  padding: 0.1rem 0;
+  width: 100%;
+}
+
+.ash-and-anvil.sheet.actor .details-meta {
+  flex-wrap: wrap;
+  font-size: var(--font-size-12);
+  gap: 0.5rem;
+  opacity: 0.85;
+}
+
+.ash-and-anvil.sheet.actor .details-levels {
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: var(--font-size-12);
+  gap: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .details-levels input {
+  max-width: 3.5rem;
+}
+
+.ash-and-anvil.sheet.actor .details-level-badge {
+  align-items: center;
+  background: radial-gradient(circle at 30% 30%, #3d3d3d, #1a1a1a);
+  border: 2px solid var(--aa-accent);
+  border-radius: 50%;
+  display: flex;
+  flex-shrink: 0;
+  height: 3.5rem;
+  justify-content: center;
+  width: 3.5rem;
+}
+
+.ash-and-anvil.sheet.actor .details-level-badge .level-value {
+  color: var(--aa-accent);
+  font-size: var(--font-size-18);
+  font-weight: bold;
+}
+
+.ash-and-anvil.sheet.actor .details-abilities-row {
+  display: grid;
+  gap: 0.35rem;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.ash-and-anvil.sheet.actor .ability-shield {
+  align-items: center;
+  background: var(--aa-surface-raised);
+  border: 1px solid var(--aa-border);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.35rem 0.25rem;
+  text-align: center;
+}
+
+.ash-and-anvil.sheet.actor .ability-shield-abbr {
+  color: var(--aa-accent);
+  font-size: var(--font-size-11);
+  font-weight: bold;
+}
+
+.ash-and-anvil.sheet.actor .ability-shield-mod {
+  font-size: var(--font-size-16);
+  font-weight: bold;
+  line-height: 1.1;
+}
+
+.ash-and-anvil.sheet.actor .ability-shield-score {
+  font-size: var(--font-size-11);
+  max-width: 2.75rem;
+  padding: 0.1rem;
+  text-align: center;
+}
+
+.ash-and-anvil.sheet.actor .details-main-grid {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: minmax(200px, 1fr) minmax(260px, 1.4fr) minmax(180px, 0.9fr);
+}
+
+.ash-and-anvil.sheet.actor .details-panel {
+  background: var(--aa-surface-raised);
+  border: 1px solid var(--aa-border);
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .details-panel .panel-title {
+  color: var(--aa-accent);
+  font-size: var(--font-size-12);
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+}
+
+.ash-and-anvil.sheet.actor .ac-shield {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.35);
+  border: 2px solid var(--aa-accent-dim);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+  padding: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .ac-shield-value {
+  font-size: var(--font-size-22);
+  font-weight: bold;
+  line-height: 1;
+}
+
+.ash-and-anvil.sheet.actor .combat-mini-grid {
+  display: grid;
+  gap: 0.25rem;
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .combat-mini {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  padding: 0.2rem 0.35rem;
+  text-align: center;
+}
+
+.ash-and-anvil.sheet.actor .mini-label {
+  display: block;
+  font-size: var(--font-size-10);
+  opacity: 0.75;
+}
+
+.ash-and-anvil.sheet.actor .mini-value {
+  font-size: var(--font-size-13);
+  font-weight: bold;
+}
+
+.ash-and-anvil.sheet.actor .ac-inputs {
+  flex-wrap: wrap;
+  font-size: var(--font-size-11);
+  gap: 0.25rem;
+}
+
+.ash-and-anvil.sheet.actor .ac-inputs input {
+  max-width: 2.75rem;
+}
+
+.ash-and-anvil.sheet.actor .hp-bar {
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .hp-bar input {
+  max-width: 3.5rem;
+}
+
+.ash-and-anvil.sheet.actor .death-favor-grid {
+  display: grid;
+  gap: 0.35rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+.ash-and-anvil.sheet.actor .speed-compact {
+  display: grid;
+  gap: 0.25rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.ash-and-anvil.sheet.actor .speed-compact label {
+  display: block;
+  font-size: var(--font-size-10);
+  opacity: 0.75;
+}
+
+.ash-and-anvil.sheet.actor .speed-compact input {
+  max-width: 100%;
+  width: 100%;
+}
+
+.ash-and-anvil.sheet.actor .save-list,
+.ash-and-anvil.sheet.actor .skill-list-compact {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ash-and-anvil.sheet.actor .save-row,
+.ash-and-anvil.sheet.actor .skill-row {
+  align-items: center;
+  display: grid;
+  font-size: var(--font-size-12);
+  gap: 0.25rem;
+  padding: 0.15rem 0;
+}
+
+.ash-and-anvil.sheet.actor .save-row {
+  grid-template-columns: 1.25rem 2rem 1fr 2.5rem 2.5rem;
+}
+
+.ash-and-anvil.sheet.actor .save-abbr {
+  color: var(--aa-accent);
+  font-weight: bold;
+}
+
+.ash-and-anvil.sheet.actor .save-misc {
+  max-width: 2.5rem;
+}
+
+.ash-and-anvil.sheet.actor .save-total {
+  font-weight: bold;
+  text-align: right;
+}
+
+.ash-and-anvil.sheet.actor .details-col--skills {
+  background: var(--aa-surface-raised);
+  border: 1px solid var(--aa-border);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .skills-header {
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .skills-meta {
+  font-size: var(--font-size-11);
+  opacity: 0.75;
+}
+
+.ash-and-anvil.sheet.actor .skill-list-compact {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.ash-and-anvil.sheet.actor .skill-row {
+  border-bottom: 1px solid rgba(61, 61, 61, 0.6);
+  grid-template-columns: 2rem 1fr 2.25rem 2.25rem 2.25rem 2.25rem;
+}
+
+.ash-and-anvil.sheet.actor .skill-row--header {
+  border-bottom: 1px solid var(--aa-border);
+  color: var(--aa-accent);
+  font-size: var(--font-size-10);
+  font-weight: bold;
+  opacity: 0.9;
+  position: sticky;
+  top: 0;
+  background: var(--aa-surface-raised);
+  z-index: 1;
+}
+
+.ash-and-anvil.sheet.actor .skill-ability {
+  color: var(--aa-accent);
+  font-weight: bold;
+}
+
+.ash-and-anvil.sheet.actor .skill-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ash-and-anvil.sheet.actor .skill-ranks,
+.ash-and-anvil.sheet.actor .skill-misc {
+  max-width: 2.25rem;
+  padding: 0.1rem;
+  text-align: center;
+}
+
+.ash-and-anvil.sheet.actor .skill-bonus,
+.ash-and-anvil.sheet.actor .skill-passive {
+  font-weight: bold;
+  text-align: center;
+}
+
+.ash-and-anvil.sheet.actor .add-skill-btn {
+  font-size: var(--font-size-12);
+  margin-top: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .details-collapsible {
+  background: var(--aa-surface-raised);
+  border: 1px solid var(--aa-border);
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  padding: 0.35rem 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .details-collapsible summary {
+  color: var(--aa-accent);
+  cursor: pointer;
+  font-size: var(--font-size-12);
+  font-weight: bold;
+  list-style: disclosure-closed;
+}
+
+.ash-and-anvil.sheet.actor .details-collapsible[open] summary {
+  margin-bottom: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .details-collapsible-body .form-group {
+  margin-bottom: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .details-collapsible-body label {
+  display: block;
+  font-size: var(--font-size-11);
+  margin-bottom: 0.15rem;
+}
+
+@media (max-width: 900px) {
+  .ash-and-anvil.sheet.actor .equipment-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ash-and-anvil.sheet.actor .equipment-mannequin {
+    height: 520px;
+    margin: 0 auto;
+  }
+
+  .ash-and-anvil.sheet.actor .details-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ash-and-anvil.sheet.actor .details-abilities-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 /* Inventory containers */

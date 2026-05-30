@@ -1,4 +1,5 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const { FormDataExtended } = foundry.applications.ux;
 import { ABILITY_KEYS, ABILITIES, SKILLS, SKILL_KEYS } from "../rules/constants.mjs";
 import { applyAncestryAdjustments, ensureSkillEntries } from "../rules/derive-character.mjs";
 import { defaultSkillPoints } from "../rules/skills.mjs";

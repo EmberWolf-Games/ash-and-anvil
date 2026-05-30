@@ -17,15 +17,18 @@ import { registerSettings } from "./module/config/settings.mjs";
 import { CHARACTER_SHEET_PARAMS, NPC_SHEET_PARAMS } from "./module/config/sheet-params.mjs";
 import { printReadySummary, printStartupBanner } from "./module/helpers/banner.mjs";
 import { aaGroup, aaLog, aaVerbose } from "./module/helpers/logger.mjs";
+import { registerHandlebarsPartials } from "./module/helpers/templates.mjs";
 import { CharacterActorSheet, NpcActorSheet } from "./module/sheets/actor/_module.mjs";
 import { ItemSheetAA } from "./module/sheets/item-sheet.mjs";
 import { registerPauseScreen } from "./module/ui/pause.mjs";
 import { seedCompendiumsIfNeeded } from "./module/bootstrap/seed-compendiums.mjs";
 import * as RULES from "./module/rules/_module.mjs";
 
-Hooks.once("init", () => {
+Hooks.once("init", async () => {
   printStartupBanner();
   aaLog("Initializing (1st Edition)…");
+
+  await registerHandlebarsPartials();
 
   const actorDataModels = {
     character: CharacterData,
@@ -42,7 +45,7 @@ Hooks.once("init", () => {
   };
 
   CONFIG.ASH_ANVIL = {
-    keyVersion: "0.4.1",
+    keyVersion: "0.5.0",
     rules: RULES,
     currency: {
       getConfig: RULES.getCurrencyConfig,
@@ -71,11 +74,15 @@ Hooks.once("init", () => {
   CONFIG.Item.documentClass = AAAItem;
 
   const { Actors, Items } = foundry.documents.collections;
+  const { ActorSheetV2, ItemSheetV2 } = foundry.applications.sheets;
 
   registerSettings();
   registerPauseScreen();
 
   aaGroup("Sheets", () => {
+    Actors.unregisterSheet("core", ActorSheetV2);
+    Items.unregisterSheet("core", ItemSheetV2);
+
     Actors.registerSheet("ash-and-anvil", CharacterActorSheet, {
       types: ["character"],
       makeDefault: true,
@@ -94,6 +101,9 @@ Hooks.once("init", () => {
       label: "ASHANVIL.SheetItem",
     });
 
+    aaLog(
+      `Registered actor sheets — character: ${CharacterActorSheet.DEFAULT_OPTIONS.id}; npc: ${NpcActorSheet.DEFAULT_OPTIONS.id}`
+    );
     aaVerbose("Actor and item sheets registered.");
   });
 

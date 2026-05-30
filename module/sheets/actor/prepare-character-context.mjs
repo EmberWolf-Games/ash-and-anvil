@@ -1,6 +1,12 @@
 import { ABILITIES, ABILITY_KEYS, SKILL_DEFINITIONS, SKILL_KEYS } from "../../rules/constants.mjs";
 
 import { getCharacterSheetParams } from "../../config/sheet-params.mjs";
+import {
+  ALIGNMENT_OPTIONS,
+  GENDER_OPTIONS,
+  LIFESTYLE_OPTIONS,
+  localizeOptions,
+} from "../../config/character-options.mjs";
 
 import { prepareDetailsTabContext } from "./prepare-details-context.mjs";
 
@@ -133,6 +139,7 @@ export function prepareCharacterSheetContext(actor, options = {}) {
       faith: system.details?.faith ?? "",
 
       gender: system.details?.gender ?? "",
+      lifestyle: system.details?.lifestyle ?? "",
 
       eyeColor: system.details?.eyeColor ?? "",
 
@@ -171,6 +178,16 @@ export function prepareCharacterSheetContext(actor, options = {}) {
     buildVersion: system.chargen?.buildVersion ?? "",
 
     editable,
+
+    bioOptions: {
+      genders: localizeOptions(GENDER_OPTIONS),
+      alignments: localizeOptions(ALIGNMENT_OPTIONS),
+      lifestyles: localizeOptions(LIFESTYLE_OPTIONS),
+    },
+
+    sheetEditMode: options.sheetEditMode ?? false,
+    isGM: game.user.isGM,
+    changeLog: options.changeLog ?? [],
 
 
 

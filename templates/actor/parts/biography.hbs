@@ -2,16 +2,32 @@
   <h3 class="zone-title">{{localize "ASHANVIL.BioSectionIdentity"}}</h3>
   <div class="bio-grid grid grid-3col">
     <div class="form-group">
+      <label>{{localize "ASHANVIL.BioGender"}}</label>
+      <select name="system.details.gender" {{#unless sheetEditMode}}disabled{{/unless}}>
+        {{#each bioOptions.genders as |opt|}}
+        <option value="{{opt.value}}" {{#if (eq ../bio.gender opt.value)}}selected{{/if}}>{{opt.label}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
       <label>{{localize "ASHANVIL.BioAlignment"}}</label>
-      <input type="text" name="system.details.alignment" value="{{bio.alignment}}" />
+      <select name="system.details.alignment" {{#unless sheetEditMode}}disabled{{/unless}}>
+        {{#each bioOptions.alignments as |opt|}}
+        <option value="{{opt.value}}" {{#if (eq ../bio.alignment opt.value)}}selected{{/if}}>{{opt.label}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "ASHANVIL.BioLifestyle"}}</label>
+      <select name="system.details.lifestyle" {{#unless sheetEditMode}}disabled{{/unless}}>
+        {{#each bioOptions.lifestyles as |opt|}}
+        <option value="{{opt.value}}" {{#if (eq ../bio.lifestyle opt.value)}}selected{{/if}}>{{opt.label}}</option>
+        {{/each}}
+      </select>
     </div>
     <div class="form-group">
       <label>{{localize "ASHANVIL.BioFaith"}}</label>
-      <input type="text" name="system.details.faith" value="{{bio.faith}}" />
-    </div>
-    <div class="form-group">
-      <label>{{localize "ASHANVIL.BioGender"}}</label>
-      <input type="text" name="system.details.gender" value="{{bio.gender}}" />
+      <input type="text" name="system.details.faith" value="{{bio.faith}}" {{#unless sheetEditMode}}readonly{{/unless}} />
     </div>
   </div>
 </section>
@@ -21,27 +37,27 @@
   <div class="bio-grid grid grid-3col">
     <div class="form-group">
       <label>{{localize "ASHANVIL.BioEyeColor"}}</label>
-      <input type="text" name="system.details.eyeColor" value="{{bio.eyeColor}}" />
+      <input type="text" name="system.details.eyeColor" value="{{bio.eyeColor}}" {{#unless sheetEditMode}}readonly{{/unless}} />
     </div>
     <div class="form-group">
       <label>{{localize "ASHANVIL.BioHairColor"}}</label>
-      <input type="text" name="system.details.hairColor" value="{{bio.hairColor}}" />
+      <input type="text" name="system.details.hairColor" value="{{bio.hairColor}}" {{#unless sheetEditMode}}readonly{{/unless}} />
     </div>
     <div class="form-group">
       <label>{{localize "ASHANVIL.BioSkinColor"}}</label>
-      <input type="text" name="system.details.skinColor" value="{{bio.skinColor}}" />
+      <input type="text" name="system.details.skinColor" value="{{bio.skinColor}}" {{#unless sheetEditMode}}readonly{{/unless}} />
     </div>
     <div class="form-group">
       <label>{{localize "ASHANVIL.BioHeight"}}</label>
-      <input type="text" name="system.details.height" value="{{bio.height}}" />
+      <input type="text" name="system.details.height" value="{{bio.height}}" {{#unless sheetEditMode}}readonly{{/unless}} />
     </div>
     <div class="form-group">
       <label>{{localize "ASHANVIL.BioWeight"}}</label>
-      <input type="text" name="system.details.weight" value="{{bio.weight}}" />
+      <input type="text" name="system.details.weight" value="{{bio.weight}}" {{#unless sheetEditMode}}readonly{{/unless}} />
     </div>
     <div class="form-group">
       <label>{{localize "ASHANVIL.BioAge"}}</label>
-      <input type="text" name="system.details.age" value="{{bio.age}}" />
+      <input type="text" name="system.details.age" value="{{bio.age}}" {{#unless sheetEditMode}}readonly{{/unless}} />
     </div>
   </div>
 </section>

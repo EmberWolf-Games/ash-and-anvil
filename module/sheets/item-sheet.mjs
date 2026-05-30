@@ -3,6 +3,7 @@ const { ItemSheetV2 } = foundry.applications.sheets;
 
 export class ItemSheetAA extends HandlebarsApplicationMixin(ItemSheetV2) {
   static DEFAULT_OPTIONS = {
+    id: "ash-anvil-item-sheet",
     classes: ["ash-and-anvil", "sheet", "item"],
     position: { width: 520, height: 600 },
     window: { resizable: true },

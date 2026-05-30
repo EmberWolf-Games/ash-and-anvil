@@ -3,6 +3,7 @@ const { ActorSheetV2 } = foundry.applications.sheets;
 
 export class NpcActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
+    id: "ash-anvil-npc-sheet",
     classes: ["ash-and-anvil", "sheet", "actor", "npc"],
     position: { width: 560, height: 640 },
     window: { resizable: true },

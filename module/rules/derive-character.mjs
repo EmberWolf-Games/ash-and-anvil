@@ -19,6 +19,7 @@ import { defaultSkillPoints, deriveSkills, ensureSkillEntries } from "./skills.m
 import { aaRules } from "../helpers/logger.mjs";
 
 import { EQUIPMENT_SLOT_IDS } from "../config/equipment-slots.mjs";
+import { normalizeTagArray } from "../helpers/tag-arrays.mjs";
 
 
 
@@ -79,46 +80,36 @@ export function ensureCharacterStructure(system) {
   system.speed ??= { walk: 30, fly: 0, hover: 0, swim: 0, climb: 0, burrow: 0 };
 
   system.proficiencies ??= {
-
     armorLight: false,
-
     armorMedium: false,
-
     armorHeavy: false,
-
-    weapons: "",
-
-    tools: "",
-
-    languages: "",
-
-    gameSets: "",
-
+    weapons: [],
+    tools: [],
+    languages: [],
+    gameSets: [],
     notes: "",
-
   };
+  system.proficiencies.weapons = normalizeTagArray(system.proficiencies.weapons);
+  system.proficiencies.tools = normalizeTagArray(system.proficiencies.tools);
+  system.proficiencies.languages = normalizeTagArray(system.proficiencies.languages);
+  system.proficiencies.gameSets = normalizeTagArray(system.proficiencies.gameSets);
 
   system.defense ??= {
-
     armorCategory: "none",
-
     ac: { base: 10, armor: 0, shield: 0, misc: 0, total: 10 },
-
     touchAc: 10,
-
   };
 
   system.defenses ??= {
-
-    resistances: "",
-
-    immunities: "",
-
-    vulnerabilities: "",
-
-    conditionImmunities: "",
-
+    resistances: [],
+    immunities: [],
+    vulnerabilities: [],
+    conditionImmunities: [],
   };
+  system.defenses.resistances = normalizeTagArray(system.defenses.resistances);
+  system.defenses.immunities = normalizeTagArray(system.defenses.immunities);
+  system.defenses.vulnerabilities = normalizeTagArray(system.defenses.vulnerabilities);
+  system.defenses.conditionImmunities = normalizeTagArray(system.defenses.conditionImmunities);
 
   if (system.currency?.pp != null || system.currency?.gp != null) {
 

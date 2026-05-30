@@ -1,261 +1,818 @@
 import { ChargenWizard } from "../../applications/chargen-wizard.mjs";
+
 import {
+
   CHARACTER_SHEET_PARAMS,
+
   defaultSubTabId,
+
   getSubTabs,
+
 } from "../../config/sheet-params.mjs";
+
 import { equipItemToSlot, moveItemToContainer, unequipSlot } from "../../rules/equipment.mjs";
+
+import { normalizeTagArray } from "../../helpers/tag-arrays.mjs";
+
+import { formatChangeLogForDisplay, recordSheetChanges } from "../../helpers/sheet-audit.mjs";
+
 import { confirmDeleteItem, getActorEffects } from "./prepare-sheet-items.mjs";
+
 import { prepareCharacterSheetContext } from "./prepare-character-context.mjs";
 
+
+
 const { HandlebarsApplicationMixin } = foundry.applications.api;
+
 const { ActorSheetV2 } = foundry.applications.sheets;
+
+
 
 const INVENTORY_ITEM_TYPES = new Set(["gear", "spell", "feature"]);
 
+
+
 export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
+
   #activeTab = CHARACTER_SHEET_PARAMS.tabs.find((t) => t.default)?.id ?? "details";
+
   #activeSubTabs = {
+
     powers: defaultSubTabId("powers"),
+
     effects: defaultSubTabId("effects"),
+
   };
+
   /** @type {string|null} */
+
   #openContainerId = null;
 
+  /** @type {boolean} */
+
+  #sheetEditMode = false;
+
+
+
   static DEFAULT_OPTIONS = {
+
+    id: "ash-anvil-character-sheet",
+
     classes: ["ash-and-anvil", "sheet", "actor", "character"],
+
     position: {
+
       width: CHARACTER_SHEET_PARAMS.window.width,
+
       height: CHARACTER_SHEET_PARAMS.window.height,
+
     },
+
     window: { resizable: CHARACTER_SHEET_PARAMS.window.resizable },
+
     tag: "form",
-    actions: {
-      openChargen: CharacterActorSheet.#onOpenChargen,
-      changeTab: CharacterActorSheet.#onChangeTab,
-      changeSubTab: CharacterActorSheet.#onChangeSubTab,
-      addCustomSkill: CharacterActorSheet.#onAddCustomSkill,
-      toggleHeritage: CharacterActorSheet.#onToggleHeritage,
-      createItem: CharacterActorSheet.#onCreateItem,
-      editItem: CharacterActorSheet.#onEditItem,
-      deleteItem: CharacterActorSheet.#onDeleteItem,
-      toggleEffect: CharacterActorSheet.#onToggleEffect,
-      openContainer: CharacterActorSheet.#onOpenContainer,
-      closeContainer: CharacterActorSheet.#onCloseContainer,
-      unequipSlot: CharacterActorSheet.#onUnequipSlot,
+
+    form: {
+
+      submitOnChange: true,
+
+      submitOnClose: true,
+
     },
+
+    actions: {
+
+      openChargen: CharacterActorSheet.#onOpenChargen,
+
+      changeTab: CharacterActorSheet.#onChangeTab,
+
+      changeSubTab: CharacterActorSheet.#onChangeSubTab,
+
+      toggleEditMode: CharacterActorSheet.#onToggleEditMode,
+
+      addTag: CharacterActorSheet.#onAddTag,
+
+      removeTag: CharacterActorSheet.#onRemoveTag,
+
+      addCustomSkill: CharacterActorSheet.#onAddCustomSkill,
+
+      toggleHeritage: CharacterActorSheet.#onToggleHeritage,
+
+      createItem: CharacterActorSheet.#onCreateItem,
+
+      editItem: CharacterActorSheet.#onEditItem,
+
+      deleteItem: CharacterActorSheet.#onDeleteItem,
+
+      toggleEffect: CharacterActorSheet.#onToggleEffect,
+
+      openContainer: CharacterActorSheet.#onOpenContainer,
+
+      closeContainer: CharacterActorSheet.#onCloseContainer,
+
+      unequipSlot: CharacterActorSheet.#onUnequipSlot,
+
+    },
+
     dragDrop: [
+
       {
+
         dragSelector: "[data-item-id]",
+
         dropSelector: ".inventory-drop, .equipment-slot",
+
       },
+
     ],
+
   };
+
+
 
   static PARTS = {
+
     header: {
+
       template: "systems/ash-and-anvil/templates/actor/parts/header.hbs",
+
     },
+
     body: {
+
       template: "systems/ash-and-anvil/templates/actor/character-sheet.hbs",
-      scrollable: [""],
+
+      scrollable: [".sheet-tab-content", ".sheet-subtab-content"],
+
     },
+
   };
 
+
+
   get title() {
+
     return `${this.actor.name} — ${game.i18n.localize("ASHANVIL.SheetActorCharacter")}`;
+
   }
+
+
+
+  #canEditSheet() {
+
+    return this.isEditable && this.#sheetEditMode;
+
+  }
+
+
+
+  #syncEditLockClass() {
+
+    this.element?.classList.toggle("sheet-edit-locked", this.isEditable && !this.#sheetEditMode);
+
+  }
+
+
+
+  /** @param {object} submitData */
+
+  #sanitizeSubmitName(submitData) {
+
+    if (!submitData) return;
+
+    const name = submitData.name;
+
+    if (typeof name === "string") {
+
+      if (name.endsWith(".character")) submitData.name = name.slice(0, -".character".length);
+
+      return;
+
+    }
+
+    if (Array.isArray(name)) {
+
+      submitData.name = String(
+
+        name.find((v) => typeof v === "string" && v !== "character") ?? name[0] ?? this.actor.name
+
+      );
+
+      return;
+
+    }
+
+    if (name && typeof name === "object") {
+
+      const values = Object.values(name).filter((v) => typeof v === "string");
+
+      submitData.name = values.find((v) => v !== "character") ?? values[0] ?? this.actor.name;
+
+    }
+
+  }
+
+
+
+  /** @inheritdoc */
+
+  _onChangeForm(formConfig, event) {
+
+    if (!this.#canEditSheet()) return;
+
+    const el = event.target;
+
+    if (!(el instanceof HTMLElement) || !el.name) return;
+
+    if (el.closest(".tag-field") || el.closest(".sheet-edit-toggle")) return;
+
+    return super._onChangeForm(formConfig, event);
+
+  }
+
+
+
+  async #submitOpenForm() {
+
+    if (!this.#canEditSheet() || !this.rendered) return;
+
+    try {
+
+      await this.submit();
+
+    } catch (err) {
+
+      console.warn(`${game.system.id} | Character sheet submit skipped`, err);
+
+    }
+
+  }
+
+
 
   async _preparePartContext(partId, context, options) {
+
     context = await super._preparePartContext(partId, context, options);
+
+    const sheetEditMode = this.#canEditSheet();
+
     const sheetContext = prepareCharacterSheetContext(this.actor, {
-      editable: this.isEditable,
+
+      editable: sheetEditMode,
+
+      sheetEditMode,
+
+      changeLog: formatChangeLogForDisplay(this.actor),
+
       openContainerId: this.#openContainerId,
+
     });
+
+
 
     if (partId === "header") {
+
       Object.assign(context, {
+
         buildComplete: sheetContext.buildComplete,
-        combat: sheetContext.combat,
-        layout: sheetContext.layout,
+
+        canEditActor: this.isEditable,
+
+        sheetEditMode,
+
+        isGM: sheetContext.isGM,
+
+        changeLog: sheetContext.changeLog,
+
       });
+
     }
+
+
 
     if (partId === "body") {
+
       Object.assign(context, sheetContext, {
+
         activeTab: this.#activeTab,
+
         activeSubTabs: { ...this.#activeSubTabs },
+
         subTabs: CHARACTER_SHEET_PARAMS.subTabs,
+
       });
+
     }
+
+
 
     return context;
+
   }
+
+
+
+  async _preClose(options) {
+
+    await this.#submitOpenForm();
+
+    return super._preClose(options);
+
+  }
+
+
+
+  async _onRender(context, options) {
+
+    await super._onRender(context, options);
+
+    this.#syncEditLockClass();
+
+    this.#bindTagSelects();
+
+  }
+
+
+
+  #bindTagSelects() {
+
+    this.element?.querySelectorAll(".tag-add-select").forEach((select) => {
+
+      if (select.dataset.bound) return;
+
+      select.dataset.bound = "1";
+
+      select.addEventListener("change", (event) => {
+
+        event.stopPropagation();
+
+        const btn = select.closest(".tag-field")?.querySelector("[data-action=addTag]");
+
+        if (btn) void CharacterActorSheet.#onAddTag(event, btn);
+
+      });
+
+    });
+
+  }
+
+
+
+  async _processSubmitData(event, form, submitData, options) {
+
+    this.#sanitizeSubmitName(submitData);
+
+    if (this.#canEditSheet()) await recordSheetChanges(this.actor, submitData);
+
+    return super._processSubmitData(event, form, submitData, options);
+
+  }
+
+
 
   async _onDropItem(event, item) {
-    if (!this.isEditable || !INVENTORY_ITEM_TYPES.has(item.type)) return false;
+
+    if (!this.#canEditSheet() || !INVENTORY_ITEM_TYPES.has(item.type)) return false;
+
+
 
     const target = event.target.closest("[data-drop-zone]");
+
     if (item.type === "gear" && target) {
+
       const zone = target.dataset.dropZone;
+
       if (zone === "equipment") {
+
         const slotId = target.closest("[data-slot]")?.dataset.slot;
+
         if (slotId) {
+
           await equipItemToSlot(this.actor, item, slotId);
+
           this.render(false);
+
           return true;
+
         }
+
       }
+
       if (zone === "container") {
+
         const containerId = target.dataset.containerId;
+
         if (containerId) {
+
           await moveItemToContainer(this.actor, item, containerId);
+
           this.render(false);
+
           return true;
+
         }
+
       }
+
       if (zone === "root") {
+
         await moveItemToContainer(this.actor, item, "");
+
         this.render(false);
+
         return true;
+
       }
+
     }
+
+
 
     if (item.parent?.id === this.actor.id) return super._onDropItem(event, item);
+
     const itemData = item.toObject();
+
     delete itemData._id;
+
     await Item.createDocuments([itemData], { parent: this.actor });
+
     return true;
+
   }
+
+
 
   static async #onOpenChargen() {
+
     const app = /** @type {CharacterActorSheet} */ (this);
+
     await ChargenWizard.show(app.actor);
+
   }
 
-  static #onChangeTab(_event, target) {
+
+
+  static async #onChangeTab(_event, target) {
+
     const app = /** @type {CharacterActorSheet} */ (this);
+
+    await app.#submitOpenForm();
+
     const tab = target.dataset.tab;
+
     if (!tab || tab === app.#activeTab) return;
+
     if (!CHARACTER_SHEET_PARAMS.tabs.some((t) => t.id === tab)) return;
+
     app.#activeTab = tab;
+
     app.render(false);
+
   }
 
-  static #onChangeSubTab(_event, target) {
+
+
+  static async #onChangeSubTab(_event, target) {
+
     const app = /** @type {CharacterActorSheet} */ (this);
+
+    await app.#submitOpenForm();
+
     const group = target.dataset.group;
+
     const tab = target.dataset.tab;
+
     if (!group || !tab) return;
+
     if (!getSubTabs(group).some((t) => t.id === tab)) return;
+
     app.#activeSubTabs[group] = tab;
+
     app.render(false);
+
   }
+
+
+
+  static #onToggleEditMode(_event, target) {
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.isEditable) return;
+
+    app.#sheetEditMode = target.checked;
+
+    app.render(false);
+
+  }
+
+
+
+  static async #onAddTag(event, target) {
+
+    event.preventDefault?.();
+
+    event.stopPropagation?.();
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canEditSheet()) return;
+
+    const field = target.dataset.field;
+
+    if (!field) return;
+
+    const select = target.closest(".tag-field")?.querySelector(".tag-add-select");
+
+    const value = select?.value ?? "";
+
+    if (!value) return;
+
+
+
+    const current = normalizeTagArray(foundry.utils.getProperty(app.actor.system, field));
+
+    if (current.includes(value)) return;
+
+    current.push(value);
+
+
+
+    const update = { system: {} };
+
+    foundry.utils.setProperty(update.system, field, current);
+
+    await app.actor.update(update);
+
+    await recordSheetChanges(app.actor, update);
+
+    if (select) select.value = "";
+
+    app.render(false);
+
+  }
+
+
+
+  static async #onRemoveTag(event, target) {
+
+    event.preventDefault?.();
+
+    event.stopPropagation?.();
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canEditSheet()) return;
+
+    const field = target.dataset.field;
+
+    const value = target.dataset.value;
+
+    if (!field || !value) return;
+
+
+
+    const current = normalizeTagArray(foundry.utils.getProperty(app.actor.system, field)).filter(
+
+      (v) => v !== value
+
+    );
+
+    const update = { system: {} };
+
+    foundry.utils.setProperty(update.system, field, current);
+
+    await app.actor.update(update);
+
+    await recordSheetChanges(app.actor, update);
+
+    app.render(false);
+
+  }
+
+
 
   static #onOpenContainer(_event, target) {
+
     const app = /** @type {CharacterActorSheet} */ (this);
+
     app.#openContainerId = target.dataset.containerId ?? null;
+
     app.#activeTab = "inventory";
+
     app.render(false);
+
   }
+
+
 
   static #onCloseContainer() {
+
     const app = /** @type {CharacterActorSheet} */ (this);
+
     app.#openContainerId = null;
+
     app.render(false);
+
   }
+
+
 
   static async #onUnequipSlot(_event, target) {
+
     const app = /** @type {CharacterActorSheet} */ (this);
-    if (!app.isEditable) return;
+
+    if (!app.#canEditSheet()) return;
+
     const slotId = target.dataset.slot;
+
     if (!slotId) return;
+
     await unequipSlot(app.actor, slotId);
+
     app.render(false);
+
   }
+
+
 
   static async #onAddCustomSkill() {
+
     const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canEditSheet()) return;
+
     const label = window.prompt(game.i18n.localize("ASHANVIL.SkillName"));
+
     if (!label?.trim()) return;
+
     const custom = foundry.utils.deepClone(app.actor.system.skills?.custom ?? []);
+
     custom.push({
+
       id: foundry.utils.randomID(),
+
       label: label.trim(),
+
       ability: "mnd",
+
       ranks: 0,
+
       misc: 0,
+
       bonus: 0,
+
     });
-    await app.actor.update({ "system.skills.custom": custom });
+
+    const update = { "system.skills.custom": custom };
+
+    await app.actor.update(update);
+
+    await recordSheetChanges(app.actor, { system: { skills: { custom } } });
+
     app.render(false);
+
   }
+
+
 
   static async #onToggleHeritage(event, target) {
+
     const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canEditSheet()) return;
+
     const kind = target.dataset.heritage;
+
     const checked = target.checked;
+
     const update = {
+
       "system.details.isVampire": kind === "vampire" ? checked : false,
+
       "system.details.isLycanthrope": kind === "lycanthrope" ? checked : false,
+
     };
+
     if (checked && kind === "vampire") update["system.details.isLycanthrope"] = false;
+
     if (checked && kind === "lycanthrope") update["system.details.isVampire"] = false;
+
     await app.actor.update(update);
+
+    await recordSheetChanges(app.actor, foundry.utils.expandObject(update));
+
     app.render(false);
+
   }
+
+
 
   static async #onCreateItem(_event, target) {
+
     const app = /** @type {CharacterActorSheet} */ (this);
-    if (!app.isEditable) return;
+
+    if (!app.#canEditSheet()) return;
+
     const type = target.dataset.itemType ?? "gear";
+
     const tradition = target.dataset.tradition ?? "arcane";
+
     const isContainer = target.dataset.container === "1";
+
     const labels = {
+
       gear: isContainer ? "ASHANVIL.NewContainer" : "ASHANVIL.NewGear",
+
       spell: "ASHANVIL.NewSpell",
+
       feature: "ASHANVIL.NewFeature",
+
     };
+
     const data = {
+
       name: game.i18n.localize(labels[type] ?? "Name"),
+
       type,
+
       system: {},
+
     };
+
     if (type === "spell") data.system = { tradition, level: 0, school: "", prepared: false };
+
     if (type === "gear" && isContainer) {
+
       data.system = { isContainer: true, containerKind: "backpack", containerCapacity: 20, quantity: 1 };
+
     }
+
     const created = await Item.createDocuments([data], { parent: app.actor });
+
     created[0]?.sheet?.render(true);
+
     app.render(false);
+
   }
+
+
 
   static #onEditItem(_event, target) {
+
     const app = /** @type {CharacterActorSheet} */ (this);
+
     const itemId = target.closest("[data-item-id]")?.dataset.itemId ?? target.dataset.itemId;
+
     app.actor.items.get(itemId)?.sheet?.render(true);
+
   }
+
+
 
   static async #onDeleteItem(_event, target) {
+
     const app = /** @type {CharacterActorSheet} */ (this);
-    if (!app.isEditable) return;
+
+    if (!app.#canEditSheet()) return;
+
     const itemId = target.closest("[data-item-id]")?.dataset.itemId ?? target.dataset.itemId;
+
     const item = app.actor.items.get(itemId);
+
     if (!item) return;
+
     if (!(await confirmDeleteItem(item.name))) return;
+
     await item.delete();
+
     app.render(false);
+
   }
 
+
+
   static async #onToggleEffect(_event, target) {
+
     const app = /** @type {CharacterActorSheet} */ (this);
-    if (!app.isEditable) return;
+
+    if (!app.#canEditSheet()) return;
+
     const effectId = target.dataset.effectId;
+
     const effect =
+
       app.actor.effects.get(effectId) ??
+
       getActorEffects(app.actor).find((e) => e.id === effectId);
+
     if (!effect) return;
+
     await effect.update({ disabled: !target.checked });
+
     app.render(false);
+
   }
+
 }
+

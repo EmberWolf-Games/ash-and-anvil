@@ -1,27 +1,35 @@
-<div class="sheet-zone sheet-zone--equipment equipment-tab" data-zone="equipment">
-  <p class="hint">{{localize "ASHANVIL.EquipmentHint"}}</p>
-  <div class="equipment-mannequin-wrap">
-    <div class="equipment-mannequin">
-      <img class="mannequin-bg" src="{{equipment.mannequinPath}}" alt="" />
-      {{#each equipment.slots as |slot|}}
-      <div
-        class="equipment-slot {{#if slot.occupied}}occupied{{/if}} equipment-slot--{{slot.group}}"
-        data-slot="{{slot.id}}"
-        data-drop-zone="equipment"
-        title="{{slot.label}}"
-        style="top: {{slot.top}}%; left: {{slot.left}}%; width: {{slot.w}}%; height: {{slot.h}}%;"
-      >
-        {{#if slot.item}}
-        <button type="button" class="slot-item" data-action="editItem" data-item-id="{{slot.item.id}}">
-          <img src="{{slot.item.img}}" alt="{{slot.item.name}}" />
-          <span class="slot-label">{{slot.item.name}}</span>
-        </button>
-        <button type="button" class="slot-unequip" data-action="unequipSlot" data-slot="{{slot.id}}" title="{{localize 'ASHANVIL.Unequip'}}">×</button>
-        {{else}}
-        <span class="slot-empty">{{slot.label}}</span>
-        {{/if}}
-      </div>
-      {{/each}}
-    </div>
-  </div>
-</div>
+<div class="sheet-zone sheet-zone--equipment equipment-tab" data-zone="equipment">
+  <p class="hint equipment-hint">{{localize "ASHANVIL.EquipmentHint"}}</p>
+
+  <div class="equipment-layout">
+    <aside class="equipment-panel equipment-panel--carried">
+      <h4 class="panel-title">{{localize "ASHANVIL.EquipPanelCarried"}}</h4>
+      {{#each equipment.leftSlots as |slot|}}
+      {{> "systems/ash-and-anvil/templates/actor/parts/equipment-slot-panel.hbs" slot=slot}}
+      {{/each}}
+    </aside>
+
+    <div class="equipment-mannequin-wrap">
+      <div
+        class="equipment-mannequin {{#if equipment.mannequinIsFemale}}mannequin--female{{else}}mannequin--male{{/if}}"
+        style="--mannequin-url: url('{{equipment.mannequinPath}}')"
+      >
+        <div class="mannequin-art" aria-hidden="true"></div>
+        <div class="mannequin-slots">
+          {{#each equipment.mannequinSlots as |slot|}}
+          {{> "systems/ash-and-anvil/templates/actor/parts/equipment-slot-mannequin.hbs" slot=slot}}
+          {{/each}}
+        </div>
+      </div>
+    </div>
+
+    <aside class="equipment-panel equipment-panel--rings">
+      <h4 class="panel-title">{{localize "ASHANVIL.EquipPanelRings"}}</h4>
+      <div class="equipment-rings-grid">
+        {{#each equipment.ringSlots as |slot|}}
+        {{> "systems/ash-and-anvil/templates/actor/parts/equipment-slot-panel.hbs" slot=slot}}
+        {{/each}}
+      </div>
+    </aside>
+  </div>
+</div>

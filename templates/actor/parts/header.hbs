@@ -1,6 +1,31 @@
 <header class="sheet-header sheet-header--minimal" data-zone="header">
-  <h1 class="charname"><input name="name" type="text" value="{{document.name}}" placeholder="{{localize 'Name'}}" /></h1>
+  <div class="sheet-header-row flexrow">
+    <h1 class="charname flex1">
+      <input name="name" type="text" value="{{document.name}}" placeholder="{{localize 'Name'}}" {{#unless sheetEditMode}}readonly{{/unless}} />
+    </h1>
+    {{#if canEditActor}}
+    <label class="sheet-edit-toggle" title="{{localize 'ASHANVIL.SheetEditModeHint'}}">
+      <span class="toggle-label">{{localize "ASHANVIL.SheetEditMode"}}</span>
+      <input type="checkbox" data-action="toggleEditMode" {{checked sheetEditMode}} />
+    </label>
+    {{/if}}
+  </div>
   {{#unless buildComplete}}
   <p class="chargen-warning">{{localize "ASHANVIL.ChargenIncompleteBanner"}}</p>
   {{/unless}}
+  {{#if isGM}}
+  <details class="sheet-audit-log">
+    <summary>{{localize "ASHANVIL.SheetAuditLog"}} ({{changeLog.length}})</summary>
+    <ul class="audit-entries">
+      {{#each changeLog as |entry|}}
+      <li>
+        <span class="audit-meta">{{entry.userName}} · {{entry.ts}}</span>
+        <span class="audit-diff">{{entry.summary}}</span>
+      </li>
+      {{else}}
+      <li class="audit-empty">{{localize "ASHANVIL.SheetAuditEmpty"}}</li>
+      {{/each}}
+    </ul>
+  </details>
+  {{/if}}
 </header>

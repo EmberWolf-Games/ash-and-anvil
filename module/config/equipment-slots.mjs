@@ -1,42 +1,98 @@
+const BASE = "systems/ash-and-anvil/assets/ui";
+const SLOT_SIZE = 11;
+
 /**
- * Equipment slot definitions — positions are % on the mannequin panel (top, left).
- * @typedef {{ id: string, labelKey: string, group: string, top: number, left: number, w?: number, h?: number }} EquipmentSlotDef
+ * Equipment slot definitions.
+ * @typedef {"mannequin" | "panel-left" | "panel-rings"} EquipmentSlotPlacement
+ * @typedef {{ id: string, labelKey: string, abbrKey?: string, group: string, placement: EquipmentSlotPlacement, top?: number, left?: number, size?: number, ringIndex?: number }} EquipmentSlotDef
  */
 
-/** @type {readonly EquipmentSlotDef[]} */
+export const MANNEQUIN_IMAGES = {
+
+  male: `${BASE}/mannequin_male.png`,
+
+  female: `${BASE}/mannequin_female.png`,
+
+};
+
+
+
+/**
+
+ * Square slot anchors — top/left are center points on the figure overlay (percent).
+
+ * Coordinates are relative to `.mannequin-slots`, not the outer frame.
+
+ * @type {readonly EquipmentSlotDef[]}
+
+ */
+
 export const EQUIPMENT_SLOTS = [
-  { id: "head", labelKey: "ASHANVIL.EquipHead", group: "body", top: 4, left: 44, w: 12, h: 10 },
-  { id: "leftEar", labelKey: "ASHANVIL.EquipLeftEar", group: "body", top: 8, left: 32, w: 8, h: 6 },
-  { id: "rightEar", labelKey: "ASHANVIL.EquipRightEar", group: "body", top: 8, left: 60, w: 8, h: 6 },
-  { id: "neck", labelKey: "ASHANVIL.EquipNeck", group: "body", top: 14, left: 44, w: 12, h: 6 },
-  { id: "shoulders", labelKey: "ASHANVIL.EquipShoulders", group: "body", top: 18, left: 38, w: 24, h: 8 },
-  { id: "backCloak", labelKey: "ASHANVIL.EquipBackCloak", group: "back", top: 20, left: 68, w: 12, h: 18 },
-  { id: "backSheathe", labelKey: "ASHANVIL.EquipBackSheathe", group: "back", top: 24, left: 18, w: 10, h: 20 },
-  { id: "backpack", labelKey: "ASHANVIL.EquipBackpack", group: "back", top: 28, left: 62, w: 14, h: 16 },
-  { id: "chest", labelKey: "ASHANVIL.EquipChest", group: "body", top: 26, left: 40, w: 20, h: 12 },
-  { id: "leftArm", labelKey: "ASHANVIL.EquipLeftArm", group: "body", top: 28, left: 22, w: 10, h: 16 },
-  { id: "rightArm", labelKey: "ASHANVIL.EquipRightArm", group: "body", top: 28, left: 68, w: 10, h: 16 },
-  { id: "hands", labelKey: "ASHANVIL.EquipHands", group: "body", top: 38, left: 40, w: 20, h: 8 },
-  { id: "body", labelKey: "ASHANVIL.EquipBody", group: "body", top: 40, left: 38, w: 24, h: 10 },
-  { id: "naturalArmor", labelKey: "ASHANVIL.EquipNaturalArmor", group: "body", top: 44, left: 42, w: 16, h: 8 },
-  { id: "waist1", labelKey: "ASHANVIL.EquipWaist1", group: "waist", top: 50, left: 32, w: 10, h: 8 },
-  { id: "waist2", labelKey: "ASHANVIL.EquipWaist2", group: "waist", top: 52, left: 44, w: 12, h: 8 },
-  { id: "waist3", labelKey: "ASHANVIL.EquipWaist3", group: "waist", top: 50, left: 58, w: 10, h: 8 },
-  { id: "legs", labelKey: "ASHANVIL.EquipLegs", group: "body", top: 58, left: 40, w: 20, h: 14 },
-  { id: "feet", labelKey: "ASHANVIL.EquipFeet", group: "body", top: 78, left: 38, w: 24, h: 10 },
-  { id: "leftHand", labelKey: "ASHANVIL.EquipLeftHand", group: "held", top: 42, left: 8, w: 12, h: 12 },
-  { id: "rightHand", labelKey: "ASHANVIL.EquipRightHand", group: "held", top: 42, left: 80, w: 12, h: 12 },
-  { id: "floating", labelKey: "ASHANVIL.EquipFloating", group: "special", top: 10, left: 82, w: 12, h: 12 },
-  { id: "ring1", labelKey: "ASHANVIL.EquipRing", group: "rings", top: 72, left: 26, w: 6, h: 6 },
-  { id: "ring2", labelKey: "ASHANVIL.EquipRing", group: "rings", top: 74, left: 32, w: 6, h: 6 },
-  { id: "ring3", labelKey: "ASHANVIL.EquipRing", group: "rings", top: 76, left: 38, w: 6, h: 6 },
-  { id: "ring4", labelKey: "ASHANVIL.EquipRing", group: "rings", top: 77, left: 44, w: 6, h: 6 },
-  { id: "ring5", labelKey: "ASHANVIL.EquipRing", group: "rings", top: 77, left: 50, w: 6, h: 6 },
-  { id: "ring6", labelKey: "ASHANVIL.EquipRing", group: "rings", top: 76, left: 56, w: 6, h: 6 },
-  { id: "ring7", labelKey: "ASHANVIL.EquipRing", group: "rings", top: 74, left: 62, w: 6, h: 6 },
-  { id: "ring8", labelKey: "ASHANVIL.EquipRing", group: "rings", top: 72, left: 68, w: 6, h: 6 },
-  { id: "ring9", labelKey: "ASHANVIL.EquipRing", group: "rings", top: 70, left: 50, w: 6, h: 6 },
-  { id: "ring10", labelKey: "ASHANVIL.EquipRing", group: "rings", top: 68, left: 56, w: 6, h: 6 },
+
+  { id: "head", labelKey: "ASHANVIL.EquipHead", abbrKey: "ASHANVIL.EquipAbbrHead", group: "body", placement: "mannequin", top: 5, left: 50, size: SLOT_SIZE },
+
+  { id: "leftEar", labelKey: "ASHANVIL.EquipLeftEar", abbrKey: "ASHANVIL.EquipAbbrEar", group: "body", placement: "mannequin", top: 9, left: 30, size: SLOT_SIZE },
+
+  { id: "rightEar", labelKey: "ASHANVIL.EquipRightEar", abbrKey: "ASHANVIL.EquipAbbrEar", group: "body", placement: "mannequin", top: 9, left: 70, size: SLOT_SIZE },
+
+  { id: "neck", labelKey: "ASHANVIL.EquipNeck", abbrKey: "ASHANVIL.EquipAbbrNeck", group: "body", placement: "mannequin", top: 14, left: 50, size: SLOT_SIZE },
+
+  { id: "shoulders", labelKey: "ASHANVIL.EquipShoulders", abbrKey: "ASHANVIL.EquipAbbrShoulders", group: "body", placement: "mannequin", top: 19, left: 50, size: SLOT_SIZE },
+
+  { id: "chest", labelKey: "ASHANVIL.EquipChest", abbrKey: "ASHANVIL.EquipAbbrChest", group: "body", placement: "mannequin", top: 25, left: 50, size: SLOT_SIZE },
+
+  { id: "leftArm", labelKey: "ASHANVIL.EquipLeftArm", abbrKey: "ASHANVIL.EquipAbbrArm", group: "body", placement: "mannequin", top: 30, left: 10, size: SLOT_SIZE },
+
+  { id: "rightArm", labelKey: "ASHANVIL.EquipRightArm", abbrKey: "ASHANVIL.EquipAbbrArm", group: "body", placement: "mannequin", top: 30, left: 90, size: SLOT_SIZE },
+
+  { id: "naturalArmor", labelKey: "ASHANVIL.EquipNaturalArmor", abbrKey: "ASHANVIL.EquipAbbrNatural", group: "body", placement: "mannequin", top: 25, left: 72, size: SLOT_SIZE },
+
+  { id: "body", labelKey: "ASHANVIL.EquipBody", abbrKey: "ASHANVIL.EquipAbbrBody", group: "body", placement: "mannequin", top: 35, left: 50, size: SLOT_SIZE },
+
+  { id: "hands", labelKey: "ASHANVIL.EquipHands", abbrKey: "ASHANVIL.EquipAbbrHands", group: "body", placement: "mannequin", top: 44, left: 50, size: SLOT_SIZE },
+
+  { id: "waist1", labelKey: "ASHANVIL.EquipWaist1", abbrKey: "ASHANVIL.EquipAbbrWaist", group: "waist", placement: "mannequin", top: 50, left: 38, size: SLOT_SIZE },
+
+  { id: "waist2", labelKey: "ASHANVIL.EquipWaist2", abbrKey: "ASHANVIL.EquipAbbrWaist", group: "waist", placement: "mannequin", top: 50, left: 50, size: SLOT_SIZE },
+
+  { id: "waist3", labelKey: "ASHANVIL.EquipWaist3", abbrKey: "ASHANVIL.EquipAbbrWaist", group: "waist", placement: "mannequin", top: 50, left: 62, size: SLOT_SIZE },
+
+  { id: "legs", labelKey: "ASHANVIL.EquipLegs", abbrKey: "ASHANVIL.EquipAbbrLegs", group: "body", placement: "mannequin", top: 64, left: 50, size: SLOT_SIZE },
+
+  { id: "feet", labelKey: "ASHANVIL.EquipFeet", abbrKey: "ASHANVIL.EquipAbbrFeet", group: "body", placement: "mannequin", top: 93, left: 50, size: SLOT_SIZE },
+
+  { id: "leftHand", labelKey: "ASHANVIL.EquipLeftHand", group: "held", placement: "panel-left" },
+
+  { id: "rightHand", labelKey: "ASHANVIL.EquipRightHand", group: "held", placement: "panel-left" },
+
+  { id: "backCloak", labelKey: "ASHANVIL.EquipBackCloak", group: "back", placement: "panel-left" },
+
+  { id: "backSheathe", labelKey: "ASHANVIL.EquipBackSheathe", group: "back", placement: "panel-left" },
+
+  { id: "backpack", labelKey: "ASHANVIL.EquipBackpack", group: "back", placement: "panel-left" },
+
+  { id: "floating", labelKey: "ASHANVIL.EquipFloating", group: "special", placement: "panel-left" },
+
+  { id: "ring1", labelKey: "ASHANVIL.EquipRing", group: "rings", placement: "panel-rings", ringIndex: 1 },
+
+  { id: "ring2", labelKey: "ASHANVIL.EquipRing", group: "rings", placement: "panel-rings", ringIndex: 2 },
+
+  { id: "ring3", labelKey: "ASHANVIL.EquipRing", group: "rings", placement: "panel-rings", ringIndex: 3 },
+
+  { id: "ring4", labelKey: "ASHANVIL.EquipRing", group: "rings", placement: "panel-rings", ringIndex: 4 },
+
+  { id: "ring5", labelKey: "ASHANVIL.EquipRing", group: "rings", placement: "panel-rings", ringIndex: 5 },
+
+  { id: "ring6", labelKey: "ASHANVIL.EquipRing", group: "rings", placement: "panel-rings", ringIndex: 6 },
+
+  { id: "ring7", labelKey: "ASHANVIL.EquipRing", group: "rings", placement: "panel-rings", ringIndex: 7 },
+
+  { id: "ring8", labelKey: "ASHANVIL.EquipRing", group: "rings", placement: "panel-rings", ringIndex: 8 },
+
+  { id: "ring9", labelKey: "ASHANVIL.EquipRing", group: "rings", placement: "panel-rings", ringIndex: 9 },
+
+  { id: "ring10", labelKey: "ASHANVIL.EquipRing", group: "rings", placement: "panel-rings", ringIndex: 10 },
+
 ];
 
 /** @type {readonly string[]} */
@@ -44,3 +100,15 @@ export const EQUIPMENT_SLOT_IDS = EQUIPMENT_SLOTS.map((s) => s.id);
 
 /** @type {Readonly<Record<string, EquipmentSlotDef>>} */
 export const EQUIPMENT_SLOT_MAP = Object.fromEntries(EQUIPMENT_SLOTS.map((s) => [s.id, s]));
+
+/**
+ * @param {string} [gender]
+ * @returns {string}
+ */
+export function mannequinImageForGender(gender) {
+  const g = String(gender ?? "")
+    .trim()
+    .toLowerCase();
+  if (g === "female") return MANNEQUIN_IMAGES.female;
+  return MANNEQUIN_IMAGES.male;
+}

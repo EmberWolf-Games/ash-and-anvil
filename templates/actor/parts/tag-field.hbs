@@ -1,0 +1,29 @@
+<div class="tag-field" data-tag-field="{{fieldKey}}">
+  <div class="tag-field-header">
+    <span class="tag-field-label">{{label}}</span>
+    {{#if sheetEditMode}}
+    <div class="tag-add-row">
+      <select class="tag-add-select" data-field="{{fieldKey}}">
+        <option value="">{{localize "ASHANVIL.TagAddPlaceholder"}}</option>
+        {{#each available as |opt|}}
+        <option value="{{opt.value}}">{{opt.label}}</option>
+        {{/each}}
+      </select>
+      <button type="button" class="tag-add-btn" data-action="addTag" data-field="{{fieldKey}}">{{localize "ASHANVIL.TagAdd"}}</button>
+    </div>
+    {{/if}}
+  </div>
+  <div class="tag-list">
+    {{#each tags as |tag|}}
+    <span class="tag-chip" data-value="{{tag.value}}">
+      {{tag.label}}
+      {{#if ../sheetEditMode}}
+      <button type="button" class="tag-remove" data-action="removeTag" data-field="{{../fieldKey}}" data-value="{{tag.value}}" title="{{localize 'ASHANVIL.TagRemove'}}">×</button>
+      {{/if}}
+    </span>
+    {{/each}}
+    {{#unless tags.length}}
+    <span class="tag-empty">{{localize "ASHANVIL.TagEmpty"}}</span>
+    {{/unless}}
+  </div>
+</div>

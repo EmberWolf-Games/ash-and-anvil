@@ -1,0 +1,16 @@
+<div
+  class="equipment-slot equipment-slot--panel {{#if slot.occupied}}occupied{{/if}}"
+  data-slot="{{slot.id}}"
+  data-drop-zone="equipment"
+>
+  <span class="slot-panel-label">{{#if slot.ringIndex}}{{slot.abbr}}{{else}}{{slot.label}}{{/if}}</span>
+  {{#if slot.item}}
+  <button type="button" class="slot-item" data-action="editItem" data-item-id="{{slot.item.id}}">
+    <img src="{{slot.item.img}}" alt="" />
+    <span class="slot-label">{{slot.item.name}}</span>
+  </button>
+  <button type="button" class="slot-unequip" data-action="unequipSlot" data-slot="{{slot.id}}" title="{{localize 'ASHANVIL.Unequip'}}">×</button>
+  {{else}}
+  <span class="slot-empty">{{localize "ASHANVIL.EquipDropHint"}}</span>
+  {{/if}}
+</div>
