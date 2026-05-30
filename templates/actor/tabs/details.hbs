@@ -29,6 +29,11 @@
     <div class="details-abilities-row">
       {{#each abilityRows as |row|}}
       <div class="ability-shield" data-ability="{{row.key}}">
+        {{#if canAdjustResources}}
+        <button type="button" class="roll-check-btn roll-check-btn--ability" data-action="rollAbility" data-ability="{{row.key}}" title="{{localize 'ASHANVIL.RollCheckHint'}}">
+          <i class="fas fa-dice-d20"></i>
+        </button>
+        {{/if}}
         <span class="ability-shield-abbr">{{row.abbr}}</span>
         <span class="ability-shield-mod">{{numberFormat row.ability.mod sign=true}}</span>
         <input class="ability-shield-score" type="number" name="system.abilities.{{row.key}}.value" value="{{row.ability.value}}" min="0" max="50" title="{{row.label}}" />
@@ -90,26 +95,38 @@
           <input type="number" class="gameplay-field" name="system.attributes.health.temp" value="{{combat.health.temp}}" min="0" {{#unless canAdjustResources}}readonly{{/unless}} />
         </div>
         <div class="death-favor-grid">
-          <div>
-            <span class="mini-label">{{localize "ASHANVIL.DeathSaves"}}</span>
-            <div class="flexrow">
-              <label>{{localize "ASHANVIL.Successes"}}</label>
-              <input type="number" class="gameplay-field" name="system.attributes.deathSaves.successes" value="{{combat.deathSaves.successes}}" min="0" max="3" {{#unless canAdjustResources}}readonly{{/unless}} />
-              <label>{{localize "ASHANVIL.Failures"}}</label>
-              <input type="number" class="gameplay-field" name="system.attributes.deathSaves.failures" value="{{combat.deathSaves.failures}}" min="0" max="3" {{#unless canAdjustResources}}readonly{{/unless}} />
+          <div class="death-save-block">
+            <div class="death-save-header flexrow">
+              <span class="mini-label">{{localize "ASHANVIL.DeathSaves"}}</span>
+              {{#if combat.deathSave.isDead}}
+              <span class="death-status death-status--dead">{{localize "ASHANVIL.DeathSaveDeadStatus"}}</span>
+              {{else if combat.deathSave.stabilized}}
+              <span class="death-status death-status--stable">{{localize "ASHANVIL.DeathSaveStabilizedStatus"}}</span>
+              {{/if}}
             </div>
+            <div class="death-save-track flexrow">
+              <span class="death-save-label">{{localize "ASHANVIL.Successes"}}</span>
+              <span class="death-save-count">{{combat.deathSaves.successes}}/3</span>
+              <span class="death-save-label">{{localize "ASHANVIL.Failures"}}</span>
+              <span class="death-save-count">{{combat.deathSaves.failures}}/3</span>
+            </div>
+            {{#if canAdjustResources}}
+            <div class="death-save-actions flexrow">
+              {{#if combat.deathSave.canRoll}}
+              <button type="button" class="roll-check-btn" data-action="rollDeathSave" title="{{localize 'ASHANVIL.DeathSaveRollHint'}}">
+                <i class="fas fa-dice-d20"></i> {{localize "ASHANVIL.DeathSaveRoll"}}
+              </button>
+              {{/if}}
+              {{#if combat.deathSave.canWake}}
+              <button type="button" class="roll-check-btn" data-action="rollWakeSave" title="{{localize 'ASHANVIL.WakeSaveHint'}}">
+                <i class="fas fa-dice-d20"></i> {{localize "ASHANVIL.WakeSaveRoll"}} (DC {{combat.deathSave.wakeDc}})
+              </button>
+              {{/if}}
+            </div>
+            {{/if}}
           </div>
         </div>
       </section>
-
-      {{#if hasResourceBars}}
-      <section class="details-panel details-panel--resources">
-        <h4 class="panel-title">{{localize "ASHANVIL.PowerResources"}}</h4>
-        {{#each resourceBars as |bar|}}
-        {{> "systems/ash-and-anvil/templates/actor/parts/resource-bar.hbs" bar=bar}}
-        {{/each}}
-      </section>
-      {{/if}}
 
       <section class="details-panel details-panel--speed">
         <h4 class="panel-title">{{localize "ASHANVIL.Speed"}}</h4>
@@ -138,6 +155,11 @@
             <span class="save-name">{{row.label}}</span>
             <input class="save-misc" type="number" name="system.saves.{{row.key}}.misc" value="{{row.save.misc}}" title="{{localize 'ASHANVIL.Misc'}}" />
             <span class="save-total">{{numberFormat row.save.total sign=true}}</span>
+            {{#if ../canAdjustResources}}
+            <button type="button" class="roll-check-btn roll-check-btn--inline" data-action="rollSave" data-save="{{row.key}}" title="{{localize 'ASHANVIL.RollCheckHint'}}">
+              <i class="fas fa-dice-d20"></i>
+            </button>
+            {{/if}}
           </li>
           {{/each}}
         </ul>
@@ -158,6 +180,7 @@
           <span class="skill-misc-h">{{localize "ASHANVIL.Misc"}}</span>
           <span class="skill-bonus-h">{{localize "ASHANVIL.Bonus"}}</span>
           <span class="skill-passive-h">{{localize "ASHANVIL.Passive"}}</span>
+          <span class="skill-roll-h">{{localize "ASHANVIL.Roll"}}</span>
         </li>
         {{#each skillRows as |row|}}
         <li class="skill-row">
@@ -167,6 +190,11 @@
           <input class="skill-misc" type="number" name="system.skills.entries.{{row.key}}.misc" value="{{row.entry.misc}}" title="{{localize 'ASHANVIL.Misc'}}" />
           <span class="skill-bonus">{{numberFormat row.entry.bonus sign=true}}</span>
           <span class="skill-passive">{{row.passive}}</span>
+          {{#if ../canAdjustResources}}
+          <button type="button" class="roll-check-btn roll-check-btn--inline" data-action="rollSkill" data-skill="{{row.key}}" title="{{localize 'ASHANVIL.RollCheckHint'}}">
+            <i class="fas fa-dice-d20"></i>
+          </button>
+          {{/if}}
         </li>
         {{/each}}
         {{#each customSkillRows as |row|}}
@@ -177,6 +205,11 @@
           <input class="skill-misc" type="number" name="system.skills.custom.{{row.index}}.misc" value="{{row.entry.misc}}" />
           <span class="skill-bonus">{{numberFormat row.entry.bonus sign=true}}</span>
           <span class="skill-passive">{{row.passive}}</span>
+          {{#if ../canAdjustResources}}
+          <button type="button" class="roll-check-btn roll-check-btn--inline" data-action="rollSkill" data-skill="custom" data-custom-index="{{row.index}}" title="{{localize 'ASHANVIL.RollCheckHint'}}">
+            <i class="fas fa-dice-d20"></i>
+          </button>
+          {{/if}}
         </li>
         {{/each}}
       </ul>
@@ -184,6 +217,15 @@
     </section>
 
     <aside class="details-col details-col--extra">
+      {{#if hasResourceBars}}
+      <section class="details-panel details-panel--resources">
+        <h4 class="panel-title">{{localize "ASHANVIL.PowerResources"}}</h4>
+        {{#each resourceBars as |bar|}}
+        {{> "systems/ash-and-anvil/templates/actor/parts/resource-bar.hbs" bar=bar}}
+        {{/each}}
+      </section>
+      {{/if}}
+
       <section class="details-panel">
         <h4 class="panel-title">{{localize "ASHANVIL.Lineage"}}</h4>
         <input type="text" name="system.details.lineage" value="{{details.lineage}}" placeholder="{{localize 'ASHANVIL.LineagePlaceholder'}}" />

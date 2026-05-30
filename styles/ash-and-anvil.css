@@ -1273,6 +1273,7 @@
   flex-direction: column;
   gap: 0.1rem;
   padding: 0.35rem 0.25rem;
+  position: relative;
   text-align: center;
 }
 
@@ -1381,7 +1382,77 @@
 .ash-and-anvil.sheet.actor .death-favor-grid {
   display: grid;
   gap: 0.35rem;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
+}
+
+.ash-and-anvil.sheet.actor .death-save-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .death-save-header {
+  align-items: center;
+  gap: 0.35rem;
+  justify-content: space-between;
+}
+
+.ash-and-anvil.sheet.actor .death-save-track {
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .death-save-count {
+  font-weight: bold;
+  min-width: 2rem;
+}
+
+.ash-and-anvil.sheet.actor .death-status {
+  font-size: var(--font-size-11);
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.ash-and-anvil.sheet.actor .death-status--dead {
+  color: #c0392b;
+}
+
+.ash-and-anvil.sheet.actor .death-status--stable {
+  color: #d4a017;
+}
+
+.ash-and-anvil.sheet.actor .death-save-actions {
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .roll-check-btn {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--aa-border);
+  border-radius: 4px;
+  color: var(--aa-accent);
+  cursor: pointer;
+  font-size: var(--font-size-11);
+  line-height: 1.2;
+  padding: 0.15rem 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .roll-check-btn:hover {
+  background: var(--aa-accent-dim);
+  color: var(--aa-text);
+}
+
+.ash-and-anvil.sheet.actor .roll-check-btn--ability {
+  padding: 0.1rem 0.25rem;
+  position: absolute;
+  right: 2px;
+  top: 2px;
+}
+
+.ash-and-anvil.sheet.actor .roll-check-btn--inline {
+  justify-self: center;
+  min-width: 1.75rem;
+  padding: 0.1rem;
 }
 
 .ash-and-anvil.sheet.actor .speed-compact {
@@ -1418,7 +1489,7 @@
 }
 
 .ash-and-anvil.sheet.actor .save-row {
-  grid-template-columns: 1.25rem 2rem 1fr 2.5rem 2.5rem;
+  grid-template-columns: 1.25rem 2rem 1fr 2.5rem 2.5rem 1.75rem;
 }
 
 .ash-and-anvil.sheet.actor .save-abbr {
@@ -1464,7 +1535,7 @@
 
 .ash-and-anvil.sheet.actor .skill-row {
   border-bottom: 1px solid rgba(61, 61, 61, 0.6);
-  grid-template-columns: 2rem 1fr 2.25rem 2.25rem 2.25rem 2.25rem;
+  grid-template-columns: 2rem 1fr 2.25rem 2.25rem 2.25rem 2.25rem 1.75rem;
 }
 
 .ash-and-anvil.sheet.actor .skill-row--header {

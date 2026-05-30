@@ -16,6 +16,14 @@ import { validateWeightPickup } from "../../rules/encumbrance.mjs";
 
 import { parseDeltaInput } from "../../rules/resource-adjust.mjs";
 
+import {
+  rollAbilityCheck,
+  rollDeathSave,
+  rollSavingThrow,
+  rollSkillCheck,
+  rollWakeSave,
+} from "../../rules/sheet-rolls.mjs";
+
 import { normalizeTagArray } from "../../helpers/tag-arrays.mjs";
 
 import { formatChangeLogForDisplay, recordSheetChanges } from "../../helpers/sheet-audit.mjs";
@@ -118,6 +126,16 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       closeContainer: CharacterActorSheet.#onCloseContainer,
 
       applyResourceDelta: CharacterActorSheet.#onApplyResourceDelta,
+
+      rollAbility: CharacterActorSheet.#onRollAbility,
+
+      rollSave: CharacterActorSheet.#onRollSave,
+
+      rollSkill: CharacterActorSheet.#onRollSkill,
+
+      rollDeathSave: CharacterActorSheet.#onRollDeathSave,
+
+      rollWakeSave: CharacterActorSheet.#onRollWakeSave,
 
       unequipSlot: CharacterActorSheet.#onUnequipSlot,
 
@@ -705,6 +723,84 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     await app.actor.update(update);
 
     input.value = "";
+
+    app.render(false);
+
+  }
+
+
+
+  static async #onRollAbility(_event, target) {
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canAdjustResources()) return;
+
+    const ability = target.dataset.ability;
+
+    if (!ability) return;
+
+    await rollAbilityCheck(app.actor, ability);
+
+  }
+
+
+
+  static async #onRollSave(_event, target) {
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canAdjustResources()) return;
+
+    const save = target.dataset.save;
+
+    if (!save) return;
+
+    await rollSavingThrow(app.actor, save);
+
+  }
+
+
+
+  static async #onRollSkill(_event, target) {
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canAdjustResources()) return;
+
+    const skill = target.dataset.skill;
+
+    if (!skill) return;
+
+    const customIndex = target.dataset.customIndex ?? null;
+
+    await rollSkillCheck(app.actor, skill, customIndex);
+
+  }
+
+
+
+  static async #onRollDeathSave(_event, _target) {
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canAdjustResources()) return;
+
+    await rollDeathSave(app.actor);
+
+    app.render(false);
+
+  }
+
+
+
+  static async #onRollWakeSave(_event, _target) {
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canAdjustResources()) return;
+
+    await rollWakeSave(app.actor);
 
     app.render(false);
 

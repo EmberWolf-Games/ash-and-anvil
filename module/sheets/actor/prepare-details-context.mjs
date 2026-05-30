@@ -20,6 +20,11 @@ import {
 } from "../../config/traits.mjs";
 import { spentSkillPoints } from "../../rules/skills.mjs";
 import { buildResourceBarContext } from "../../rules/caster-resources.mjs";
+import {
+  canRollDeathSave,
+  canRollWakeSave,
+  wakeSaveDc,
+} from "../../rules/death-saves.mjs";
 import { availableTagOptions, normalizeTagArray, selectedTags } from "../../helpers/tag-arrays.mjs";
 
 /**
@@ -115,6 +120,13 @@ export function prepareDetailsTabContext(actor, baseContext) {
   const vulnerabilityTags = normalizeTagArray(defensesRaw.vulnerabilities);
   const conditionImmunityTags = normalizeTagArray(defensesRaw.conditionImmunities);
 
+  const deathSaves = system.attributes?.deathSaves ?? {
+    successes: 0,
+    failures: 0,
+    stabilized: false,
+    isDead: false,
+  };
+
   const resourceBars = buildResourceBarContext(actor);
 
   return {
@@ -148,7 +160,14 @@ export function prepareDetailsTabContext(actor, baseContext) {
     },
     combat: {
       health: system.attributes?.health ?? { value: 0, max: 0, temp: 0 },
-      deathSaves: system.attributes?.deathSaves ?? { successes: 0, failures: 0 },
+      deathSaves,
+      deathSave: {
+        canRoll: canRollDeathSave(actor),
+        canWake: canRollWakeSave(actor),
+        wakeDc: wakeSaveDc(actor),
+        isDead: deathSaves.isDead ?? false,
+        stabilized: deathSaves.stabilized ?? false,
+      },
       favor: system.attributes?.favor ?? 0,
       quickness: system.attributes?.quickness ?? 0,
       edge: system.proficiency?.edge ?? 0,

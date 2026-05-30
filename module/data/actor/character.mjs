@@ -130,6 +130,8 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
         deathSaves: new SchemaField({
           successes: new NumberField({ integer: true, initial: 0, min: 0, max: 3 }),
           failures: new NumberField({ integer: true, initial: 0, min: 0, max: 3 }),
+          stabilized: new BooleanField({ initial: false, label: "ASHANVIL.DeathSaveStabilized" }),
+          isDead: new BooleanField({ initial: false, label: "ASHANVIL.DeathSaveDead" }),
         }),
         favor: new NumberField({ integer: true, initial: 0, min: 0, label: "ASHANVIL.Favor" }),
       }),

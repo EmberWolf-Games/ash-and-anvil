@@ -54,7 +54,15 @@ export function ensureCharacterStructure(system) {
 
   system.attributes.quickness ??= 0;
 
-  system.attributes.deathSaves ??= { successes: 0, failures: 0 };
+  system.attributes.deathSaves ??= { successes: 0, failures: 0, stabilized: false, isDead: false };
+
+  const hp = system.attributes.health?.value ?? 0;
+  if (hp > 0) {
+    system.attributes.deathSaves.successes = 0;
+    system.attributes.deathSaves.failures = 0;
+    system.attributes.deathSaves.stabilized = false;
+    system.attributes.deathSaves.isDead = false;
+  }
 
   system.attributes.favor ??= 0;
 
