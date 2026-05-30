@@ -175,7 +175,7 @@
         <input type="text" name="system.details.lineage" value="{{details.lineage}}" placeholder="{{localize 'ASHANVIL.LineagePlaceholder'}}" />
       </section>
 
-      <details class="details-collapsible">
+      <details class="details-collapsible" data-collapsible-id="proficiencies" {{#if openCollapsibles.proficiencies}}open{{/if}}>
         <summary>{{localize "ASHANVIL.Proficiencies"}}</summary>
         <div class="details-collapsible-body">
           <div class="prof-armor flexrow">
@@ -190,7 +190,7 @@
         </div>
       </details>
 
-      <details class="details-collapsible">
+      <details class="details-collapsible" data-collapsible-id="defenses" {{#if openCollapsibles.defenses}}open{{/if}}>
         <summary>{{localize "ASHANVIL.Defenses"}}</summary>
         <div class="details-collapsible-body">
           {{> "systems/ash-and-anvil/templates/actor/parts/tag-field.hbs" fieldKey=tagFields.resistances.fieldKey label=tagFields.resistances.label tags=tagFields.resistances.tags available=tagFields.resistances.available sheetEditMode=sheetEditMode}}
@@ -200,7 +200,7 @@
         </div>
       </details>
 
-      <details class="details-collapsible">
+      <details class="details-collapsible" data-collapsible-id="heritage" {{#if openCollapsibles.heritage}}open{{/if}}>
         <summary>{{localize "ASHANVIL.Heritage"}}</summary>
         <div class="details-collapsible-body">
           <label><input type="checkbox" {{checked heritage.isVampire}} data-action="toggleHeritage" data-heritage="vampire" /> {{localize "ASHANVIL.HeritageVampire"}}</label>

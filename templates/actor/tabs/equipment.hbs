@@ -2,11 +2,22 @@
   <p class="hint equipment-hint">{{localize "ASHANVIL.EquipmentHint"}}</p>
 
   <div class="equipment-layout">
-    <aside class="equipment-panel equipment-panel--carried">
-      <h4 class="panel-title">{{localize "ASHANVIL.EquipPanelCarried"}}</h4>
-      {{#each equipment.leftSlots as |slot|}}
-      {{> "systems/ash-and-anvil/templates/actor/parts/equipment-slot-panel.hbs" slot=slot}}
-      {{/each}}
+    <aside class="equipment-sidebar">
+      <section class="equipment-panel equipment-panel--carried">
+        <h4 class="panel-title">{{localize "ASHANVIL.EquipPanelCarried"}}</h4>
+        {{#each equipment.leftSlots as |slot|}}
+        {{> "systems/ash-and-anvil/templates/actor/parts/equipment-slot-panel.hbs" slot=slot}}
+        {{/each}}
+      </section>
+
+      <section class="equipment-panel equipment-panel--rings">
+        <h4 class="panel-title">{{localize "ASHANVIL.EquipPanelRings"}}</h4>
+        <div class="equipment-rings-grid">
+          {{#each equipment.ringSlots as |slot|}}
+          {{> "systems/ash-and-anvil/templates/actor/parts/equipment-slot-panel.hbs" slot=slot}}
+          {{/each}}
+        </div>
+      </section>
     </aside>
 
     <div class="equipment-mannequin-wrap">
@@ -22,14 +33,5 @@
         </div>
       </div>
     </div>
-
-    <aside class="equipment-panel equipment-panel--rings">
-      <h4 class="panel-title">{{localize "ASHANVIL.EquipPanelRings"}}</h4>
-      <div class="equipment-rings-grid">
-        {{#each equipment.ringSlots as |slot|}}
-        {{> "systems/ash-and-anvil/templates/actor/parts/equipment-slot-panel.hbs" slot=slot}}
-        {{/each}}
-      </div>
-    </aside>
   </div>
 </div>

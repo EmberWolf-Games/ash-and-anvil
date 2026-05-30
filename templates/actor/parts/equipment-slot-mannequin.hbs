@@ -1,15 +1,15 @@
 <div
-  class="equipment-slot equipment-slot--mannequin {{#if slot.occupied}}occupied{{/if}} equipment-slot--{{slot.group}}"
-  data-slot="{{slot.id}}"
+  class="equipment-slot equipment-slot--mannequin {{#if slot.occupied}}occupied{{/if}} equipment-slot--{{slot.group}}{{#if slot.linked}} equipment-slot--linked{{/if}}"
+  data-slot="{{slot.storageKey}}"
   data-drop-zone="equipment"
-  title="{{slot.label}}"
+  title="{{slot.label}}{{#if slot.linked}} ({{localize 'ASHANVIL.EquipLinkedHint'}}){{/if}}"
   style="top: {{slot.top}}%; left: {{slot.left}}%; width: {{slot.size}}%;"
 >
   {{#if slot.item}}
   <button type="button" class="slot-item" data-action="editItem" data-item-id="{{slot.item.id}}">
     <img src="{{slot.item.img}}" alt="{{slot.item.name}}" />
   </button>
-  <button type="button" class="slot-unequip" data-action="unequipSlot" data-slot="{{slot.id}}" title="{{localize 'ASHANVIL.Unequip'}}">×</button>
+  <button type="button" class="slot-unequip" data-action="unequipSlot" data-slot="{{slot.storageKey}}" title="{{localize 'ASHANVIL.Unequip'}}">×</button>
   {{else}}
   <span class="slot-abbr">{{slot.abbr}}</span>
   {{/if}}

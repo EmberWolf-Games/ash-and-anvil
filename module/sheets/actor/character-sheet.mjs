@@ -52,6 +52,9 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
   #sheetEditMode = false;
 
+  /** @type {Set<string>} */
+  #openCollapsibles = new Set();
+
 
 
   static DEFAULT_OPTIONS = {
@@ -170,6 +173,41 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     this.element?.classList.toggle("sheet-edit-locked", this.isEditable && !this.#sheetEditMode);
 
+  }
+
+  #collapsibleContext() {
+    return {
+      proficiencies: this.#openCollapsibles.has("proficiencies"),
+      defenses: this.#openCollapsibles.has("defenses"),
+      heritage: this.#openCollapsibles.has("heritage"),
+    };
+  }
+
+  #captureOpenCollapsibles() {
+    this.element?.querySelectorAll("details[data-collapsible-id]").forEach((el) => {
+      const id = el.dataset.collapsibleId;
+      if (!id) return;
+      if (el.open) this.#openCollapsibles.add(id);
+      else this.#openCollapsibles.delete(id);
+    });
+  }
+
+  #bindCollapsibles() {
+    this.element?.querySelectorAll("details[data-collapsible-id]").forEach((el) => {
+      if (el.dataset.collapsibleBound) return;
+      el.dataset.collapsibleBound = "1";
+      el.addEventListener("toggle", () => {
+        const id = el.dataset.collapsibleId;
+        if (!id) return;
+        if (el.open) this.#openCollapsibles.add(id);
+        else this.#openCollapsibles.delete(id);
+      });
+    });
+  }
+
+  async render(force, options) {
+    if (this.rendered) this.#captureOpenCollapsibles();
+    return super.render(force, options);
   }
 
 
@@ -300,6 +338,8 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
         subTabs: CHARACTER_SHEET_PARAMS.subTabs,
 
+        openCollapsibles: this.#collapsibleContext(),
+
       });
 
     }
@@ -329,6 +369,8 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     this.#syncEditLockClass();
 
     this.#bindTagSelects();
+
+    this.#bindCollapsibles();
 
   }
 
