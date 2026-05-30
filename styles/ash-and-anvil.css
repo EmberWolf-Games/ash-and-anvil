@@ -342,6 +342,95 @@
   font-style: italic;
 }
 
+.ash-and-anvil.level-up-wizard .level-up-steps {
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.ash-and-anvil.level-up-wizard .level-up-steps .step {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--aa-border);
+  border-radius: 4px;
+  flex: 1 1 auto;
+  font-size: var(--font-size-11);
+  padding: 0.25rem 0.35rem;
+  text-align: center;
+}
+
+.ash-and-anvil.level-up-wizard .level-up-steps .step.active {
+  border-color: var(--aa-accent);
+  color: var(--aa-accent);
+}
+
+.ash-and-anvil.level-up-wizard .level-up-option {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.ash-and-anvil.level-up-wizard .level-up-footer {
+  border-top: 1px solid var(--aa-border);
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .features-tab-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ash-and-anvil.sheet.actor .features-tab-header {
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.ash-and-anvil.sheet.actor .features-class-line {
+  font-size: var(--font-size-13);
+  font-weight: bold;
+  margin: 0.15rem 0;
+}
+
+.ash-and-anvil.sheet.actor .class-card-list {
+  display: grid;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ash-and-anvil.sheet.actor .class-card {
+  background: var(--aa-surface-raised);
+  border: 1px solid var(--aa-border);
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .class-card-role {
+  color: var(--aa-accent);
+  font-size: var(--font-size-10);
+  text-transform: uppercase;
+}
+
+.ash-and-anvil.sheet.actor .class-card-subclass {
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .class-card-subclass input {
+  flex: 1 1 auto;
+}
+
+.ash-and-anvil.sheet.actor .class-card--add {
+  border-style: dashed;
+  text-align: center;
+}
+
+.ash-and-anvil.sheet.actor .compact-build-blocks .build-block {
+  margin-bottom: 0.25rem;
+}
+
 /* Pause overlay (v13: replaces default clock SVG / FA icon) */
 @keyframes ash-anvil-pause-spin {
   from {
@@ -1220,14 +1309,92 @@
 }
 
 .ash-and-anvil.sheet.actor .details-name {
-  border-bottom: 1px solid var(--aa-border);
+  border-bottom: none;
   color: var(--aa-text);
   display: block;
   font-size: var(--font-size-20);
   font-weight: bold;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0;
   padding: 0.1rem 0;
+}
+
+.ash-and-anvil.sheet.actor .details-name-row {
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.ash-and-anvil.sheet.actor .details-identity-line,
+.ash-and-anvil.sheet.actor .details-class-line {
+  font-size: var(--font-size-12);
+  opacity: 0.9;
+}
+
+.ash-and-anvil.sheet.actor .details-class-line {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.ash-and-anvil.sheet.actor .details-class-xp {
+  gap: 0.25rem;
+  margin-top: 0.15rem;
+}
+
+.ash-and-anvil.sheet.actor .details-xp-row {
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .xp-bar-label {
+  font-size: var(--font-size-10);
+  opacity: 0.8;
+}
+
+.ash-and-anvil.sheet.actor .xp-bar-track {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--aa-border);
+  border-radius: 4px;
+  height: 0.65rem;
+  overflow: hidden;
   width: 100%;
+}
+
+.ash-and-anvil.sheet.actor .xp-bar-fill {
+  background: linear-gradient(90deg, var(--aa-accent-dim), var(--aa-accent));
+  height: 100%;
+  min-width: 0;
+  transition: width 0.2s ease;
+}
+
+.ash-and-anvil.sheet.actor .xp-edit-input {
+  max-width: 4.5rem;
+}
+
+.ash-and-anvil.sheet.actor .level-up-btn,
+.ash-and-anvil .level-up-btn {
+  align-items: center;
+  background: #2d8a4e;
+  border: 1px solid #3cb371;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: var(--font-size-12);
+  font-weight: bold;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  white-space: nowrap;
+}
+
+.ash-and-anvil.sheet.actor .level-up-btn:hover,
+.ash-and-anvil .level-up-btn:hover {
+  background: #3cb371;
+}
+
+.ash-and-anvil.sheet.actor .level-up-btn--secondary {
+  background: rgba(45, 138, 78, 0.25);
+  border-color: #3cb371;
+  color: #b8f0c8;
 }
 
 .ash-and-anvil.sheet.actor .details-meta {

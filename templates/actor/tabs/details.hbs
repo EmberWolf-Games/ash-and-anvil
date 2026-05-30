@@ -10,18 +10,31 @@
     <div class="details-identity-compact flexrow">
       <img class="profile-img profile-img--compact" src="{{details.portrait}}" data-action="editImage" data-field="img" alt="{{details.name}}" />
       <div class="details-name-block flexcol">
-        <span class="details-name">{{details.name}}</span>
-        <div class="details-meta flexrow">
-          <span class="details-meta-item">{{details.ancestry}}{{#if details.ancestryBlended}} · {{details.secondaryAncestry}}{{/if}}</span>
-          <span class="details-meta-item">{{details.className}}{{#if details.multiClass}} / {{details.secondaryClassName}}{{/if}}</span>
-          <span class="details-meta-item">{{localize "ASHANVIL.TotalLevel"}} {{details.totalLevel}}/{{details.maxTotalLevel}}</span>
+        <div class="details-name-row flexrow">
+          <span class="details-name flex1">{{details.name}}</span>
           <span class="details-level-chip" title="{{localize 'ASHANVIL.TotalLevel'}}">Lv {{details.totalLevel}}</span>
         </div>
-        <div class="details-levels flexrow">
-          <label>{{localize "ASHANVIL.PrimaryClassLevel"}}</label>
-          <input type="number" name="system.attributes.primaryClassLevel" value="{{details.primaryClassLevel}}" min="0" max="{{details.maxTotalLevel}}" />
-          <label>{{localize "ASHANVIL.SecondaryClassLevel"}}</label>
-          <input type="number" name="system.attributes.secondaryClassLevel" value="{{details.secondaryClassLevel}}" min="0" max="{{details.maxTotalLevel}}" />
+        <span class="details-identity-line">{{details.ancestryLine}}</span>
+        <div class="details-class-xp flexcol">
+          <span class="details-class-line">{{details.classLine}}</span>
+          <div class="details-xp-row flexrow">
+            <div class="xp-bar-wrap flexcol flex1">
+              <span class="xp-bar-label">{{localize "ASHANVIL.Experience"}} {{details.experience.display}}</span>
+              <div class="xp-bar-track" title="{{details.experience.value}} XP">
+                <div class="xp-bar-fill" style="width: {{details.experience.pct}}%"></div>
+              </div>
+            </div>
+            {{#if sheetEditMode}}
+            <input type="number" class="xp-edit-input" name="system.attributes.experience.value" value="{{details.experience.value}}" min="0" title="{{localize 'ASHANVIL.Experience'}}" />
+            {{/if}}
+            {{#if details.canLevelUp}}
+            {{#if canAdjustResources}}
+            <button type="button" class="level-up-btn" data-action="openLevelUp" title="{{localize 'ASHANVIL.LevelUpHint'}}">
+              <i class="fas fa-arrow-up"></i> {{localize "ASHANVIL.LevelUp"}}
+            </button>
+            {{/if}}
+            {{/if}}
+          </div>
         </div>
       </div>
     </div>
@@ -29,7 +42,7 @@
     <div class="details-abilities-row">
       {{#each abilityRows as |row|}}
       <div class="ability-shield" data-ability="{{row.key}}">
-        {{#if canAdjustResources}}
+        {{#if @root.canAdjustResources}}
         <button type="button" class="roll-check-btn roll-check-btn--ability" data-action="rollAbility" data-ability="{{row.key}}" title="{{localize 'ASHANVIL.RollCheckHint'}}">
           <i class="fas fa-dice-d20"></i>
         </button>

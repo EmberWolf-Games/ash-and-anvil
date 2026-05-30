@@ -1,85 +1,118 @@
-<h3 class="zone-title">{{localize "ASHANVIL.SheetZoneFeatures"}}</h3>
-
-<section class="build-blocks">
-  <h4>{{localize "ASHANVIL.ChargenBuildBlocks"}}</h4>
-  <ul class="item-list build-block-list">
-    {{#if items.build.ancestry.id}}
-    <li class="build-block" data-type="ancestry" data-item-id="{{items.build.ancestry.id}}">
-      <div class="build-block-header flexrow">
-        <img class="item-img" src="{{items.build.ancestry.img}}" alt="" width="28" height="28" />
-        <strong class="flex1">{{items.build.ancestry.name}}</strong>
-        <button type="button" class="item-action" data-action="editItem" data-item-id="{{items.build.ancestry.id}}">
-          <i class="fa-solid fa-pen"></i>
-        </button>
-      </div>
-      {{#if items.build.ancestry.description}}<div class="description">{{{items.build.ancestry.description}}}</div>{{/if}}
-    </li>
-    {{/if}}
-    {{#if items.build.class.id}}
-    <li class="build-block" data-type="class" data-item-id="{{items.build.class.id}}">
-      <div class="build-block-header flexrow">
-        <img class="item-img" src="{{items.build.class.img}}" alt="" width="28" height="28" />
-        <strong class="flex1">{{items.build.class.name}}</strong>
-        <button type="button" class="item-action" data-action="editItem" data-item-id="{{items.build.class.id}}">
-          <i class="fa-solid fa-pen"></i>
-        </button>
-      </div>
-      {{#if items.build.class.system.hitDie}}
-      <p class="build-meta">{{localize "ASHANVIL.HitDie"}}: d{{items.build.class.system.hitDie}}</p>
+<div class="features-tab-layout">
+  <header class="features-tab-header flexrow">
+    <div class="features-tab-summary flexcol flex1">
+      <h3 class="zone-title">{{localize "ASHANVIL.SheetZoneFeatures"}}</h3>
+      <p class="features-class-line">{{details.classLine}}</p>
+      <p class="hint">{{localize "ASHANVIL.FeaturesTabHint"}}</p>
+    </div>
+    <div class="features-tab-actions flexcol">
+      {{#if featuresTab.canLevelUp}}
+      <button type="button" class="level-up-btn" data-action="openLevelUp">
+        <i class="fas fa-arrow-up"></i> {{localize "ASHANVIL.LevelUp"}}
+      </button>
       {{/if}}
-      {{#if items.build.class.description}}<div class="description">{{{items.build.class.description}}}</div>{{/if}}
-    </li>
-    {{/if}}
-    {{#if items.build.background.id}}
-    <li class="build-block" data-type="background" data-item-id="{{items.build.background.id}}">
-      <div class="build-block-header flexrow">
-        <img class="item-img" src="{{items.build.background.img}}" alt="" width="28" height="28" />
-        <strong class="flex1">{{items.build.background.name}}</strong>
-        <button type="button" class="item-action" data-action="editItem" data-item-id="{{items.build.background.id}}">
-          <i class="fa-solid fa-pen"></i>
+      {{#unless buildComplete}}
+      <button type="button" data-action="openChargen">{{localize "ASHANVIL.ChargenOpen"}}</button>
+      {{/unless}}
+    </div>
+  </header>
+
+  <section class="features-class-progression">
+    <h4>{{localize "ASHANVIL.ClassProgression"}}</h4>
+    <ul class="class-card-list">
+      {{#each featuresTab.classCards as |card|}}
+      <li class="class-card">
+        <div class="class-card-header flexrow">
+          <img class="item-img" src="{{card.img}}" alt="" width="36" height="36" />
+          <div class="class-card-title flexcol flex1">
+            <span class="class-card-role">{{card.roleLabel}}</span>
+            <strong>{{card.displayLine}}</strong>
+          </div>
+          <button type="button" class="item-action" data-action="editItem" data-item-id="{{card.itemId}}" title="{{localize 'ASHANVIL.EditClass'}}">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+        </div>
+        <div class="class-card-subclass flexrow">
+          <label>{{localize "ASHANVIL.Subclass"}}</label>
+          <input type="text" name="{{card.subclassField}}" value="{{card.subclass}}" placeholder="{{localize 'ASHANVIL.SubclassPlaceholder'}}" {{#unless ../sheetEditMode}}readonly{{/unless}} />
+        </div>
+        {{#if card.hitDie}}
+        <p class="build-meta">{{localize "ASHANVIL.HitDie"}}: d{{card.hitDie}}</p>
+        {{/if}}
+      </li>
+      {{/each}}
+      {{#if featuresTab.canAddSecondClass}}
+      <li class="class-card class-card--add">
+        <p class="hint">{{localize "ASHANVIL.AddSecondClassHint"}}</p>
+        {{#if featuresTab.canLevelUp}}
+        <button type="button" class="level-up-btn level-up-btn--secondary" data-action="openLevelUp">
+          <i class="fas fa-plus"></i> {{localize "ASHANVIL.AddSecondClass"}}
         </button>
-      </div>
-      {{#if items.build.background.system.starterGear}}
-      <p class="build-meta">{{localize "ASHANVIL.StarterGear"}}: {{items.build.background.system.starterGear}}</p>
+        {{else}}
+        <span class="class-card-locked">{{localize "ASHANVIL.AddSecondClassLocked"}}</span>
+        {{/if}}
+      </li>
       {{/if}}
-      {{#if items.build.background.description}}<div class="description">{{{items.build.background.description}}}</div>{{/if}}
-    </li>
+    </ul>
+  </section>
+
+  <section class="features-build-blocks">
+    <h4>{{localize "ASHANVIL.ChargenBuildBlocks"}}</h4>
+    <ul class="build-block-list compact-build-blocks">
+      {{#if featuresTab.ancestry.id}}
+      <li class="build-block">
+        <div class="build-block-header flexrow">
+          <img class="item-img" src="{{featuresTab.ancestry.img}}" alt="" width="24" height="24" />
+          <strong class="flex1">{{featuresTab.ancestry.name}}</strong>
+          <button type="button" class="item-action" data-action="editItem" data-item-id="{{featuresTab.ancestry.id}}"><i class="fa-solid fa-pen"></i></button>
+        </div>
+      </li>
+      {{/if}}
+      {{#if featuresTab.background.id}}
+      <li class="build-block">
+        <div class="build-block-header flexrow">
+          <img class="item-img" src="{{featuresTab.background.img}}" alt="" width="24" height="24" />
+          <strong class="flex1">{{featuresTab.background.name}}</strong>
+          <button type="button" class="item-action" data-action="editItem" data-item-id="{{featuresTab.background.id}}"><i class="fa-solid fa-pen"></i></button>
+        </div>
+      </li>
+      {{/if}}
+    </ul>
+  </section>
+
+  <section class="ancestry-feature-tiers">
+    <h4>{{localize "ASHANVIL.AncestryFeatures"}}</h4>
+    <p class="hint">{{localize "ASHANVIL.AncestryFeatureHint"}}</p>
+    <ul class="tier-list">
+      {{#each details.ancestryFeatureLevels as |lvl|}}
+      <li class="{{#if (gte ../details.totalLevel lvl)}}tier-unlocked{{else}}tier-locked{{/if}}">
+        {{localize "ASHANVIL.Level"}} {{lvl}}
+        {{#if (gte ../details.totalLevel lvl)}}<span class="tier-status">({{localize "ASHANVIL.Unlocked"}})</span>{{else}}<span class="tier-status">({{localize "ASHANVIL.Locked"}})</span>{{/if}}
+      </li>
+      {{/each}}
+    </ul>
+  </section>
+
+  <section class="feature-list">
+    <div class="feature-list-header flexrow">
+      <h4>{{localize "ASHANVIL.Features"}}</h4>
+      <button type="button" data-action="createItem" data-item-type="feature">{{localize "ASHANVIL.AddFeature"}}</button>
+    </div>
+    {{#if items.features.length}}
+    <ul class="item-list">
+      {{#each items.features as |feature|}}
+      <li class="feature" data-item-id="{{feature.id}}">
+        <div class="feature-header flexrow">
+          <img class="item-img" src="{{feature.img}}" alt="" width="28" height="28" />
+          <strong class="flex1">{{feature.name}}</strong>
+          {{> "systems/ash-and-anvil/templates/actor/parts/item-row-actions.hbs" id=feature.id}}
+        </div>
+        {{#if feature.description}}<div class="description">{{{feature.description}}}</div>{{/if}}
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}
+    <p class="hint">{{localize "ASHANVIL.NoFeatures"}}</p>
     {{/if}}
-  </ul>
-</section>
-
-<section class="ancestry-feature-tiers">
-  <h4>{{localize "ASHANVIL.AncestryFeatures"}}</h4>
-  <p class="hint">{{localize "ASHANVIL.AncestryFeatureHint"}}</p>
-  <ul class="tier-list">
-    {{#each details.ancestryFeatureLevels as |lvl|}}
-    <li class="{{#if (gte ../details.totalLevel lvl)}}tier-unlocked{{else}}tier-locked{{/if}}">
-      {{localize "ASHANVIL.Level"}} {{lvl}}
-      {{#if (gte ../details.totalLevel lvl)}}<span class="tier-status">({{localize "ASHANVIL.Unlocked"}})</span>{{else}}<span class="tier-status">({{localize "ASHANVIL.Locked"}})</span>{{/if}}
-    </li>
-    {{/each}}
-  </ul>
-</section>
-
-<section class="feature-list">
-  <div class="feature-list-header flexrow">
-    <h4>{{localize "ASHANVIL.Features"}}</h4>
-    <button type="button" data-action="createItem" data-item-type="feature">{{localize "ASHANVIL.AddFeature"}}</button>
-  </div>
-  {{#if items.features.length}}
-  <ul class="item-list">
-    {{#each items.features as |feature|}}
-    <li class="feature" data-item-id="{{feature.id}}">
-      <div class="feature-header flexrow">
-        <img class="item-img" src="{{feature.img}}" alt="" width="28" height="28" />
-        <strong class="flex1">{{feature.name}}</strong>
-        {{> "systems/ash-and-anvil/templates/actor/parts/item-row-actions.hbs" id=feature.id}}
-      </div>
-      {{#if feature.description}}<div class="description">{{{feature.description}}}</div>{{/if}}
-    </li>
-    {{/each}}
-  </ul>
-  {{else}}
-  <p class="hint">{{localize "ASHANVIL.NoFeatures"}}</p>
-  {{/if}}
-</section>
+  </section>
+</div>

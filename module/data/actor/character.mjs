@@ -134,6 +134,14 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
           isDead: new BooleanField({ initial: false, label: "ASHANVIL.DeathSaveDead" }),
         }),
         favor: new NumberField({ integer: true, initial: 0, min: 0, label: "ASHANVIL.Favor" }),
+        experience: new SchemaField({
+          value: new NumberField({
+            integer: true,
+            initial: 0,
+            min: 0,
+            label: "ASHANVIL.Experience",
+          }),
+        }),
       }),
       abilities: new SchemaField(abilityFields(), { label: "ASHANVIL.Abilities" }),
       saves: new SchemaField(saveFields(), { label: "ASHANVIL.SavingThrows" }),
@@ -240,6 +248,9 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
         classId: new StringField({ initial: "", label: "ASHANVIL.Class" }),
         secondaryClassId: new StringField({ initial: "", label: "ASHANVIL.SecondaryClass" }),
         backgroundId: new StringField({ initial: "", label: "ASHANVIL.Background" }),
+        subrace: new StringField({ initial: "", label: "ASHANVIL.Subrace" }),
+        primarySubclass: new StringField({ initial: "", label: "ASHANVIL.PrimarySubclass" }),
+        secondarySubclass: new StringField({ initial: "", label: "ASHANVIL.SecondarySubclass" }),
         ...biographyFields(),
       }),
       chargen: new SchemaField({

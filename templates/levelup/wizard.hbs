@@ -1,0 +1,87 @@
+<div class="level-up-wizard-body">
+  <nav class="level-up-steps flexrow">
+    {{#each steps as |label idx|}}
+    <span class="step {{#if (eq ../step idx)}}active{{/if}}">{{label}}</span>
+    {{/each}}
+  </nav>
+
+  <p class="level-up-xp hint">{{localize "ASHANVIL.Experience"}}: {{experience.display}}</p>
+
+  {{#if (eq step 0)}}
+  <section class="level-up-panel">
+    <h3>{{localize "ASHANVIL.LevelUpStepAdvance"}}</h3>
+    <p class="hint">{{localize "ASHANVIL.LevelUpAdvanceHint"}}</p>
+    <div class="level-up-options">
+      {{#if advanceOptions.canPrimary}}
+      <label class="level-up-option">
+        <input type="radio" name="mode" value="primary" {{#if (eq state.mode "primary")}}checked{{/if}} />
+        {{advanceOptions.primaryLabel}}
+      </label>
+      {{/if}}
+      {{#if advanceOptions.canSecondary}}
+      <label class="level-up-option">
+        <input type="radio" name="mode" value="secondary" {{#if (eq state.mode "secondary")}}checked{{/if}} />
+        {{advanceOptions.secondaryLabel}}
+      </label>
+      {{/if}}
+      {{#if advanceOptions.canAddClass}}
+      <label class="level-up-option">
+        <input type="radio" name="mode" value="addClass" {{#if (eq state.mode "addClass")}}checked{{/if}} />
+        {{localize "ASHANVIL.LevelUpAddSecondClass"}}
+      </label>
+      {{/if}}
+    </div>
+    {{#if (eq state.mode "addClass")}}
+    <label>{{localize "ASHANVIL.LevelUpPickClass"}}</label>
+    <select name="newClassId">
+      <option value="">{{localize "ASHANVIL.LevelUpSelectClass"}}</option>
+      {{#each catalog.classes as |cls|}}
+      <option value="{{cls.uuid}}" {{#if (eq ../state.newClassId cls.uuid)}}selected{{/if}}>{{cls.name}}</option>
+      {{/each}}
+    </select>
+    {{/if}}
+  </section>
+  {{/if}}
+
+  {{#if (eq step 1)}}
+  <section class="level-up-panel">
+    <h3>{{localize "ASHANVIL.LevelUpStepSubclass"}}</h3>
+    <p class="hint">{{localize "ASHANVIL.LevelUpSubclassHint"}}</p>
+    <label>{{subclassLabel}}</label>
+    <input type="text" name="subclass" value="{{state.subclass}}" placeholder="{{localize 'ASHANVIL.SubclassPlaceholder'}}" />
+  </section>
+  {{/if}}
+
+  {{#if (eq step 2)}}
+  <section class="level-up-panel">
+    <h3>{{localize "ASHANVIL.LevelUpStepFeatures"}}</h3>
+    <p class="hint">{{localize "ASHANVIL.LevelUpFeaturesHint"}}</p>
+    <label>{{localize "ASHANVIL.LevelUpFeatName"}}</label>
+    <input type="text" name="featName" value="{{state.featName}}" placeholder="{{localize 'ASHANVIL.LevelUpFeatPlaceholder'}}" />
+    <label>{{localize "ASHANVIL.LevelUpFeatureNotes"}}</label>
+    <textarea name="featureNotes" rows="5" placeholder="{{localize 'ASHANVIL.LevelUpFeatureNotesPlaceholder'}}">{{state.featureNotes}}</textarea>
+  </section>
+  {{/if}}
+
+  {{#if (eq step 3)}}
+  <section class="level-up-panel">
+    <h3>{{localize "ASHANVIL.LevelUpStepReview"}}</h3>
+    <ul class="level-up-review">
+      <li><strong>{{localize "ASHANVIL.LevelUpReviewAdvance"}}:</strong> {{reviewSummary}}</li>
+      {{#if state.subclass}}<li><strong>{{subclassLabel}}:</strong> {{state.subclass}}</li>{{/if}}
+      {{#if state.featName}}<li><strong>{{localize "ASHANVIL.LevelUpFeatName"}}:</strong> {{state.featName}}</li>{{/if}}
+      {{#if state.featureNotes}}<li><strong>{{localize "ASHANVIL.LevelUpFeatureNotes"}}:</strong> {{state.featureNotes}}</li>{{/if}}
+    </ul>
+  </section>
+  {{/if}}
+
+  <footer class="level-up-footer flexrow">
+    {{#if step}}<button type="button" data-action="back">{{localize "ASHANVIL.Back"}}</button>{{/if}}
+    <span class="flex1"></span>
+    {{#if isLast}}
+    <button type="button" data-action="finish">{{localize "ASHANVIL.LevelUpConfirm"}}</button>
+    {{else}}
+    <button type="button" data-action="next">{{localize "ASHANVIL.Next"}}</button>
+    {{/if}}
+  </footer>
+</div>

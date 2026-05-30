@@ -66,6 +66,8 @@ export function ensureCharacterStructure(system) {
 
   system.attributes.favor ??= 0;
 
+  system.attributes.experience ??= { value: 0 };
+
   system.proficiency ??= {};
 
   system.proficiency.edge ??= 2;

@@ -9,6 +9,7 @@ import {
 } from "../../config/character-options.mjs";
 
 import { prepareDetailsTabContext } from "./prepare-details-context.mjs";
+import { prepareFeaturesTabContext } from "./prepare-features-context.mjs";
 
 import { prepareEffectsTabContext } from "./prepare-effects-context.mjs";
 
@@ -139,6 +140,7 @@ export function prepareCharacterSheetContext(actor, options = {}) {
       faith: system.details?.faith ?? "",
 
       gender: system.details?.gender ?? "",
+      subrace: system.details?.subrace ?? "",
       lifestyle: system.details?.lifestyle ?? "",
 
       eyeColor: system.details?.eyeColor ?? "",
@@ -268,6 +270,8 @@ export function prepareCharacterSheetContext(actor, options = {}) {
 
   const detailsCtx = prepareDetailsTabContext(actor, base);
 
+  const featuresCtx = prepareFeaturesTabContext(actor, base);
+
   const inventoryCtx = prepareInventoryTabContext(actor, {
     openContainerId: options.openContainerId ?? null,
   });
@@ -285,6 +289,8 @@ export function prepareCharacterSheetContext(actor, options = {}) {
     ...base,
 
     ...detailsCtx,
+
+    ...featuresCtx,
 
     ...inventoryCtx,
 

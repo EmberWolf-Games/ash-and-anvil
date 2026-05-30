@@ -46,7 +46,7 @@ Hooks.once("init", async () => {
   };
 
   CONFIG.ASH_ANVIL = {
-    keyVersion: "0.6.1.10",
+    keyVersion: "0.6.1.12",
     rules: RULES,
     currency: {
       getConfig: RULES.getCurrencyConfig,

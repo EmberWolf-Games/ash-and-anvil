@@ -25,7 +25,9 @@ import {
   canRollWakeSave,
   wakeSaveDc,
 } from "../../rules/death-saves.mjs";
-import { availableTagOptions, normalizeTagArray, selectedTags } from "../../helpers/tag-arrays.mjs";
+import { normalizeTagArray, selectedTags, availableTagOptions } from "../../helpers/tag-arrays.mjs";
+import { formatAncestrySummary, formatClassSummary } from "../../helpers/identity-display.mjs";
+import { buildExperienceContext } from "../../rules/experience.mjs";
 
 /**
  * @param {Actor} actor
@@ -128,22 +130,27 @@ export function prepareDetailsTabContext(actor, baseContext) {
   };
 
   const resourceBars = buildResourceBarContext(actor);
+  const experience = buildExperienceContext(actor);
 
   return {
     details: {
       name: actor.name,
       portrait: actor.img,
+      ancestryLine: formatAncestrySummary(actor),
+      classLine: formatClassSummary(actor),
       ancestry: primaryAncestry?.name ?? "—",
       secondaryAncestry: secondaryAncestry?.name ?? "—",
       ancestryBlended: !!secondaryAncestry,
       className: primaryClass?.name ?? "—",
       secondaryClassName: secondaryClass?.name ?? "—",
-      multiClass: classes.length > 1,
+      multiClass: classes.length > 1 && (system.attributes?.secondaryClassLevel ?? 0) > 0,
       primaryClassLevel: system.attributes?.primaryClassLevel ?? 1,
       secondaryClassLevel: system.attributes?.secondaryClassLevel ?? 0,
       totalLevel,
       maxTotalLevel: MAX_TOTAL_LEVEL,
       maxClasses: MAX_CLASSES,
+      experience,
+      canLevelUp: experience.canLevelUp,
       lineage: system.details?.lineage ?? "",
       lineageNotes: system.details?.lineageNotes ?? "",
       ancestryFeatureLevels: ANCESTRY_FEATURE_LEVELS,

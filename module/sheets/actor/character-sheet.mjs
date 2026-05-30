@@ -1,4 +1,5 @@
 import { ChargenWizard } from "../../applications/chargen-wizard.mjs";
+import { LevelUpWizard } from "../../applications/level-up-wizard.mjs";
 
 import {
 
@@ -98,6 +99,8 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     actions: {
 
       openChargen: CharacterActorSheet.#onOpenChargen,
+
+      openLevelUp: CharacterActorSheet.#onOpenLevelUp,
 
       changeTab: CharacterActorSheet.#onChangeTab,
 
@@ -547,6 +550,20 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const app = /** @type {CharacterActorSheet} */ (this);
 
     await ChargenWizard.show(app.actor);
+
+  }
+
+
+
+  static async #onOpenLevelUp() {
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canAdjustResources()) return;
+
+    await LevelUpWizard.show(app.actor);
+
+    app.render(false);
 
   }
 

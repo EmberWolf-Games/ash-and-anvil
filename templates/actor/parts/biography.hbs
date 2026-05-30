@@ -26,6 +26,10 @@
       </select>
     </div>
     <div class="form-group">
+      <label>{{localize "ASHANVIL.Subrace"}}</label>
+      <input type="text" name="system.details.subrace" value="{{bio.subrace}}" placeholder="{{localize 'ASHANVIL.SubracePlaceholder'}}" {{#unless sheetEditMode}}readonly{{/unless}} />
+    </div>
+    <div class="form-group">
       <label>{{localize "ASHANVIL.BioFaith"}}</label>
       <input type="text" name="system.details.faith" value="{{bio.faith}}" {{#unless sheetEditMode}}readonly{{/unless}} />
     </div>
