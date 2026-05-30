@@ -5,6 +5,7 @@ const SYSTEM = "systems/ash-and-anvil/templates";
 /** @type {readonly string[]} */
 export const HANDLEBARS_PARTIALS = [
   `${SYSTEM}/actor/tabs/details.hbs`,
+  `${SYSTEM}/actor/tabs/details-skills-section.hbs`,
   `${SYSTEM}/actor/tabs/equipment.hbs`,
   `${SYSTEM}/actor/tabs/inventory.hbs`,
   `${SYSTEM}/actor/tabs/features.hbs`,
