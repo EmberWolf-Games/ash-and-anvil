@@ -14,7 +14,7 @@ if (!version) {
 
 if (!isValidVersion(version)) {
   console.error(`Invalid version: ${version}`);
-  console.error("Expected M.m.bbb.hhh (e.g. 0.6.001.002) or legacy semver (e.g. 0.6.1).");
+  console.error("Expected M.m.b.h (e.g. 0.6.1.2) or legacy semver (e.g. 0.6.1).");
   process.exit(1);
 }
 

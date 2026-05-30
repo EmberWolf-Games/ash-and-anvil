@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Optional override (e.g. 0.6.001.002). Leave empty to use system.json."
+        description: "Optional override (e.g. 0.6.1.2). Leave empty to use system.json."
         required: false
         type: string
 

@@ -2,7 +2,7 @@
  * Build Foundry release artifacts: stamped system.json + installable zip.
  *
  * Usage: node utils/release/build-release.mjs <version>
- * Example: node utils/release/build-release.mjs 0.6.001.002
+ * Example: node utils/release/build-release.mjs 0.6.1.2
  */
 import fs from "node:fs";
 import path from "node:path";

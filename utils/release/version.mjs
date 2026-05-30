@@ -2,8 +2,8 @@
  * Ash & Anvil version scheme: M.m.b.h[+suffix]
  *   M — major (1–2 digits)
  *   m — minor (1–2 digits)
- *   b — build (3 digits)
- *   h — hotfix (3 digits, optional trailing a–z)
+ *   b — build (1–3 digits)
+ *   h — hotfix (1–3 digits, optional trailing a–z)
  *
  * Legacy semver (M.m.p) is accepted for migration and comparison only.
  */
@@ -12,7 +12,7 @@
 export const LEGACY_SEMVER_PATTERN = /^\d+\.\d+\.\d+(-[\w.-]+)?(\+[\w.-]+)?$/;
 
 /** @type {RegExp} */
-export const BUILD_VERSION_PATTERN = /^\d{1,2}\.\d{1,2}\.\d{3}\.\d{3}[a-z]?$/;
+export const BUILD_VERSION_PATTERN = /^\d{1,2}\.\d{1,2}\.\d{1,3}\.\d{1,3}[a-z]?$/;
 
 /**
  * @typedef {{ scheme: "build"|"legacy", major: number, minor: number, build: number, hotfix: number, hotfixSuffix: string, raw: string }} ParsedVersion
@@ -35,7 +35,7 @@ export function isValidVersion(version) {
 export function parseVersion(version) {
   const raw = String(version ?? "").trim();
   if (BUILD_VERSION_PATTERN.test(raw)) {
-    const match = /^(\d{1,2})\.(\d{1,2})\.(\d{3})\.(\d{3})([a-z]?)$/.exec(raw);
+    const match = /^(\d{1,2})\.(\d{1,2})\.(\d{1,3})\.(\d{1,3})([a-z]?)$/.exec(raw);
     if (!match) throw new Error(`Invalid build version: ${raw}`);
     return {
       scheme: "build",
@@ -104,9 +104,7 @@ export function versionTag(version) {
 export function legacyToBuildVersion(legacy) {
   const parsed = parseVersion(legacy);
   if (parsed.scheme === "build") return parsed.raw;
-  const build = String(parsed.build).padStart(3, "0");
-  const hotfix = String(parsed.hotfix).padStart(3, "0");
-  return `${parsed.major}.${parsed.minor}.${build}.${hotfix}`;
+  return `${parsed.major}.${parsed.minor}.${parsed.build}.${parsed.hotfix}`;
 }
 
 /**
@@ -117,7 +115,7 @@ export function validateVersionOrThrow(version) {
   const v = String(version ?? "").trim();
   if (!isValidVersion(v)) {
     throw new Error(
-      `Invalid version "${v}". Use M.m.bbb.hhh (e.g. 0.6.001.002) or legacy semver during migration.`
+      `Invalid version "${v}". Use M.m.b.h (e.g. 0.6.1.2) or legacy semver during migration.`
     );
   }
   return v;

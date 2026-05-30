@@ -80,11 +80,11 @@ Under **Configure Settings → Ash & Anvil**:
 
 ## Status
 
-Pre-1.0 development. Versioning uses the **build scheme** `M.m.bbb.hhh` (see [docs/VERSIONING.md](docs/VERSIONING.md)) so releases do not drift toward semver `1.0.0` before the system is ready.
+Pre-1.0 development. Versioning uses the **build scheme** `M.m.b.h` (see [docs/VERSIONING.md](docs/VERSIONING.md)) so releases do not drift toward semver `1.0.0` before the system is ready.
 
 | Version | Notes |
 |--------|--------|
-| **0.6.001.002** | Current dev build on `main`. Hotfix increments on each release. |
+| **0.6.1.3** | Current dev build on `main`. Hotfix increments on each release. |
 
 Core D20 mechanics and automation are in active development. |
 
@@ -92,7 +92,7 @@ Core D20 mechanics and automation are in active development. |
 
 Releases are built automatically by GitHub Actions (`.github/workflows/release.yml`) on every push to `main`.
 
-1. Bump `"version"` in `system.json` (and `keyVersion` in `ash-and-anvil.mjs`) using `M.m.bbb.hhh` — see [docs/VERSIONING.md](docs/VERSIONING.md).
+1. Bump `"version"` in `system.json` (and `keyVersion` in `ash-and-anvil.mjs`) using `M.m.b.h` — see [docs/VERSIONING.md](docs/VERSIONING.md).
 2. Commit and push to `main`.
 3. The workflow validates the version, creates `v<version>` if it does not exist yet, and publishes assets.
 
@@ -111,13 +111,13 @@ The workflow uploads three assets to the GitHub Release:
 Validate a version locally:
 
 ```bash
-node utils/release/validate-version.mjs 0.6.001.002
+node utils/release/validate-version.mjs 0.6.1.2
 ```
 
 Build artifacts locally:
 
 ```bash
-node utils/release/build-release.mjs 0.6.001.002
+node utils/release/build-release.mjs 0.6.1.2
 ```
 
 Output is written to `dist/release/`.
