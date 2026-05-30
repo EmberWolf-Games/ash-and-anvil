@@ -136,7 +136,7 @@ export class SpellCastDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     context.requiresSave = !!sys.requiresSave;
     context.damageOnSave = sys.damageOnSave ?? "none";
     context.damageOnSaveHint = game.i18n.localize(
-      `ASHANVIL.SpellDamageOnSave.${sys.damageOnSave ?? "none"}`
+      `ASHANVIL.SpellDamageOnSaveRule.${sys.damageOnSave ?? "none"}`
     );
     return context;
   }
