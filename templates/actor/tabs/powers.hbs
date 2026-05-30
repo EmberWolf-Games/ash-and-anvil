@@ -1,12 +1,14 @@
 <div class="sheet-zone sheet-zone--powers" data-zone="powers">
   <nav class="sheet-subtabs flexrow" data-group="powers">
-    {{#each subTabs.powers as |tab|}}
+    {{#each powers.subTabs as |tab|}}
     <button
       type="button"
-      class="sheet-subtab {{#if (eq ../activeSubTabs.powers tab.id)}}active{{/if}}"
+      class="sheet-subtab {{#if (eq ../activeSubTabs.powers tab.id)}}active{{/if}} {{#unless tab.enabled}}sheet-subtab--disabled{{/unless}}"
       data-action="changeSubTab"
       data-group="powers"
       data-tab="{{tab.id}}"
+      {{#unless tab.enabled}}disabled aria-disabled="true"{{/unless}}
+      title="{{#unless tab.enabled}}{{localize 'ASHANVIL.PowerTabUnavailable'}}{{/unless}}"
     >{{localize tab.labelKey}}</button>
     {{/each}}
   </nav>

@@ -1,3 +1,4 @@
+import { PLAYTEST_CONDITIONS } from "../../config/playtest-conditions.mjs";
 import { effectRow, getActorEffects } from "./prepare-sheet-items.mjs";
 
 /**
@@ -7,6 +8,13 @@ export function prepareEffectsTabContext(actor) {
   const rows = getActorEffects(actor).map(effectRow);
   const activeEffects = rows.filter((e) => e.temporary);
   const passiveEffects = rows.filter((e) => !e.temporary);
+  const activeConditions = new Set(actor.system.conditions?.active ?? []);
+
+  const conditionOptions = PLAYTEST_CONDITIONS.map((cond) => ({
+    value: cond.value,
+    label: game.i18n.localize(cond.labelKey),
+    checked: activeConditions.has(cond.value),
+  }));
 
   return {
     effects: {
@@ -16,6 +24,7 @@ export function prepareEffectsTabContext(actor) {
       hasPassive: passiveEffects.length > 0,
       activeHint: game.i18n.localize("ASHANVIL.NoActiveEffects"),
       passiveHint: game.i18n.localize("ASHANVIL.NoPassiveEffects"),
+      conditionOptions,
     },
   };
 }

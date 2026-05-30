@@ -76,6 +76,8 @@ export function ensureCharacterStructure(system) {
 
   system.chargen ??= { buildComplete: false, buildVersion: "" };
 
+  system.conditions ??= { active: [] };
+
   system.abilities ??= {};
 
   for (const key of ABILITY_KEYS) {

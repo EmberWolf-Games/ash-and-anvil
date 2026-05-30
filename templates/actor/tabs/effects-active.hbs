@@ -1,6 +1,30 @@
 <div class="sheet-zone sheet-zone--effects-active" data-zone="effects-active">
-  {{> "systems/ash-and-anvil/templates/actor/parts/effect-list.hbs"
-    effects=effects.active
-    emptyHint=effects.activeHint
-  }}
+  <section class="effects-conditions">
+    <h4 class="panel-title">{{localize "ASHANVIL.Conditions"}}</h4>
+    <p class="hint">{{localize "ASHANVIL.ConditionsHint"}}</p>
+    <ul class="conditions-grid">
+      {{#each effects.conditionOptions as |cond|}}
+      <li>
+        <label class="condition-toggle">
+          <input
+            type="checkbox"
+            data-action="toggleCondition"
+            data-condition="{{cond.value}}"
+            {{#if cond.checked}}checked{{/if}}
+            {{#unless ../canAdjustResources}}disabled{{/unless}}
+          />
+          {{cond.label}}
+        </label>
+      </li>
+      {{/each}}
+    </ul>
+  </section>
+
+  <section class="effects-active-list">
+    <h4 class="panel-title">{{localize "ASHANVIL.ActiveEffects"}}</h4>
+    {{> "systems/ash-and-anvil/templates/actor/parts/effect-list.hbs"
+      effects=effects.active
+      emptyHint=effects.activeHint
+    }}
+  </section>
 </div>

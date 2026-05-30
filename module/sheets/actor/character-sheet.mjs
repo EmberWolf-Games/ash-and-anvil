@@ -1,5 +1,6 @@
 import { ChargenWizard } from "../../applications/chargen-wizard.mjs";
 import { LevelUpWizard } from "../../applications/level-up-wizard.mjs";
+import { runSpellCast, showSpellInfo } from "../../applications/spell-cast-dialog.mjs";
 
 import {
 
@@ -32,6 +33,7 @@ import { formatChangeLogForDisplay, recordSheetChanges } from "../../helpers/she
 import { confirmDeleteItem, getActorEffects } from "./prepare-sheet-items.mjs";
 
 import { prepareCharacterSheetContext } from "./prepare-character-context.mjs";
+import { resolvePowersSubTab } from "./prepare-powers-context.mjs";
 
 
 
@@ -139,6 +141,12 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       rollDeathSave: CharacterActorSheet.#onRollDeathSave,
 
       rollWakeSave: CharacterActorSheet.#onRollWakeSave,
+
+      toggleCondition: CharacterActorSheet.#onToggleCondition,
+
+      castSpell: CharacterActorSheet.#onCastSpell,
+
+      showSpellInfo: CharacterActorSheet.#onShowSpellInfo,
 
       unequipSlot: CharacterActorSheet.#onUnequipSlot,
 
@@ -371,6 +379,11 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     if (partId === "body") {
 
+      this.#activeSubTabs.powers = resolvePowersSubTab(
+        sheetContext,
+        this.#activeSubTabs.powers
+      );
+
       Object.assign(context, sheetContext, {
 
         activeTab: this.#activeTab,
@@ -592,6 +605,8 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
   static async #onChangeSubTab(_event, target) {
 
     const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (target.disabled || target.classList.contains("sheet-subtab--disabled")) return;
 
     await app.#submitOpenForm();
 
@@ -820,6 +835,72 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     await rollWakeSave(app.actor);
 
     app.render(false);
+
+  }
+
+
+
+  static async #onToggleCondition(_event, target) {
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canAdjustResources()) return;
+
+    const key = target.dataset.condition;
+
+    if (!key) return;
+
+    const active = [...(app.actor.system.conditions?.active ?? [])];
+
+    if (target.checked) {
+
+      if (!active.includes(key)) active.push(key);
+
+    } else {
+
+      const idx = active.indexOf(key);
+
+      if (idx >= 0) active.splice(idx, 1);
+
+    }
+
+    await app.actor.update({ "system.conditions.active": active });
+
+    app.render(false);
+
+  }
+
+
+
+  static async #onCastSpell(_event, target) {
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canAdjustResources()) return;
+
+    const itemId = target.closest("[data-item-id]")?.dataset.itemId ?? target.dataset.itemId;
+
+    const spell = app.actor.items.get(itemId);
+
+    if (!spell || spell.type !== "spell") return;
+
+    await runSpellCast(app.actor, spell);
+
+  }
+
+
+
+  static #onShowSpellInfo(_event, target) {
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    const itemId = target.closest("[data-item-id]")?.dataset.itemId ?? target.dataset.itemId;
+
+    const spell = app.actor.items.get(itemId);
+
+    if (!spell || spell.type !== "spell") return;
+
+    showSpellInfo(spell);
 
   }
 

@@ -1,0 +1,60 @@
+<div class="spell-cast-body">
+  <h3>{{spell.name}}</h3>
+
+  {{#if (eq phase "attack")}}
+  <section class="spell-cast-step">
+    <p class="hint">{{localize "ASHANVIL.SpellCastAttackHint"}}</p>
+    <p>{{localize "ASHANVIL.SpellAttackBonus"}}: {{numberFormat attackBonus sign=true}}</p>
+    <div class="boon-row flexrow">
+      <span>{{localize "ASHANVIL.SpellBoonBane"}}:</span>
+      <button type="button" class="{{#if (eq boon -2)}}active{{/if}}" data-action="setBoon" data-boon="-2">{{localize "ASHANVIL.BoonDoubleBane"}}</button>
+      <button type="button" class="{{#if (eq boon -1)}}active{{/if}}" data-action="setBoon" data-boon="-1">{{localize "ASHANVIL.BoonBane"}}</button>
+      <button type="button" class="{{#if (eq boon 0)}}active{{/if}}" data-action="setBoon" data-boon="0">{{localize "ASHANVIL.BoonNormal"}}</button>
+      <button type="button" class="{{#if (eq boon 1)}}active{{/if}}" data-action="setBoon" data-boon="1">{{localize "ASHANVIL.BoonBoon"}}</button>
+    </div>
+    <footer class="spell-cast-footer flexrow">
+      <button type="button" data-action="cancel">{{localize "Cancel"}}</button>
+      <span class="flex1"></span>
+      <button type="button" data-action="rollAttack">{{localize "ASHANVIL.SpellRollAttack"}}</button>
+    </footer>
+  </section>
+  {{/if}}
+
+  {{#if (eq phase "attackResult")}}
+  <section class="spell-cast-step">
+    <p>{{localize "ASHANVIL.SpellAttackResultHint"}}</p>
+    <footer class="spell-cast-footer flexrow">
+      <button type="button" data-action="setAttackHit" data-hit="false">{{localize "ASHANVIL.SpellMiss"}}</button>
+      <span class="flex1"></span>
+      <button type="button" data-action="setAttackHit" data-hit="true">{{localize "ASHANVIL.SpellHit"}}</button>
+    </footer>
+  </section>
+  {{/if}}
+
+  {{#if (eq phase "save")}}
+  <section class="spell-cast-step">
+    <p>{{localize "ASHANVIL.SpellSaveHint"}}</p>
+    <p><strong>{{localize "ASHANVIL.SpellSaveDC"}}:</strong> {{saveDc}}</p>
+    {{#if damageOnSaveHint}}
+    <p class="hint">{{damageOnSaveHint}}</p>
+    {{/if}}
+    <footer class="spell-cast-footer flexrow">
+      <button type="button" data-action="cancel">{{localize "Cancel"}}</button>
+      <button type="button" data-action="setSaveResult" data-failed="false">{{localize "ASHANVIL.SpellSaveSuccess"}}</button>
+      <button type="button" data-action="setSaveResult" data-failed="true">{{localize "ASHANVIL.SpellSaveFail"}}</button>
+    </footer>
+  </section>
+  {{/if}}
+
+  {{#if (eq phase "damage")}}
+  <section class="spell-cast-step">
+    <p>{{localize "ASHANVIL.SpellDamageHint"}}</p>
+    <p><strong>{{localize "ASHANVIL.SpellDamageFormula"}}:</strong> {{scaledFormula}}</p>
+    <footer class="spell-cast-footer flexrow">
+      <button type="button" data-action="cancel">{{localize "Cancel"}}</button>
+      <span class="flex1"></span>
+      <button type="button" data-action="rollDamage">{{localize "ASHANVIL.SpellRollDamage"}}</button>
+    </footer>
+  </section>
+  {{/if}}
+</div>

@@ -227,6 +227,83 @@
   opacity: 1;
 }
 
+.ash-and-anvil.sheet .sheet-subtab--disabled,
+.ash-and-anvil.sheet .sheet-subtab:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.ash-and-anvil.sheet .conditions-grid {
+  display: grid;
+  gap: 0.35rem 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+}
+
+.ash-and-anvil.sheet .condition-toggle {
+  align-items: center;
+  display: flex;
+  font-size: var(--font-size-12);
+  gap: 0.35rem;
+}
+
+.ash-and-anvil.sheet .effects-conditions {
+  margin-bottom: 0.75rem;
+}
+
+.ash-and-anvil.sheet .power-level-group {
+  border: 1px solid var(--aa-border);
+  border-radius: 6px;
+  margin-bottom: 0.35rem;
+}
+
+.ash-and-anvil.sheet .power-level-summary {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0.35rem 0.5rem;
+}
+
+.ash-and-anvil.sheet .power-level-body {
+  border-top: 1px solid var(--aa-border);
+  padding: 0.35rem 0.5rem 0.5rem;
+}
+
+.ash-and-anvil.sheet .power-spell-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ash-and-anvil.sheet .power-spell-row {
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0;
+}
+
+.ash-and-anvil.sheet .power-cast-btn,
+.ash-and-anvil.sheet .power-info-btn {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--aa-border);
+  border-radius: 4px;
+  color: var(--aa-accent);
+  cursor: pointer;
+  font-size: var(--font-size-11);
+  padding: 0.15rem 0.4rem;
+}
+
+.ash-and-anvil.spell-cast-dialog .boon-row button.active {
+  border-color: var(--aa-accent);
+  color: var(--aa-accent);
+}
+
+.ash-and-anvil.spell-cast-dialog .spell-cast-footer {
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+
 .ash-and-anvil.sheet .layout-pending-note {
   color: var(--aa-accent);
   font-style: italic;

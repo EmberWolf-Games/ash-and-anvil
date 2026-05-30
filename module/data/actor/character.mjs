@@ -257,6 +257,9 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
         buildComplete: new BooleanField({ initial: false, label: "ASHANVIL.BuildComplete" }),
         buildVersion: new StringField({ initial: "", label: "ASHANVIL.BuildVersion" }),
       }),
+      conditions: new SchemaField({
+        active: new ArrayField(new StringField()),
+      }),
     };
   }
 }

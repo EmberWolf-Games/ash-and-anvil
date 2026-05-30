@@ -1,7 +1,8 @@
 <div class="sheet-zone sheet-zone--powers-divine-gifts" data-zone="powers-divine-gifts">
-  {{> "systems/ash-and-anvil/templates/actor/parts/spell-list.hbs"
-    spells=powers.divineGifts
+  {{> "systems/ash-and-anvil/templates/actor/parts/spell-level-groups.hbs"
+    levelGroups=powers.divineGifts.levelGroups
     tradition="divine"
+    tabId="divineGifts"
     emptyHint=powerHints.divineGifts
   }}
 </div>

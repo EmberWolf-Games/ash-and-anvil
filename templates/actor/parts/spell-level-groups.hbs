@@ -1,0 +1,38 @@
+<section class="powers-by-level" data-tradition="{{tradition}}" data-tab="{{tabId}}">
+  {{#if levelGroups.length}}
+  {{#each levelGroups as |group|}}
+  <details class="power-level-group" {{#if group.spells.length}}open{{/if}}>
+    <summary class="power-level-summary">{{group.label}}</summary>
+    <div class="power-level-body">
+      {{#if group.spells.length}}
+      <ul class="power-spell-list">
+        {{#each group.spells as |spell|}}
+        <li class="power-spell-row flexrow" data-item-id="{{spell.id}}">
+          <img class="item-img" src="{{spell.img}}" alt="" width="28" height="28" />
+          <span class="power-spell-name flex1">{{spell.name}}</span>
+          {{#if @root.canAdjustResources}}
+          <button type="button" class="power-cast-btn" data-action="castSpell" data-item-id="{{spell.id}}" title="{{localize 'ASHANVIL.SpellCast'}}">
+            <i class="fas fa-hand-sparkles"></i> {{localize "ASHANVIL.SpellCast"}}
+          </button>
+          {{/if}}
+          <button type="button" class="power-info-btn" data-action="showSpellInfo" data-item-id="{{spell.id}}" title="{{localize 'ASHANVIL.SpellInfo'}}">
+            <i class="fas fa-circle-info"></i>
+          </button>
+        </li>
+        {{/each}}
+      </ul>
+      {{else}}
+      <p class="hint">{{group.emptyHint}}</p>
+      {{/if}}
+    </div>
+  </details>
+  {{/each}}
+  {{else}}
+  <p class="hint">{{emptyHint}}</p>
+  {{/if}}
+  <footer class="tab-footer flexrow">
+    <button type="button" data-action="createItem" data-item-type="spell" data-tradition="{{tradition}}" {{#unless ../sheetEditMode}}disabled{{/unless}}>
+      {{localize "ASHANVIL.AddSpell"}}
+    </button>
+  </footer>
+</section>

@@ -26,6 +26,7 @@ export const HANDLEBARS_PARTIALS = [
   `${SYSTEM}/actor/parts/inventory-gear-row.hbs`,
   `${SYSTEM}/actor/parts/resource-adjust.hbs`,
   `${SYSTEM}/actor/parts/resource-bar.hbs`,
+  `${SYSTEM}/actor/parts/spell-level-groups.hbs`,
   `${SYSTEM}/actor/parts/tag-field.hbs`,
 ];
 
