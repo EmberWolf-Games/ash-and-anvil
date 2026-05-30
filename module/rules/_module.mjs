@@ -68,7 +68,6 @@ export {
   deriveCharacter,
   ensureCharacterStructure,
   ensureSkillStructure,
-  ensureSkillEntries,
   applyAncestryAdjustments,
 } from "./derive-character.mjs";
 export {
