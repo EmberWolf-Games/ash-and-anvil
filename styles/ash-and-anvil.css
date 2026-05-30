@@ -611,13 +611,14 @@
 }
 
 .ash-and-anvil.sheet.actor .equipment-layout {
-  align-items: stretch;
+  align-items: start;
   display: grid;
   gap: 0.75rem;
   grid-template-columns: minmax(200px, 240px) minmax(0, 1fr);
 }
 
 .ash-and-anvil.sheet.actor .equipment-sidebar {
+  align-self: start;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -641,9 +642,9 @@
 }
 
 .ash-and-anvil.sheet.actor .equipment-panel--rings {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
+  flex: 0 0 auto;
+  overflow: visible;
+  padding-bottom: 0.35rem;
 }
 
 .ash-and-anvil.sheet.actor .equipment-panel .panel-title {
@@ -660,7 +661,7 @@
   align-items: center;
   display: flex;
   justify-content: center;
-  min-height: 42rem;
+  min-height: 0;
 }
 
 .ash-and-anvil.sheet.actor .equipment-mannequin {
@@ -798,6 +799,7 @@
   display: grid;
   gap: 0.35rem;
   grid-template-columns: 1fr 1fr;
+  margin-bottom: 0;
 }
 
 .ash-and-anvil.sheet.actor .equipment-panel--rings .equipment-slot--panel {

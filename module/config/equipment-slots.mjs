@@ -104,13 +104,13 @@ export const MANNEQUIN_DISPLAY = [
   { storageKey: "rightArm", abbrKey: "ASHANVIL.EquipAbbrArm", group: "body", top: 32, left: 90, size: SLOT_SIZE },
   { storageKey: "hands", abbrKey: "ASHANVIL.EquipAbbrHands", group: "body", top: 40, left: 16, size: SLOT_SIZE },
   { storageKey: "hands", abbrKey: "ASHANVIL.EquipAbbrHands", group: "body", top: 40, left: 84, size: SLOT_SIZE },
-  { storageKey: "waist1", abbrKey: "ASHANVIL.EquipAbbrWaist", group: "waist", top: 41, left: 34, size: SLOT_SIZE },
-  { storageKey: "waist2", abbrKey: "ASHANVIL.EquipAbbrWaist", group: "waist", top: 41, left: 50, size: SLOT_SIZE },
-  { storageKey: "waist3", abbrKey: "ASHANVIL.EquipAbbrWaist", group: "waist", top: 41, left: 66, size: SLOT_SIZE },
+  { storageKey: "waist1", abbrKey: "ASHANVIL.EquipAbbrWaist", group: "waist", top: 36, left: 34, size: SLOT_SIZE },
+  { storageKey: "waist2", abbrKey: "ASHANVIL.EquipAbbrWaist", group: "waist", top: 36, left: 50, size: SLOT_SIZE },
+  { storageKey: "waist3", abbrKey: "ASHANVIL.EquipAbbrWaist", group: "waist", top: 36, left: 66, size: SLOT_SIZE },
   { storageKey: "legs", abbrKey: "ASHANVIL.EquipAbbrLegs", group: "body", top: 58, left: 38, size: SLOT_SIZE },
   { storageKey: "legs", abbrKey: "ASHANVIL.EquipAbbrLegs", group: "body", top: 58, left: 62, size: SLOT_SIZE },
-  { storageKey: "feet", abbrKey: "ASHANVIL.EquipAbbrFeet", group: "body", top: 83, left: 38, size: SLOT_SIZE },
-  { storageKey: "feet", abbrKey: "ASHANVIL.EquipAbbrFeet", group: "body", top: 83, left: 62, size: SLOT_SIZE },
+  { storageKey: "feet", abbrKey: "ASHANVIL.EquipAbbrFeet", group: "body", top: 77, left: 38, size: SLOT_SIZE },
+  { storageKey: "feet", abbrKey: "ASHANVIL.EquipAbbrFeet", group: "body", top: 77, left: 62, size: SLOT_SIZE },
 ];
 
 /** @type {readonly EquipmentPanelSlotDef[]} */
