@@ -154,6 +154,7 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
         edge: new NumberField({ integer: true, initial: 2, label: "ASHANVIL.Edge" }),
       }),
       speed: new SchemaField({
+        baseWalk: new NumberField({ integer: true, initial: 0, min: 0, label: "ASHANVIL.SpeedBaseWalk" }),
         walk: new NumberField({ integer: true, initial: 30, min: 0, label: "ASHANVIL.SpeedWalk" }),
         fly: new NumberField({ integer: true, initial: 0, min: 0, label: "ASHANVIL.SpeedFly" }),
         hover: new NumberField({ integer: true, initial: 0, min: 0, label: "ASHANVIL.SpeedHover" }),
@@ -200,6 +201,19 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
       inventory: new SchemaField({
         totalWeight: new NumberField({ initial: 0, min: 0, label: "ASHANVIL.TotalWeight" }),
         notes: new StringField({ initial: "", label: "ASHANVIL.InventoryNotes" }),
+        encumbrance: new SchemaField({
+          tier: new StringField({ initial: "normal" }),
+          attackBane: new NumberField({ integer: true, initial: 0 }),
+          current: new NumberField({ initial: 0, min: 0 }),
+          max: new NumberField({ initial: 0, min: 0 }),
+          lightThreshold: new NumberField({ initial: 0, min: 0 }),
+          heavyThreshold: new NumberField({ initial: 0, min: 0 }),
+          bodyWeight: new NumberField({ initial: 0, min: 0 }),
+          wornWeight: new NumberField({ initial: 0, min: 0 }),
+          carriedWeight: new NumberField({ initial: 0, min: 0 }),
+          effectiveWalk: new NumberField({ integer: true, initial: 30, min: 0 }),
+          baseWalk: new NumberField({ integer: true, initial: 30, min: 0 }),
+        }),
       }),
       details: new SchemaField({
         ancestryId: new StringField({ initial: "", label: "ASHANVIL.Ancestry" }),

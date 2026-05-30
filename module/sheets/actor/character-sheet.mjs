@@ -12,6 +12,10 @@ import {
 
 import { equipItemToSlot, moveItemToContainer, unequipSlot } from "../../rules/equipment.mjs";
 
+import { validateWeightPickup } from "../../rules/encumbrance.mjs";
+
+import { parseDeltaInput } from "../../rules/resource-adjust.mjs";
+
 import { normalizeTagArray } from "../../helpers/tag-arrays.mjs";
 
 import { formatChangeLogForDisplay, recordSheetChanges } from "../../helpers/sheet-audit.mjs";
@@ -112,6 +116,8 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       openContainer: CharacterActorSheet.#onOpenContainer,
 
       closeContainer: CharacterActorSheet.#onCloseContainer,
+
+      applyResourceDelta: CharacterActorSheet.#onApplyResourceDelta,
 
       unequipSlot: CharacterActorSheet.#onUnequipSlot,
 
@@ -454,13 +460,13 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
         const containerId = target.dataset.containerId;
 
-        if (containerId) {
+        if (containerId !== undefined) {
 
-          await moveItemToContainer(this.actor, item, containerId);
+          const moved = await moveItemToContainer(this.actor, item, containerId);
 
-          this.render(false);
+          if (moved) this.render(false);
 
-          return true;
+          return moved;
 
         }
 
@@ -468,11 +474,11 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
       if (zone === "root") {
 
-        await moveItemToContainer(this.actor, item, "");
+        const moved = await moveItemToContainer(this.actor, item, "");
 
-        this.render(false);
+        if (moved) this.render(false);
 
-        return true;
+        return moved;
 
       }
 
@@ -481,6 +487,16 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
 
     if (item.parent?.id === this.actor.id) return super._onDropItem(event, item);
+
+    const weightCheck = validateWeightPickup(this.actor, item);
+
+    if (!weightCheck.ok) {
+
+      ui.notifications.warn(weightCheck.message);
+
+      return false;
+
+    }
 
     const itemData = item.toObject();
 
@@ -620,9 +636,47 @@ export class CharacterActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     const app = /** @type {CharacterActorSheet} */ (this);
 
-    app.#openContainerId = target.dataset.containerId ?? null;
+    const id = target.dataset.containerId ?? null;
+
+    app.#openContainerId = !id || id === "root" ? null : id;
 
     app.#activeTab = "inventory";
+
+    app.render(false);
+
+  }
+
+
+
+  static async #onApplyResourceDelta(_event, target) {
+
+    const app = /** @type {CharacterActorSheet} */ (this);
+
+    if (!app.#canEditSheet()) return;
+
+    const path = target.dataset.path;
+
+    const wrap = target.closest("[data-resource-path]");
+
+    const input = wrap?.querySelector("[data-resource-input]");
+
+    if (!path || !input) return;
+
+    const current = foundry.utils.getProperty(app.actor.system, path) ?? 0;
+
+    let next = parseDeltaInput(input.value, current);
+
+    if (path === "attributes.health.value") {
+
+      const max = app.actor.system.attributes?.health?.max ?? next;
+
+      next = Math.min(next, max);
+
+    }
+
+    await app.actor.update({ [`system.${path}`]: next });
+
+    input.value = "";
 
     app.render(false);
 

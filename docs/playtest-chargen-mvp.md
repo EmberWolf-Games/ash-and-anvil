@@ -38,7 +38,13 @@ Automated smoke (optional): `node .cursor/playtest-chargen.mjs`
 
 - [ ] **Details** — identity, abilities, saves, skills, proficiencies, vitals, heritage.
 - [ ] **Equipment** — mannequin slots; drag gear to slot; unequip works.
-- [ ] **Inventory** — Shards currency, worn/carried list, container buttons open nested contents.
+## Inventory tab (0.6.1.8+)
+
+- [ ] **Inventory** — two-column layout; currency delta (`+10` / absolute); encumbrance weight current/max with yellow/red icons
+- [ ] **Encumbrance** — walk speed derived from base walk; attack bane at encumbered / double bane when heavily encumbered
+- [ ] **Containers** — left-rail navigation; capacity hard block; equipped backpack pinned when in backpack slot
+- [ ] **HP delta** — Details tab and token HUD adjust field (`+5` / absolute)
+- [ ] Drag gear to container / on person; over-max weight blocked on pickup
 - [ ] **Features** — build blocks + ancestry feature tiers (1/5/10/15).
 - [ ] **Powers** — spellcasting / psionics / divine gifts sub-tabs.
 - [ ] **Effects** — active / passive sub-tabs.

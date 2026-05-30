@@ -491,6 +491,179 @@
 }
 
 /* Inventory tab */
+.ash-and-anvil.sheet.actor .inventory-layout {
+  align-items: start;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: minmax(200px, 240px) minmax(0, 1fr);
+}
+
+.ash-and-anvil.sheet.actor .inventory-sidebar {
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.ash-and-anvil.sheet.actor .inventory-panel {
+  background: var(--aa-surface-raised);
+  border: 1px solid var(--aa-border);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .inventory-panel .panel-title {
+  border-bottom: 1px solid var(--aa-border);
+  color: var(--aa-accent);
+  font-size: var(--font-size-12);
+  font-weight: bold;
+  margin: 0 0 0.35rem;
+  padding-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.ash-and-anvil.sheet.actor .inventory-main {
+  background: var(--aa-surface-raised);
+  border: 1px solid var(--aa-border);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 0;
+  padding: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .inventory-main-header,
+.ash-and-anvil.sheet.actor .inventory-main-footer {
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ash-and-anvil.sheet.actor .inventory-container-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .container-nav-btn {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--aa-border);
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  display: grid;
+  gap: 0.25rem 0.35rem;
+  grid-template-columns: auto 1fr auto;
+  padding: 0.35rem 0.45rem;
+  text-align: left;
+}
+
+.ash-and-anvil.sheet.actor .container-nav-btn.active {
+  border-color: var(--aa-accent);
+  color: var(--aa-accent);
+}
+
+.ash-and-anvil.sheet.actor .container-nav-btn--equipped {
+  border-style: dashed;
+}
+
+.ash-and-anvil.sheet.actor .container-equipped-badge {
+  color: var(--aa-accent);
+  font-size: var(--font-size-10);
+  grid-column: 2 / -1;
+  text-transform: uppercase;
+}
+
+.ash-and-anvil.sheet.actor .inventory-drop--main {
+  flex: 1 1 auto;
+  min-height: 8rem;
+}
+
+.ash-and-anvil.sheet.actor .resource-adjust {
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .resource-current {
+  font-weight: bold;
+  min-width: 4rem;
+}
+
+.ash-and-anvil.sheet.actor .resource-delta-input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ash-and-anvil.sheet.actor .resource-apply {
+  background: var(--aa-surface-raised);
+  border: 1px solid var(--aa-border);
+  border-radius: 3px;
+  color: var(--aa-accent);
+  cursor: pointer;
+  font-size: var(--font-size-11);
+  padding: 0.2rem 0.45rem;
+}
+
+.ash-and-anvil.sheet.actor .currency-breakdown-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ash-and-anvil.sheet.actor .currency-chip {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--aa-border);
+  border-radius: 999px;
+  font-size: var(--font-size-11);
+  padding: 0.1rem 0.45rem;
+}
+
+.ash-and-anvil.sheet.actor .encumbrance-icon--light {
+  color: #e6c619;
+}
+
+.ash-and-anvil.sheet.actor .encumbrance-icon--heavy {
+  color: #e64545;
+}
+
+.ash-and-anvil.sheet.actor .encumbrance-summary {
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .gear-badge {
+  border-radius: 999px;
+  font-size: var(--font-size-10);
+  padding: 0.05rem 0.35rem;
+  text-transform: uppercase;
+}
+
+.ash-and-anvil.sheet.actor .gear-badge--equipped {
+  background: rgba(232, 93, 4, 0.2);
+  border: 1px solid var(--aa-accent-dim);
+  color: var(--aa-accent);
+}
+
+.ash-and-anvil.sheet.actor .hp-adjust-wrap,
+.ash-and-anvil.sheet.actor .hp-meta {
+  margin-bottom: 0.35rem;
+}
+
+.ash-and-anvil.sheet.actor .speed-effective {
+  color: var(--aa-accent);
+  font-size: var(--font-size-16);
+  font-weight: bold;
+  margin-right: 0.35rem;
+}
+
 .ash-and-anvil.sheet.actor .inventory-tab .currency-grid {
   gap: 0.5rem;
 }
@@ -1314,6 +1487,10 @@
     grid-template-columns: 1fr;
   }
 
+  .ash-and-anvil.sheet.actor .inventory-layout {
+    grid-template-columns: 1fr;
+  }
+
   .ash-and-anvil.sheet.actor .equipment-mannequin-wrap {
     min-height: auto;
   }
@@ -1375,6 +1552,27 @@
 .ash-and-anvil.sheet.actor .gear-meta {
   font-size: var(--font-size-12);
   opacity: 0.8;
+}
+
+#token-hud .ash-anvil-token-hp {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(232, 93, 4, 0.45);
+  border-radius: 4px;
+  color: #f0ebe3;
+  font-size: 11px;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+  padding: 0.15rem 0.35rem;
+}
+
+#token-hud .ash-anvil-token-hp .token-hp-delta {
+  max-width: 4rem;
+  min-width: 0;
+}
+
+#token-hud .ash-anvil-token-hp .token-hp-apply {
+  color: #e85d04;
 }
 
 .ash-and-anvil.sheet.actor .tier-unlocked .tier-status {

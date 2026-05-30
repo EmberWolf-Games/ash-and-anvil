@@ -97,7 +97,10 @@ export function prepareDetailsTabContext(actor, baseContext) {
   }));
 
   const prof = system.proficiencies ?? {};
-  const speed = system.speed ?? {};
+  const speed = {
+    ...(system.speed ?? {}),
+    baseWalk: system.speed?.baseWalk || system.speed?.walk || 30,
+  };
   const defense = system.defense ?? {};
   const defensesRaw = system.defenses ?? {};
   const totalLevel = system.attributes?.totalLevel ?? 1;

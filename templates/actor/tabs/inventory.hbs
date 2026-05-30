@@ -1,91 +1,101 @@
 <div class="sheet-zone sheet-zone--inventory inventory-tab" data-zone="inventory">
-  <section class="inventory-currency">
-    <h3 class="zone-title">{{inventory.currencyLabel}}</h3>
-    <div class="currency-shards flexrow">
-      <div class="form-group flex1">
-        <label>{{localize "ASHANVIL.CurrencyTotal"}}</label>
-        <input type="number" name="system.currency.value" value="{{inventory.currencyValue}}" min="0" />
-      </div>
-      <div class="currency-breakdown flexcol">
-        <span class="hint">{{localize "ASHANVIL.CurrencyBreakdown"}}</span>
-        <strong>{{inventory.currencyDisplay}}</strong>
-      </div>
-    </div>
-  </section>
+  <div class="inventory-layout">
+    <aside class="inventory-sidebar">
+      <section class="inventory-panel inventory-panel--currency">
+        <h4 class="panel-title">{{inventory.currencyLabel}}</h4>
+        {{> "systems/ash-and-anvil/templates/actor/parts/resource-adjust.hbs"
+          display=inventory.currencyDisplay
+          path="currency.value"
+          editable=sheetEditMode
+        }}
+        {{#if inventory.currencyBreakdown.length}}
+        <ul class="currency-breakdown-chips">
+          {{#each inventory.currencyBreakdown as |part|}}
+          <li class="currency-chip">{{part.count}} {{part.label}}</li>
+          {{/each}}
+        </ul>
+        {{/if}}
+      </section>
 
-  {{#if inventory.openContainer}}
-  <section class="inventory-container-panel">
-    <header class="flexrow">
-      <h3 class="zone-title flex1">{{inventory.openContainer.name}}</h3>
-      <button type="button" data-action="closeContainer">{{localize "ASHANVIL.CloseContainer"}}</button>
-    </header>
-    <div class="inventory-drop" data-drop-zone="container" data-container-id="{{inventory.openContainerId}}">
-      {{#if inventory.openContainer.contents.length}}
-      <ul class="gear-list item-list">
-        {{#each inventory.openContainer.contents as |item|}}
-        <li class="gear-row" data-item-id="{{item.id}}">
-          <img class="item-img" src="{{item.img}}" alt="" width="24" height="24" />
-          <a class="item-link" data-action="editItem" data-item-id="{{item.id}}">{{item.name}}</a>
-          <span class="gear-meta">×{{item.quantity}} · {{item.weight}} · {{item.priceDisplay}}</span>
-          {{> "systems/ash-and-anvil/templates/actor/parts/item-row-actions.hbs" id=item.id}}
-        </li>
-        {{/each}}
-      </ul>
-      {{else}}
-      <p class="hint">{{localize "ASHANVIL.ContainerEmpty"}}</p>
-      {{/if}}
-    </div>
-  </section>
-  {{/if}}
+      <section class="inventory-panel inventory-panel--encumbrance">
+        <h4 class="panel-title">{{localize "ASHANVIL.Encumbrance"}}</h4>
+        <div class="encumbrance-summary flexrow">
+          {{#if inventory.encumbrance.iconClass}}
+          <i class="fa-solid fa-weight-hanging encumbrance-icon {{inventory.encumbrance.iconClass}}" title="{{localize 'ASHANVIL.EncumbranceStatus'}}"></i>
+          {{/if}}
+          <span class="encumbrance-weight">{{inventory.encumbrance.current}} / {{inventory.encumbrance.max}} {{localize "ASHANVIL.WeightUnit"}}</span>
+        </div>
+        <p class="hint encumbrance-tier">{{inventory.encumbrance.tierLabel}}</p>
+        <div class="encumbrance-walk">
+          <span class="mini-label">{{localize "ASHANVIL.SpeedWalk"}}</span>
+          <strong>{{inventory.encumbrance.effectiveWalk}}</strong>
+          <span class="hint">({{localize "ASHANVIL.SpeedBase"}} {{inventory.encumbrance.baseWalk}})</span>
+        </div>
+        {{#if inventory.encumbrance.attackBaneLabel}}
+        <p class="hint encumbrance-attack-bane">{{inventory.encumbrance.attackBaneLabel}}</p>
+        {{/if}}
+      </section>
 
-  <section class="inventory-carried">
-    <h3 class="zone-title">{{localize "ASHANVIL.CarriedGear"}}</h3>
-    <p class="hint">{{localize "ASHANVIL.CarriedGearHint"}}</p>
-    <div class="inventory-drop inventory-drop--root" data-drop-zone="root">
-      {{#if inventory.hasRootGear}}
-      <ul class="gear-list item-list">
-        {{#each inventory.rootGear as |item|}}
-        <li class="gear-row" data-item-id="{{item.id}}">
-          <img class="item-img" src="{{item.img}}" alt="" width="24" height="24" />
-          <a class="item-link" data-action="editItem" data-item-id="{{item.id}}">{{item.name}}</a>
-          <span class="gear-meta">×{{item.quantity}} · {{item.weight}} · {{item.priceDisplay}}</span>
-          {{> "systems/ash-and-anvil/templates/actor/parts/item-row-actions.hbs" id=item.id}}
-        </li>
-        {{/each}}
-      </ul>
-      {{else}}
-      <p class="hint">{{localize "ASHANVIL.NoCarriedGear"}}</p>
-      {{/if}}
-    </div>
-  </section>
+      <section class="inventory-panel inventory-panel--containers">
+        <h4 class="panel-title">{{localize "ASHANVIL.Containers"}}</h4>
+        <nav class="inventory-container-nav">
+          {{#each inventory.containerViews as |view|}}
+          <button
+            type="button"
+            class="container-nav-btn {{#if view.isOpen}}active{{/if}} {{#if view.isLinkedBackpack}}container-nav-btn--equipped{{/if}}"
+            data-action="openContainer"
+            data-container-id="{{view.id}}"
+          >
+            {{#if view.img}}<img src="{{view.img}}" alt="" width="18" height="18" />{{/if}}
+            <span class="container-nav-label">{{view.label}}</span>
+            <span class="container-nav-count">{{#if view.capacityLabel}}{{view.capacityLabel}}{{else}}{{view.childCount}}{{/if}}</span>
+            {{#if view.isLinkedBackpack}}<span class="container-equipped-badge">{{localize "ASHANVIL.Equipped"}}</span>{{/if}}
+          </button>
+          {{/each}}
+        </nav>
+        {{#if sheetEditMode}}
+        <button type="button" class="inventory-add-container" data-action="createItem" data-item-type="gear" data-container="1">
+          {{localize "ASHANVIL.AddContainer"}}
+        </button>
+        {{/if}}
+      </section>
 
-  {{#if inventory.hasContainers}}
-  <section class="inventory-containers">
-    <h3 class="zone-title">{{localize "ASHANVIL.Containers"}}</h3>
-    <div class="container-buttons flexrow">
-      {{#each inventory.containers as |container|}}
-      <button
-        type="button"
-        class="container-btn {{#if container.isOpen}}active{{/if}}"
-        data-action="openContainer"
-        data-container-id="{{container.id}}"
+      <section class="inventory-panel inventory-panel--notes">
+        <h4 class="panel-title">{{localize "ASHANVIL.InventoryNotes"}}</h4>
+        <textarea name="system.inventory.notes" rows="2" {{#unless sheetEditMode}}readonly{{/unless}}>{{inventory.notes}}</textarea>
+      </section>
+    </aside>
+
+    <div class="inventory-main">
+      <header class="inventory-main-header flexrow">
+        <h3 class="zone-title flex1">{{inventory.activeTitle}}</h3>
+        {{#if inventory.activeCapacity}}
+        <span class="container-capacity">{{inventory.activeCapacity.label}}</span>
+        {{/if}}
+      </header>
+
+      <div
+        class="inventory-drop inventory-drop--main"
+        data-drop-zone="{{#if inventory.activeDropContainerId}}container{{else}}root{{/if}}"
+        {{#if inventory.activeDropContainerId}}data-container-id="{{inventory.activeDropContainerId}}"{{/if}}
       >
-        <img src="{{container.img}}" alt="" width="20" height="20" />
-        {{container.name}} ({{container.childCount}})
-      </button>
-      {{/each}}
+        {{#if inventory.hasActiveContents}}
+        <ul class="gear-list item-list">
+          {{#each inventory.activeContents as |item|}}
+          {{> "systems/ash-and-anvil/templates/actor/parts/inventory-gear-row.hbs" item=item}}
+          {{/each}}
+        </ul>
+        {{else}}
+        <p class="hint">{{localize "ASHANVIL.EquipDropHint"}}</p>
+        {{/if}}
+      </div>
+
+      <footer class="inventory-main-footer flexrow">
+        <span class="flex1">{{localize "ASHANVIL.TotalWeight"}}: {{inventory.totalWeight}} / {{inventory.maxWeight}} {{localize "ASHANVIL.WeightUnit"}}</span>
+        {{#if sheetEditMode}}
+        <button type="button" data-action="createItem" data-item-type="gear">{{localize "ASHANVIL.AddGear"}}</button>
+        {{/if}}
+      </footer>
     </div>
-  </section>
-  {{/if}}
-
-  <footer class="tab-footer flexrow">
-    <span class="flex1">{{localize "ASHANVIL.TotalWeight"}}: {{inventory.totalWeight}}</span>
-    <button type="button" data-action="createItem" data-item-type="gear" data-container="1">{{localize "ASHANVIL.AddContainer"}}</button>
-    <button type="button" data-action="createItem" data-item-type="gear">{{localize "ASHANVIL.AddGear"}}</button>
-  </footer>
-
-  <section class="inventory-notes">
-    <h3 class="zone-title">{{localize "ASHANVIL.InventoryNotes"}}</h3>
-    <textarea name="system.inventory.notes" rows="3">{{inventory.notes}}</textarea>
-  </section>
+  </div>
 </div>

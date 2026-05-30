@@ -23,7 +23,14 @@ export {
   getCurrencyConfig,
 } from "./currency.mjs";
 export { equipItemToSlot, moveItemToContainer, unequipSlot } from "./equipment.mjs";
-export { rollD20Check, buildCheckPreview, resolveBoonBane } from "./d20.mjs";
+export { parseDeltaInput, applyResourceDelta } from "./resource-adjust.mjs";
+export {
+  computeWeightBreakdown,
+  deriveEncumbrance,
+  encumbranceThresholds,
+  validateWeightPickup,
+} from "./encumbrance.mjs";
+export { rollD20Check, buildCheckPreview, resolveBoonBane, boonDiceCount } from "./d20.mjs";
 export { deriveSaves } from "./saves.mjs";
 export { deriveDefense } from "./defense.mjs";
 export {
@@ -35,6 +42,9 @@ export {
   getRootCarriedGear,
   getGearInContainer,
   getContainerGear,
+  getLinkedBackpackId,
+  validateContainerAdd,
+  itemWeight,
 } from "./inventory.mjs";
 export {
   deriveCharacter,

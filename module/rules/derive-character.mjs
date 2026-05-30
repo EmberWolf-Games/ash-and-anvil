@@ -8,7 +8,7 @@ import { migrateLegacyCurrency } from "./currency.mjs";
 
 import { deriveDefense } from "./defense.mjs";
 
-import { totalCarriedWeight } from "./inventory.mjs";
+import { deriveEncumbrance } from "./encumbrance.mjs";
 
 import { edgeBonus } from "./proficiency.mjs";
 
@@ -77,7 +77,8 @@ export function ensureCharacterStructure(system) {
 
   system.skills.pointsAvailable ??= defaultSkillPoints(system.attributes.totalLevel);
 
-  system.speed ??= { walk: 30, fly: 0, hover: 0, swim: 0, climb: 0, burrow: 0 };
+  system.speed ??= { walk: 30, fly: 0, hover: 0, swim: 0, climb: 0, burrow: 0, baseWalk: 0 };
+  system.speed.baseWalk ??= system.speed.walk ?? 30;
 
   system.proficiencies ??= {
     armorLight: false,
@@ -190,7 +191,7 @@ function applyHeritageModifiers(system) {
 
 function deriveInventory(actor, system) {
 
-  system.inventory.totalWeight = totalCarriedWeight(actor);
+  deriveEncumbrance(actor, system);
 
 }
 

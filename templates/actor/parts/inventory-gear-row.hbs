@@ -1,0 +1,9 @@
+<li class="gear-row" data-item-id="{{item.id}}">
+  <img class="item-img" src="{{item.img}}" alt="" width="24" height="24" />
+  <a class="item-link" data-action="editItem" data-item-id="{{item.id}}">{{item.name}}</a>
+  {{#if item.equipped}}
+  <span class="gear-badge gear-badge--equipped" title="{{localize 'ASHANVIL.GearEquippedBadge'}}">{{localize "ASHANVIL.Equipped"}}</span>
+  {{/if}}
+  <span class="gear-meta">×{{item.quantity}} · {{item.weight}} · {{item.priceDisplay}}</span>
+  {{> "systems/ash-and-anvil/templates/actor/parts/item-row-actions.hbs" id=item.id}}
+</li>

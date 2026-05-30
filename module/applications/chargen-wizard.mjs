@@ -294,7 +294,10 @@ export class ChargenWizard extends HandlebarsApplicationMixin(ApplicationV2) {
     system.attributes.totalLevel = 1;
     system.attributes.level = 1;
     system.skills.pointsAvailable = defaultSkillPoints(1);
-    if (ancestry?.system?.speed) system.speed.walk = ancestry.system.speed;
+    if (ancestry?.system?.speed) {
+      system.speed.baseWalk = ancestry.system.speed;
+      system.speed.walk = ancestry.system.speed;
+    }
 
     system.chargen.buildComplete = true;
     system.chargen.buildVersion = game.system.version;

@@ -4,6 +4,7 @@ import {
   resolveUnequipSlotId,
   validateHandEquip,
 } from "./hand-slots.mjs";
+import { validateContainerAdd } from "./inventory.mjs";
 
 /**
  * @param {Actor} actor
@@ -38,7 +39,8 @@ export async function equipItemToSlot(actor, item, slotId) {
     flat[`system.equipment.${id}`] = equipment[id] ?? "";
   }
 
-  await item.update({ "system.equipmentSlot": slotId, "system.containerId": "" });
+  const itemUpdate = { "system.equipmentSlot": slotId, "system.containerId": "" };
+  await item.update(itemUpdate);
   await actor.update(flat);
   return true;
 }
@@ -60,13 +62,22 @@ export async function unequipSlot(actor, slotId) {
  * @param {Actor} actor
  * @param {Item} item
  * @param {string} containerId
+ * @returns {Promise<boolean>}
  */
 export async function moveItemToContainer(actor, item, containerId) {
-  if (item.type !== "gear") return;
+  if (item.type !== "gear") return false;
+
+  const containerCheck = validateContainerAdd(actor, containerId ?? "", item);
+  if (!containerCheck.ok) {
+    ui.notifications.warn(containerCheck.message);
+    return false;
+  }
+
   const oldSlot = item.system.equipmentSlot;
   await item.update({
     "system.containerId": containerId ?? "",
     "system.equipmentSlot": "",
   });
   if (oldSlot) await actor.update({ [`system.equipment.${oldSlot}`]: "" });
+  return true;
 }

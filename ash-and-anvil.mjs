@@ -21,6 +21,7 @@ import { registerHandlebarsPartials } from "./module/helpers/templates.mjs";
 import { CharacterActorSheet, NpcActorSheet } from "./module/sheets/actor/_module.mjs";
 import { ItemSheetAA } from "./module/sheets/item-sheet.mjs";
 import { registerPauseScreen } from "./module/ui/pause.mjs";
+import { registerTokenHud } from "./module/ui/token-hud.mjs";
 import { seedCompendiumsIfNeeded } from "./module/bootstrap/seed-compendiums.mjs";
 import * as RULES from "./module/rules/_module.mjs";
 
@@ -45,7 +46,7 @@ Hooks.once("init", async () => {
   };
 
   CONFIG.ASH_ANVIL = {
-    keyVersion: "0.6.1.7",
+    keyVersion: "0.6.1.8",
     rules: RULES,
     currency: {
       getConfig: RULES.getCurrencyConfig,
@@ -78,6 +79,7 @@ Hooks.once("init", async () => {
 
   registerSettings();
   registerPauseScreen();
+  registerTokenHud();
 
   aaGroup("Sheets", () => {
     Actors.unregisterSheet("core", ActorSheetV2);

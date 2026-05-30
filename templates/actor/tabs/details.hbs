@@ -78,12 +78,18 @@
 
       <section class="details-panel details-panel--hp">
         <h4 class="panel-title">{{localize "ASHANVIL.Health"}}</h4>
-        <div class="hp-bar flexrow">
-          <input type="number" name="system.attributes.health.value" value="{{combat.health.value}}" min="0" />
-          <span>/</span>
-          <input type="number" name="system.attributes.health.max" value="{{combat.health.max}}" min="0" />
+        <div class="hp-adjust-wrap">
+          {{> "systems/ash-and-anvil/templates/actor/parts/resource-adjust.hbs"
+            display=combat.hpDisplay
+            path="attributes.health.value"
+            editable=sheetEditMode
+          }}
+        </div>
+        <div class="hp-meta flexrow">
+          <label>{{localize "ASHANVIL.HealthMax"}}</label>
+          <input type="number" name="system.attributes.health.max" value="{{combat.health.max}}" min="0" {{#unless sheetEditMode}}readonly{{/unless}} />
           <label>{{localize "ASHANVIL.HealthTemp"}}</label>
-          <input type="number" name="system.attributes.health.temp" value="{{combat.health.temp}}" min="0" />
+          <input type="number" name="system.attributes.health.temp" value="{{combat.health.temp}}" min="0" {{#unless sheetEditMode}}readonly{{/unless}} />
         </div>
         <div class="death-favor-grid">
           <div>
@@ -105,7 +111,12 @@
       <section class="details-panel details-panel--speed">
         <h4 class="panel-title">{{localize "ASHANVIL.Speed"}}</h4>
         <div class="speed-compact">
-          <div><label>{{localize "ASHANVIL.SpeedWalk"}}</label><input type="number" name="system.speed.walk" value="{{speed.walk}}" min="0" /></div>
+          <div>
+            <label>{{localize "ASHANVIL.SpeedWalk"}}</label>
+            <span class="speed-effective" title="{{localize 'ASHANVIL.SpeedEffectiveHint'}}">{{speed.walk}}</span>
+            <label>{{localize "ASHANVIL.SpeedBase"}}</label>
+            <input type="number" name="system.speed.baseWalk" value="{{speed.baseWalk}}" min="0" {{#unless sheetEditMode}}readonly{{/unless}} />
+          </div>
           <div><label>{{localize "ASHANVIL.SpeedFly"}}</label><input type="number" name="system.speed.fly" value="{{speed.fly}}" min="0" /></div>
           <div><label>{{localize "ASHANVIL.SpeedSwim"}}</label><input type="number" name="system.speed.swim" value="{{speed.swim}}" min="0" /></div>
           <div><label>{{localize "ASHANVIL.SpeedClimb"}}</label><input type="number" name="system.speed.climb" value="{{speed.climb}}" min="0" /></div>

@@ -1,0 +1,15 @@
+<div class="resource-adjust flexrow" data-resource-path="{{path}}">
+  <span class="resource-current" title="{{localize 'ASHANVIL.ResourceCurrentHint'}}">{{display}}</span>
+  <input
+    type="text"
+    class="resource-delta-input"
+    data-resource-input
+    placeholder="{{localize 'ASHANVIL.ResourceDeltaPlaceholder'}}"
+    {{#unless editable}}readonly disabled{{/unless}}
+  />
+  {{#if editable}}
+  <button type="button" class="resource-apply" data-action="applyResourceDelta" data-path="{{path}}">
+    {{localize "ASHANVIL.Apply"}}
+  </button>
+  {{/if}}
+</div>
